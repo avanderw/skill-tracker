@@ -1,6 +1,5 @@
 package net.avdw.skilltracker;
 
-import net.avdw.skilltracker.cli.MainCli;
 import picocli.CommandLine;
 
 public final class Main {
