@@ -19,6 +19,28 @@ public class TrueskillPlayground {
         play(twoPlayerSkillCalculator);
         play(twoTeamSkillCalculator);
         play(factorGraphSkillCalculator);
+
+        GameInfo gameInfo = GameInfo.getDefaultGameInfo();
+
+        Player<Integer> andrew = new Player<>(1);
+        Player<Integer> karl = new Player<>(2);
+        Player<Integer> jaco = new Player<>(3);
+        Player<Integer> etienne = new Player<>(4);
+        Player<Integer> marius = new Player<>(5);
+        Player<Integer> raoul = new Player<>(6);
+
+        Team team1 = new Team()
+                .addPlayer(andrew, gameInfo.getDefaultRating())
+                .addPlayer(karl, gameInfo.getDefaultRating());
+        Team team2 = new Team()
+                .addPlayer(jaco, gameInfo.getDefaultRating())
+                .addPlayer(etienne, gameInfo.getDefaultRating());
+        Team team3 = new Team()
+                .addPlayer(marius, gameInfo.getDefaultRating())
+                .addPlayer(raoul, gameInfo.getDefaultRating());
+
+        Collection<ITeam> teams = Team.concat(team1, team2, team3);
+        print("Northgard test", gameInfo, teams, factorGraphSkillCalculator, 1, 2, 2);
     }
 
     private static void play(SkillCalculator skillCalculator) {

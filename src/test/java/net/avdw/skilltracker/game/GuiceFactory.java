@@ -1,4 +1,4 @@
-package net.avdw.skilltracker;
+package net.avdw.skilltracker.game;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -6,7 +6,7 @@ import picocli.CommandLine;
 
 final class GuiceFactory implements CommandLine.IFactory {
     private static final GuiceFactory INSTANCE = new GuiceFactory();
-    private static final Injector INJECTOR = Guice.createInjector(new MainModule());
+    private static final Injector INJECTOR = Guice.createInjector(new TestModule());
 
     public static CommandLine.IFactory getInstance() {
         return INSTANCE;

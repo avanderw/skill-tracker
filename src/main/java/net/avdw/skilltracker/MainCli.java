@@ -1,12 +1,14 @@
 package net.avdw.skilltracker;
 
+import net.avdw.skilltracker.game.GameCli;
 import net.avdw.skilltracker.session.SessionCli;
 import org.tinylog.Logger;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 @Command(name = "skill-tracker", description = "Some fancy description", version = "1.0-SNAPSHOT", mixinStandardHelpOptions = true,
-        subcommands = {SessionCli.class})
+        subcommands = {
+                GameCli.class,
+                SessionCli.class})
 public class MainCli implements Runnable {
 
     /**
