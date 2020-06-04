@@ -20,7 +20,7 @@ public class TableQuery<T> {
         this.tableBuilder = tableBuilder;
     }
 
-    public List<T> query(String sql) {
+    public List<T> query(final String sql) {
         Logger.trace("Executing query: {}", sql);
         List<T> list = new ArrayList<>();
         try (Statement statement = connection.createStatement();

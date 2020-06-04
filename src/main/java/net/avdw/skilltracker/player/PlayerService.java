@@ -9,10 +9,10 @@ public class PlayerService {
     private final Dao<PlayerTable, Integer> playerTableDao;
 
     @Inject
-    PlayerService(Dao<PlayerTable, Integer> playerTableDao) {
+    PlayerService(final Dao<PlayerTable, Integer> playerTableDao) {
         this.playerTableDao = playerTableDao;
     }
-    public PlayerTable createOrRetrievePlayer(String name) {
+    public PlayerTable createOrRetrievePlayer(final String name) {
         try {
             PlayerTable playerTable = new PlayerTable(name);
             playerTableDao.create(playerTable);

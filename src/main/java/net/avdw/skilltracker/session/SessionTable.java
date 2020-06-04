@@ -34,7 +34,7 @@ public class SessionTable {
     @DatabaseField(canBeNull = false)
     private BigDecimal standardDeviation;
 
-    public SessionTable(Integer gameFk, Integer playerFk, Integer team, Integer rank, Date playDate, BigDecimal mean, BigDecimal standardDeviation) {
+    public SessionTable(final Integer gameFk, final Integer playerFk, final Integer team, final Integer rank, final Date playDate, final BigDecimal mean, final BigDecimal standardDeviation) {
         this.gameFk = gameFk;
         this.playerFk = playerFk;
         this.team = team;
@@ -51,7 +51,7 @@ public class SessionTable {
         return mean;
     }
 
-    public void setMean(BigDecimal mean) {
+    public void setMean(final BigDecimal mean) {
         this.mean = mean;
     }
 
@@ -59,7 +59,7 @@ public class SessionTable {
         return standardDeviation;
     }
 
-    public void setStandardDeviation(BigDecimal standardDeviation) {
+    public void setStandardDeviation(final BigDecimal standardDeviation) {
         this.standardDeviation = standardDeviation;
     }
 
@@ -67,7 +67,7 @@ public class SessionTable {
         return gameFk;
     }
 
-    public void setGameFk(Integer gameFk) {
+    public void setGameFk(final Integer gameFk) {
         this.gameFk = gameFk;
     }
 
@@ -75,7 +75,7 @@ public class SessionTable {
         return playerFk;
     }
 
-    public void setPlayerFk(Integer playerFk) {
+    public void setPlayerFk(final Integer playerFk) {
         this.playerFk = playerFk;
     }
 
@@ -83,7 +83,7 @@ public class SessionTable {
         return team;
     }
 
-    public void setTeam(Integer team) {
+    public void setTeam(final Integer team) {
         this.team = team;
     }
 
@@ -91,7 +91,7 @@ public class SessionTable {
         return rank;
     }
 
-    public void setRank(Integer rank) {
+    public void setRank(final Integer rank) {
         this.rank = rank;
     }
 
@@ -99,7 +99,7 @@ public class SessionTable {
         return playDate;
     }
 
-    public void setPlayDate(Date playDate) {
+    public void setPlayDate(final Date playDate) {
         this.playDate = playDate;
     }
 
@@ -107,7 +107,7 @@ public class SessionTable {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(final String sessionId) {
         this.sessionId = sessionId;
     }
 }

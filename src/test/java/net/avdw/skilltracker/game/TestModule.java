@@ -1,24 +1,15 @@
 package net.avdw.skilltracker.game;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
-import net.avdw.database.DbConnection;
 import net.avdw.skilltracker.DatabaseModule;
 import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.player.PlayerModule;
-import net.avdw.skilltracker.session.Session;
 import net.avdw.skilltracker.session.SessionModule;
-import org.tinylog.Logger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 class TestModule extends AbstractModule {
     @Override

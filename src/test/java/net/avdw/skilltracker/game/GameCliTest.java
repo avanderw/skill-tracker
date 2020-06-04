@@ -7,7 +7,6 @@ import com.google.inject.name.Names;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import net.avdw.database.LiquibaseRunner;
 import net.avdw.skilltracker.MainCli;

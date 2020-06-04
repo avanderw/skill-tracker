@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 @Command(name = "add", description = "Add a game which people can create sessions against", mixinStandardHelpOptions = true)
 class CreateGameCli implements Runnable {
     @Spec
-    CommandSpec spec;
+    private CommandSpec spec;
 
     @Parameters(description = "Name of the game {e.g. Tennis}", arity = "1")
     private String name;
@@ -25,9 +25,9 @@ class CreateGameCli implements Runnable {
 
     @Inject
     @Game
-    ResourceBundle bundle;
+    private ResourceBundle bundle;
     @Inject
-    GameService gameService;
+    private GameService gameService;
 
     @Override
     public void run() {

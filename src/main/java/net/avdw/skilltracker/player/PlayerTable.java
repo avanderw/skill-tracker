@@ -16,7 +16,7 @@ public class PlayerTable implements IPlayer {
     public PlayerTable() {
     }
 
-    public PlayerTable(String name) {
+    public PlayerTable(final String name) {
         this.name = name;
     }
 
@@ -24,7 +24,7 @@ public class PlayerTable implements IPlayer {
         return pk;
     }
 
-    public void setPk(Integer pk) {
+    public void setPk(final Integer pk) {
         this.pk = pk;
     }
 
@@ -32,7 +32,7 @@ public class PlayerTable implements IPlayer {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

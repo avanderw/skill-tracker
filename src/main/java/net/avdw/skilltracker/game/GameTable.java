@@ -26,7 +26,7 @@ public class GameTable {
 
     }
 
-    public GameTable(String name, double initialMean, double initialStandardDeviation, double beta, double dynamicsFactor, double drawProbability) {
+    public GameTable(final String name, final double initialMean, final double initialStandardDeviation, final double beta, final double dynamicsFactor, final double drawProbability) {
         this.name = name;
         this.initialMean = BigDecimal.valueOf(initialMean);
         this.initialStandardDeviation = BigDecimal.valueOf(initialStandardDeviation);
@@ -40,7 +40,7 @@ public class GameTable {
         return pk;
     }
 
-    public void setPk(Integer pk) {
+    public void setPk(final Integer pk) {
         this.pk = pk;
     }
 
@@ -48,7 +48,7 @@ public class GameTable {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -56,7 +56,7 @@ public class GameTable {
         return initialMean;
     }
 
-    public void setInitialMean(BigDecimal initialMean) {
+    public void setInitialMean(final BigDecimal initialMean) {
         this.initialMean = initialMean;
     }
 
@@ -64,7 +64,7 @@ public class GameTable {
         return initialStandardDeviation;
     }
 
-    public void setInitialStandardDeviation(BigDecimal initialStandardDeviation) {
+    public void setInitialStandardDeviation(final BigDecimal initialStandardDeviation) {
         this.initialStandardDeviation = initialStandardDeviation;
     }
 
@@ -72,7 +72,7 @@ public class GameTable {
         return beta;
     }
 
-    public void setBeta(BigDecimal beta) {
+    public void setBeta(final BigDecimal beta) {
         this.beta = beta;
     }
 
@@ -80,7 +80,7 @@ public class GameTable {
         return dynamicsFactor;
     }
 
-    public void setDynamicsFactor(BigDecimal dynamicsFactor) {
+    public void setDynamicsFactor(final BigDecimal dynamicsFactor) {
         this.dynamicsFactor = dynamicsFactor;
     }
 
@@ -88,7 +88,7 @@ public class GameTable {
         return drawProbability;
     }
 
-    public void setDrawProbability(BigDecimal drawProbability) {
+    public void setDrawProbability(final BigDecimal drawProbability) {
         this.drawProbability = drawProbability;
     }
 }

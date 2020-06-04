@@ -22,7 +22,7 @@ public class GameModule extends AbstractModule {
 
     @Provides
     @Singleton
-    Dao<GameTable, Integer> gameDao(ConnectionSource connectionSource) throws SQLException {
+    Dao<GameTable, Integer> gameDao(final ConnectionSource connectionSource) throws SQLException {
         return DaoManager.createDao(connectionSource, GameTable.class);
     }
 }

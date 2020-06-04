@@ -1,10 +1,8 @@
 package net.avdw.skilltracker.session;
 
 import com.google.inject.Inject;
-import de.gesundkrank.jskills.GameInfo;
 import de.gesundkrank.jskills.ITeam;
 import de.gesundkrank.jskills.Rating;
-import net.avdw.skilltracker.game.GameMapper;
 import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerService;
@@ -22,30 +20,28 @@ import java.util.ResourceBundle;
 @Command(name = "create", description = "Some fancy description", mixinStandardHelpOptions = true)
 class CreateSessionCli implements Runnable {
     @Spec
-    CommandSpec spec;
+    private CommandSpec spec;
 
     @Parameters()
-    String[] teams; // player,player,player
+    private String[] teams; // player,player,player
 
     @Option(names = "--ranks", split = ",", required = true)
-    int[] ranks;
+    private int[] ranks;
 
     @Option(names = "--game", required = true)
-    String game;
+    private String game;
 
     @Inject
     @Session
-    ResourceBundle bundle;
+    private ResourceBundle bundle;
     @Inject
-    PlayerService playerService;
+    private PlayerService playerService;
     @Inject
-    SessionService sessionService;
+    private SessionService sessionService;
     @Inject
-    SessionMapper sessionMapper;
+    private SessionMapper sessionMapper;
     @Inject
-    GameService gameService;
-    @Inject
-    GameMapper gameMapper;
+    private GameService gameService;
 
     @Override
     public void run() {

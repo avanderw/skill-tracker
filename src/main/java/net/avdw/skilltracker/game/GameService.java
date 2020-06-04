@@ -10,10 +10,11 @@ public class GameService {
     private final Dao<GameTable, Integer> gameDao;
 
     @Inject
-    GameService(Dao<GameTable, Integer> gameDao) {
+    GameService(final Dao<GameTable, Integer> gameDao) {
         this.gameDao = gameDao;
     }
-    public void createGame(String name, double initialMean, double initialStandardDeviation, double beta, double dynamicsFactor, double drawProbability) {
+
+    public void createGame(final String name, final double initialMean, final double initialStandardDeviation, final double beta, final double dynamicsFactor, final double drawProbability) {
         GameTable gameTable = new GameTable(name, initialMean, initialStandardDeviation, beta, dynamicsFactor, drawProbability);
         try {
             gameDao.create(gameTable);
@@ -22,7 +23,7 @@ public class GameService {
         }
     }
 
-    public void deleteGame(String name) {
+    public void deleteGame(final String name) {
         try {
             DeleteBuilder<GameTable, Integer> deleteBuilder =
                     gameDao.deleteBuilder();
@@ -33,7 +34,7 @@ public class GameService {
         }
     }
 
-    public GameTable retrieveGame(String game) {
+    public GameTable retrieveGame(final String game) {
         try {
             return gameDao.queryForFirst(gameDao.queryBuilder().where().eq("name", game).prepare());
         } catch (SQLException e) {

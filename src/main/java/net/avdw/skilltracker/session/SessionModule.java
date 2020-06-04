@@ -25,7 +25,7 @@ public class SessionModule extends AbstractModule {
 
     @Provides
     @Singleton
-    Dao<SessionTable, Integer> gameDao(ConnectionSource connectionSource) throws SQLException {
+    Dao<SessionTable, Integer> gameDao(final ConnectionSource connectionSource) throws SQLException {
         return DaoManager.createDao(connectionSource, SessionTable.class);
     }
 }

@@ -16,4 +16,5 @@
     <suppress checks="NewlineAtEndOfFile"/>
     <suppress checks="MagicNumber"/>
     <suppress checks="DesignForExtension"/>
+    <suppress checks="[a-zA-Z]*" files=".*MapperImpl\.java"/>
 </suppressions>

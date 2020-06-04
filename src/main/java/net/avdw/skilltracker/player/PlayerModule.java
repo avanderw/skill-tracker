@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 
 public class PlayerModule extends AbstractModule {
 
-
     @Override
     protected void configure() {
         bind(ResourceBundle.class).annotatedWith(Player.class).toInstance(ResourceBundle.getBundle("player", Locale.ENGLISH));
@@ -22,7 +21,7 @@ public class PlayerModule extends AbstractModule {
 
     @Provides
     @Singleton
-    Dao<PlayerTable, Integer> gameDao(ConnectionSource connectionSource) throws SQLException {
+    Dao<PlayerTable, Integer> gameDao(final ConnectionSource connectionSource) throws SQLException {
         return DaoManager.createDao(connectionSource, PlayerTable.class);
     }
 }
