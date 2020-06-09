@@ -77,4 +77,12 @@ public class MatchService {
             throw new UnsupportedOperationException(e);
         }
     }
+
+    public List<MatchTable> retrieveAllMatchesForGame(GameTable gameTable) {
+        try {
+            return matchTableDao.queryForEq(MatchTable.GAME_FK, gameTable.getPk());
+        } catch (SQLException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
 }
