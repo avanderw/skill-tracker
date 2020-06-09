@@ -8,6 +8,7 @@ import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
 import org.tinylog.Logger;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,5 +85,10 @@ public class MatchService {
         } catch (SQLException e) {
             throw new UnsupportedOperationException(e);
         }
+    }
+
+    public BigDecimal calculateMatchQuality(final GameTable gameTable, final List<ITeam> teams) {
+        GameInfo gameInfo = gameMapper.map(gameTable);;
+        return BigDecimal.valueOf(skillCalculator.calculateMatchQuality(gameInfo, teams));
     }
 }

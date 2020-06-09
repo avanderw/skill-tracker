@@ -102,31 +102,16 @@ public class PlayerCliTest {
         commandLine.setOut(new PrintWriter(outWriter));
         commandLine.setErr(new PrintWriter(errWriter));
 
+        matchDao.delete(matchDao.deleteBuilder().prepare());
+        gameDao.delete(gameDao.deleteBuilder().prepare());
+        playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
     @After
     public void afterTest() throws SQLException {
-        gameDao.queryForAll().forEach(tuple -> {
-            try {
-                gameDao.delete(tuple);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-        playerDao.queryForAll().forEach(tuple -> {
-            try {
-                playerDao.delete(tuple);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-        matchDao.queryForAll().forEach(tuple -> {
-            try {
-                matchDao.delete(tuple);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        matchDao.delete(matchDao.deleteBuilder().prepare());
+        gameDao.delete(gameDao.deleteBuilder().prepare());
+        playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
 }

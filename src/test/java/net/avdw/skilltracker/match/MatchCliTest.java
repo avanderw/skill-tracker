@@ -14,10 +14,7 @@ import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.tinylog.Logger;
 import picocli.CommandLine;
 
@@ -42,6 +39,7 @@ public class MatchCliTest {
     private static Dao<MatchTable, Integer> gamePlayerDao;
     private static Dao<PlayerTable, Integer> playerDao;
     private static Dao<GameTable, Integer> gameDao;
+    private static Dao<MatchTable, Integer> matchDao;
     private static GameTable gameTable;
     private StringWriter errWriter;
     private StringWriter outWriter;
@@ -71,14 +69,7 @@ public class MatchCliTest {
         gamePlayerDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
         playerDao = DaoManager.createDao(jdbcConnectionSource, PlayerTable.class);
         gameDao = DaoManager.createDao(jdbcConnectionSource, GameTable.class);
-        GameInfo g = GameInfo.getDefaultGameInfo();
-        gameTable = new GameTable("Northgard", g.getInitialMean(), g.getInitialStandardDeviation(), g.getBeta(), g.getDynamicsFactor(), g.getDrawProbability());
-        gameDao.create(gameTable);
-    }
-
-    @AfterClass
-    public static void afterClass() throws SQLException {
-        gameDao.delete(gameTable);
+        matchDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
     }
 
     @Before
@@ -89,15 +80,21 @@ public class MatchCliTest {
         commandLine.setOut(new PrintWriter(outWriter));
         commandLine.setErr(new PrintWriter(errWriter));
 
-        playerDao.queryForAll().forEach(playerTable -> {
-            try {
-                playerDao.delete(playerTable);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+        matchDao.delete(matchDao.deleteBuilder().prepare());
+        gameDao.delete(gameDao.deleteBuilder().prepare());
+        playerDao.delete(playerDao.deleteBuilder().prepare());
+
+        GameInfo g = GameInfo.getDefaultGameInfo();
+        gameTable = new GameTable("Northgard", g.getInitialMean(), g.getInitialStandardDeviation(), g.getBeta(), g.getDynamicsFactor(), g.getDrawProbability());
+        gameDao.create(gameTable);
     }
 
+    @After
+    public void afterTest() throws SQLException {
+        matchDao.delete(matchDao.deleteBuilder().prepare());
+        gameDao.delete(gameDao.deleteBuilder().prepare());
+        playerDao.delete(playerDao.deleteBuilder().prepare());
+    }
 
     @Test
     public void test_Create_Pass() throws SQLException {
@@ -137,15 +134,17 @@ public class MatchCliTest {
         int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
 
         assertEquals("", errWriter.toString());
-        assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
         assertEquals(0, exitCode);
+        assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
     }
 
     @Test
     public void test_MatchQuality_Success() {
         int exitCode = commandLine.execute("match", "quality", "Andrew,Karl", "Marius,Raoul", "--game", "Northgard");
         assertEquals("", errWriter.toString());
+        assertNotEquals("", outWriter.toString());
         assertEquals(0, exitCode);
+        assertTrue(outWriter.toString().contains("44.721360%"));
     }
 
 }

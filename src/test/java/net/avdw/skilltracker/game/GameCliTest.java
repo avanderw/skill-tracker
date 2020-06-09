@@ -77,7 +77,10 @@ public class GameCliTest {
         outWriter = new StringWriter();
         commandLine.setOut(new PrintWriter(outWriter));
         commandLine.setErr(new PrintWriter(errWriter));
+
+        matchDao.delete(matchDao.deleteBuilder().prepare());
         gameDao.delete(gameDao.deleteBuilder().prepare());
+        playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
     @After
