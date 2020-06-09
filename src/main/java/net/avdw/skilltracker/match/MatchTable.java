@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @DatabaseTable(tableName = "Session")
-public class SessionTable {
+public class MatchTable {
     public static final String SESSION_ID = "sessionId";
     public static final String GAME_FK = "gameFk";
     public static final String PLAYER_FK = "playerFk";
@@ -34,7 +34,7 @@ public class SessionTable {
     @DatabaseField(canBeNull = false)
     private BigDecimal standardDeviation;
 
-    public SessionTable(final Integer gameFk, final Integer playerFk, final Integer team, final Integer rank, final Date playDate, final BigDecimal mean, final BigDecimal standardDeviation) {
+    public MatchTable(final Integer gameFk, final Integer playerFk, final Integer team, final Integer rank, final Date playDate, final BigDecimal mean, final BigDecimal standardDeviation) {
         this.gameFk = gameFk;
         this.playerFk = playerFk;
         this.team = team;
@@ -44,7 +44,7 @@ public class SessionTable {
         this.standardDeviation = standardDeviation;
     }
 
-    public SessionTable() {
+    public MatchTable() {
     }
 
     public BigDecimal getMean() {

@@ -5,7 +5,7 @@ import com.google.inject.name.Names;
 import net.avdw.skilltracker.DatabaseModule;
 import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.player.PlayerModule;
-import net.avdw.skilltracker.session.SessionModule;
+import net.avdw.skilltracker.match.MatchModule;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +19,7 @@ class TestModule extends AbstractModule {
         install(new DatabaseModule());
         install(new GameModule());
         install(new PlayerModule());
-        install(new SessionModule());
+        install(new MatchModule());
     }
 
     protected Properties defaultProperties() {

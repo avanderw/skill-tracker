@@ -1,32 +1,30 @@
-package net.avdw.skilltracker;
+package net.avdw.skilltracker.player;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import net.avdw.property.AbstractPropertyModule;
+import net.avdw.skilltracker.DatabaseModule;
+import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.game.GameModule;
-import net.avdw.skilltracker.player.PlayerModule;
 import net.avdw.skilltracker.match.MatchModule;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-class MainModule extends AbstractPropertyModule {
+class TestModule extends AbstractModule {
     @Override
     protected void configure() {
-        Properties properties = configureProperties();
-        Names.bindProperties(binder(), properties);
+        Names.bindProperties(binder(), defaultProperties());
         bind(List.class).to(LinkedList.class);
-
         install(new DatabaseModule());
         install(new GameModule());
         install(new PlayerModule());
         install(new MatchModule());
     }
 
-    @Override
     protected Properties defaultProperties() {
         Properties properties = new Properties();
-        properties.put(PropertyName.JDBC_URL, "jdbc:sqlite:skill-tracker.sqlite");
+        properties.put(PropertyName.JDBC_URL, "jdbc:sqlite:target/test-resources/net.avdw.skilltracker.game/skill-tracker.sqlite");
         return properties;
     }
 }

@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -35,11 +35,11 @@ import java.util.ResourceBundle;
 
 import static org.junit.Assert.*;
 
-public class SessionCliTest {
+public class MatchCliTest {
     private static Injector injector;
     private static ResourceBundle sessionBundle;
     private static String jdbcUrl;
-    private static Dao<SessionTable, Integer> gamePlayerDao;
+    private static Dao<MatchTable, Integer> gamePlayerDao;
     private static Dao<PlayerTable, Integer> playerDao;
     private static Dao<GameTable, Integer> gameDao;
     private static GameTable gameTable;
@@ -68,7 +68,7 @@ public class SessionCliTest {
         liquibaseRunner.update();
 
         ConnectionSource jdbcConnectionSource = new JdbcConnectionSource(jdbcUrl);
-        gamePlayerDao = DaoManager.createDao(jdbcConnectionSource, SessionTable.class);
+        gamePlayerDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
         playerDao = DaoManager.createDao(jdbcConnectionSource, PlayerTable.class);
         gameDao = DaoManager.createDao(jdbcConnectionSource, GameTable.class);
         GameInfo g = GameInfo.getDefaultGameInfo();
@@ -102,9 +102,9 @@ public class SessionCliTest {
     @Test
     public void test_Create_Pass() throws SQLException {
 //        commandLine.execute("session", "create", "Andrew,Marius", "John-Keith,Wicus", "--ranks", "1,2", "--game", "Northgard", "--date", "2020-05-29");
-        int exitCode = commandLine.execute("session", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
         assertEquals("", errWriter.toString());
-        assertTrue(outWriter.toString().contains(sessionBundle.getString(SessionBundleKey.CREATE_SUCCESS)));
+        assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.CREATE_SUCCESS)));
         assertEquals(0, exitCode);
 
         PlayerTable andrew = playerDao.queryForFirst(playerDao.queryBuilder().where().eq(PlayerTable.NAME, "Andrew").prepare());
@@ -114,9 +114,9 @@ public class SessionCliTest {
         assertNotNull(karl);
         assertNotNull(jaco);
 
-        SessionTable andrewSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(SessionTable.PLAYER_FK, andrew.getPk()).prepare());
-        SessionTable karlSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(SessionTable.PLAYER_FK, karl.getPk()).prepare());
-        SessionTable jacoSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(SessionTable.PLAYER_FK, jaco.getPk()).prepare());
+        MatchTable andrewSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, andrew.getPk()).prepare());
+        MatchTable karlSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, karl.getPk()).prepare());
+        MatchTable jacoSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, jaco.getPk()).prepare());
         assertNotNull(andrewSession);
         assertNotNull(karlSession);
         assertNotNull(jacoSession);
@@ -134,10 +134,17 @@ public class SessionCliTest {
 
     @Test
     public void test_TeamCountRankCountMismatch_Fail() throws SQLException {
-        int exitCode = commandLine.execute("session", "create", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
 
         assertEquals("", errWriter.toString());
-        assertTrue(outWriter.toString().contains(sessionBundle.getString(SessionBundleKey.TEAM_RANK_COUNT_MISMATCH)));
+        assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
+        assertEquals(0, exitCode);
+    }
+
+    @Test
+    public void test_MatchQuality_Success() {
+        int exitCode = commandLine.execute("match", "quality", "Andrew,Karl", "Marius,Raoul", "--game", "Northgard");
+        assertEquals("", errWriter.toString());
         assertEquals(0, exitCode);
     }
 

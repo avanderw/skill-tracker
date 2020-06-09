@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
@@ -14,20 +14,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class SessionService {
-    private final Dao<SessionTable, Integer> sessionTableDao;
+public class MatchService {
+    private final Dao<MatchTable, Integer> matchTableDao;
     private final SkillCalculator skillCalculator;
-    private final SessionMapper sessionMapper;
+    private final MatchMapper matchMapper;
     private final GameMapper gameMapper;
 
     @Inject
-    SessionService(final Dao<SessionTable, Integer> sessionTableDao,
-                   final SkillCalculator skillCalculator,
-                   final SessionMapper sessionMapper,
-                   final GameMapper gameMapper) {
-        this.sessionTableDao = sessionTableDao;
+    MatchService(final Dao<MatchTable, Integer> matchTableDao,
+                 final SkillCalculator skillCalculator,
+                 final MatchMapper matchMapper,
+                 final GameMapper gameMapper) {
+        this.matchTableDao = matchTableDao;
         this.skillCalculator = skillCalculator;
-        this.sessionMapper = sessionMapper;
+        this.matchMapper = matchMapper;
         this.gameMapper = gameMapper;
     }
 
@@ -35,12 +35,12 @@ public class SessionService {
         String sessionId = UUID.randomUUID().toString();
         GameInfo gameInfo = gameMapper.map(gameTable);
         Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, ranks);
-        List<SessionTable> sessionTableList = new ArrayList<>();
+        List<MatchTable> matchTableList = new ArrayList<>();
         newRatings.forEach((p, r) -> {
             PlayerTable playerTable = (PlayerTable) p;
             Logger.debug(String.format("%s (%s)", r, playerTable.getName()));
-            SessionTable sessionTable = sessionMapper.map(gameTable, playerTable, r);
-            sessionTable.setSessionId(sessionId);
+            MatchTable matchTable = matchMapper.map(gameTable, playerTable, r);
+            matchTable.setSessionId(sessionId);
             int teamIdx = -1;
             for (int i = 0; i < teams.size(); i++) {
                 if (teams.get(i).containsKey(playerTable)) {
@@ -48,23 +48,31 @@ public class SessionService {
                     break;
                 }
             }
-            sessionTable.setTeam(teamIdx);
-            sessionTable.setRank(ranks[teamIdx]);
-            sessionTableList.add(sessionTable);
+            matchTable.setTeam(teamIdx);
+            matchTable.setRank(ranks[teamIdx]);
+            matchTableList.add(matchTable);
         });
         try {
-            sessionTableDao.create(sessionTableList);
+            matchTableDao.create(matchTableList);
         } catch (SQLException e) {
             throw new UnsupportedOperationException(e);
         }
     }
 
-    public SessionTable retrieveLatestPlayerSessionForGame(final GameTable game, final PlayerTable playerTable) {
+    public MatchTable retrieveLatestPlayerSessionForGame(final GameTable game, final PlayerTable playerTable) {
         try {
-            return sessionTableDao.queryBuilder().orderBy(SessionTable.PLAY_DATE, false).where()
-                    .eq(SessionTable.GAME_FK, game.getPk())
-                    .and().eq(SessionTable.PLAYER_FK, playerTable.getPk())
+            return matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false).where()
+                    .eq(MatchTable.GAME_FK, game.getPk())
+                    .and().eq(MatchTable.PLAYER_FK, playerTable.getPk())
                     .queryForFirst();
+        } catch (SQLException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    public List<MatchTable> retrieveAllMatchesForPlayer(PlayerTable playerTable) {
+        try {
+            return matchTableDao.queryForEq(MatchTable.PLAYER_FK, playerTable.getPk());
         } catch (SQLException e) {
             throw new UnsupportedOperationException(e);
         }

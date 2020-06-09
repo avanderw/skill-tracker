@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -13,19 +13,19 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class SessionModule extends AbstractModule {
+public class MatchModule extends AbstractModule {
 
 
     @Override
     protected void configure() {
-        bind(ResourceBundle.class).annotatedWith(Session.class).toInstance(ResourceBundle.getBundle("session", Locale.ENGLISH));
+        bind(ResourceBundle.class).annotatedWith(Match.class).toInstance(ResourceBundle.getBundle("session", Locale.ENGLISH));
         bind(SkillCalculator.class).to(FactorGraphTrueSkillCalculator.class).in(Singleton.class);
-        bind(SessionMapper.class).toInstance(SessionMapper.INSTANCE);
+        bind(MatchMapper.class).toInstance(MatchMapper.INSTANCE);
     }
 
     @Provides
     @Singleton
-    Dao<SessionTable, Integer> gameDao(final ConnectionSource connectionSource) throws SQLException {
-        return DaoManager.createDao(connectionSource, SessionTable.class);
+    Dao<MatchTable, Integer> gameDao(final ConnectionSource connectionSource) throws SQLException {
+        return DaoManager.createDao(connectionSource, MatchTable.class);
     }
 }

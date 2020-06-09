@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.game;
+package net.avdw.skilltracker.player;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -11,6 +11,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import net.avdw.database.LiquibaseRunner;
 import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
+import net.avdw.skilltracker.game.GameTable;
+import net.avdw.skilltracker.match.MatchTable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -31,20 +33,21 @@ import java.util.ResourceBundle;
 
 import static org.junit.Assert.*;
 
-public class GameCliTest {
-    private static Injector injector;
-    private static ResourceBundle sessionBundle;
-    private static String jdbcUrl;
+public class PlayerCliTest {
+    private static Dao<PlayerTable, Integer> playerDao;
+    private static Dao<MatchTable, Integer> matchDao;
     private static Dao<GameTable, Integer> gameDao;
+    private static Injector injector;
+    private static String jdbcUrl;
+    private static ResourceBundle resourceBundle;
     private StringWriter errWriter;
     private StringWriter outWriter;
     private CommandLine commandLine;
 
-
     @BeforeClass
     public static void beforeClass() throws IOException, SQLException {
         injector = Guice.createInjector(new TestModule());
-        sessionBundle = ResourceBundle.getBundle("game", Locale.ENGLISH);
+        resourceBundle = ResourceBundle.getBundle("player", Locale.ENGLISH);
 
         jdbcUrl = injector.getInstance(Key.get(String.class, Names.named(PropertyName.JDBC_URL)));
         String jdbcPathUrl = jdbcUrl.replace("jdbc:sqlite:", "");
@@ -60,7 +63,35 @@ public class GameCliTest {
         liquibaseRunner.update();
 
         ConnectionSource jdbcConnectionSource = new JdbcConnectionSource(jdbcUrl);
+        playerDao = DaoManager.createDao(jdbcConnectionSource, PlayerTable.class);
         gameDao = DaoManager.createDao(jdbcConnectionSource, GameTable.class);
+        matchDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
+    }
+
+    @Test
+    public void test_ViewPlayer_Success() {
+        commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
+        commandLine.execute("match", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+
+        errWriter = new StringWriter();
+        outWriter = new StringWriter();
+        commandLine.setOut(new PrintWriter(outWriter));
+        commandLine.setErr(new PrintWriter(errWriter));
+        int exitCode = commandLine.execute("player", "view", "Andrew");
+
+        assertEquals("", errWriter.toString());
+        assertNotEquals("", outWriter.toString());
+        assertEquals(0, exitCode);
+        assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
+    }
+
+    @Test
+    public void test_ViewPlayer_Fail() {
+        int exitCode = commandLine.execute("player", "view", "Andrew");
+
+        assertEquals("", errWriter.toString());
+        assertEquals(0, exitCode);
+        assertTrue(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 
     @Before
@@ -70,13 +101,7 @@ public class GameCliTest {
         outWriter = new StringWriter();
         commandLine.setOut(new PrintWriter(outWriter));
         commandLine.setErr(new PrintWriter(errWriter));
-        gameDao.queryForAll().forEach(tuple -> {
-            try {
-                gameDao.delete(tuple);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+
     }
 
     @After
@@ -88,45 +113,20 @@ public class GameCliTest {
                 e.printStackTrace();
             }
         });
-    }
-
-    @Test
-    public void test_Create_Pass() throws SQLException {
-        int exitCode = commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-
-        assertEquals("", errWriter.toString());
-        assertTrue(outWriter.toString().contains(sessionBundle.getString(GameBundleKey.ADD_SUCCESS)));
-        assertEquals(0, exitCode);
-
-        assertNotNull(gameDao.queryForEq("name", "Northgard"));
-    }
-
-    @Test
-    public void test_CreateDuplicate_Fail() throws SQLException {
-        int exitCode = commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        assertEquals(0, exitCode);
-        exitCode = commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        assertEquals(1, exitCode);
-
-        assertNotNull(gameDao.queryForEq("name", "Northgard"));
-    }
-
-    @Test
-    public void test_Delete_Pass() throws SQLException {
-        gameDao.create(new GameTable("Northgard", 0, 0, 0, 0, 0));
-        int exitCode = commandLine.execute("game", "rm", "Northgard");
-
-        assertEquals("", errWriter.toString());
-        assertEquals(0, exitCode);
-        assertTrue(gameDao.queryForEq("name", "Northgard").isEmpty());
-    }
-
-    @Test
-    public void test_ViewGame_Success() {
-        int exitCode = commandLine.execute("game", "Northgard");
-
-        assertEquals("", errWriter.toString());
-        assertEquals(0, exitCode);
+        playerDao.queryForAll().forEach(tuple -> {
+            try {
+                playerDao.delete(tuple);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        matchDao.queryForAll().forEach(tuple -> {
+            try {
+                matchDao.delete(tuple);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }

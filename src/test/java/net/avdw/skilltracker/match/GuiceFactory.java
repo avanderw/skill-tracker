@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

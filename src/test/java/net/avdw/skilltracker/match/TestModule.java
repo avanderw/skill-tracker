@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -19,7 +19,7 @@ class TestModule extends AbstractModule {
         install(new DatabaseModule());
         install(new GameModule());
         install(new PlayerModule());
-        install(new SessionModule());
+        install(new MatchModule());
     }
 
     protected Properties defaultProperties() {

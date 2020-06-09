@@ -21,4 +21,12 @@ public class PlayerService {
             throw new UnsupportedOperationException(e);
         }
     }
+
+    public PlayerTable retrievePlayer(String name) {
+        try {
+            return playerTableDao.queryForFirst(playerTableDao.queryBuilder().where().eq(PlayerTable.NAME, name).prepare());
+        } catch (SQLException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
 }

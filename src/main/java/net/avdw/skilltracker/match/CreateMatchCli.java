@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.session;
+package net.avdw.skilltracker.match;
 
 import com.google.inject.Inject;
 import de.gesundkrank.jskills.ITeam;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 @Command(name = "create", description = "Some fancy description", mixinStandardHelpOptions = true)
-class CreateSessionCli implements Runnable {
+class CreateMatchCli implements Runnable {
     @Spec
     private CommandSpec spec;
 
@@ -32,31 +32,31 @@ class CreateSessionCli implements Runnable {
     private String game;
 
     @Inject
-    @Session
+    @Match
     private ResourceBundle bundle;
     @Inject
     private PlayerService playerService;
     @Inject
-    private SessionService sessionService;
+    private MatchService sessionService;
     @Inject
-    private SessionMapper sessionMapper;
+    private MatchMapper sessionMapper;
     @Inject
     private GameService gameService;
 
     @Override
     public void run() {
         if (ranks.length != teams.length) {
-            spec.commandLine().getOut().println(bundle.getString(SessionBundleKey.TEAM_RANK_COUNT_MISMATCH));
+            spec.commandLine().getOut().println(bundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
         }
 
         GameTable gameTable = gameService.retrieveGame(game);
         List<ITeam> teamList = new ArrayList<>();
         for (String team : teams) {
-            SessionTeam sessionTeam = new SessionTeam();
+            MatchTeam sessionTeam = new MatchTeam();
             String[] nameArray = team.split(",");
             for (String name : nameArray) {
                 PlayerTable playerTable = playerService.createOrRetrievePlayer(name);
-                SessionTable sessionTable = sessionService.retrieveLatestPlayerSessionForGame(gameTable, playerTable);
+                MatchTable sessionTable = sessionService.retrieveLatestPlayerSessionForGame(gameTable, playerTable);
                 if (sessionTable != null) {
                     sessionTeam.put(playerTable, sessionMapper.map(sessionTable));
                 } else {
@@ -68,6 +68,6 @@ class CreateSessionCli implements Runnable {
         }
 
         sessionService.createSessionForGame(gameTable, teamList, ranks);
-        spec.commandLine().getOut().println(bundle.getString(SessionBundleKey.CREATE_SUCCESS));
+        spec.commandLine().getOut().println(bundle.getString(MatchBundleKey.CREATE_SUCCESS));
     }
 }
