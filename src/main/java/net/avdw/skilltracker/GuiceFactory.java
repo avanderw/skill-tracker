@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import picocli.CommandLine;
 
-final class GuiceFactory implements CommandLine.IFactory {
+final public class GuiceFactory implements CommandLine.IFactory {
     private static final GuiceFactory INSTANCE = new GuiceFactory();
     private static final Injector INJECTOR = Guice.createInjector(new MainModule());
 

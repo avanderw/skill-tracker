@@ -8,7 +8,6 @@ public final class Main {
 
     public static void main(final String[] args) {
         CommandLine commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
-        commandLine.setCaseInsensitiveEnumValuesAllowed(true);
         commandLine.execute(args);
     }
 }

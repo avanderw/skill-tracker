@@ -1,5 +1,6 @@
 package net.avdw.skilltracker.discord;
 
+import com.google.inject.Inject;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -9,6 +10,13 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import org.tinylog.Logger;
 
 public class GenericListener implements EventListener {
+    private final MessageRouter messageRouter;
+
+    @Inject
+    GenericListener(final MessageRouter messageRouter) {
+        this.messageRouter = messageRouter;
+    }
+
     @Override
     public void onEvent(GenericEvent genericEvent) {
         Logger.trace("Received event: {}", genericEvent);
@@ -16,20 +24,8 @@ public class GenericListener implements EventListener {
             Logger.trace("API is ready!");
         } else if (genericEvent instanceof MessageReceivedEvent) {
             MessageReceivedEvent event = (MessageReceivedEvent) genericEvent;
-            if (event.getAuthor().isBot()) {
-                Logger.trace("Author is bot, doing nothing");
-                return;
-            }
-
-            Message msg = event.getMessage();
-            if (msg.getContentRaw().equals("!ping")) {
-                MessageChannel channel = event.getChannel();
-                long time = System.currentTimeMillis();
-                channel.sendMessage("Pong!") /* => RestAction<Message> */
-                        .queue(response /* => Message */ -> {
-                            response.editMessageFormat("Pong: %d ms", System.currentTimeMillis() - time).queue();
-                        });
-            }
+            Logger.debug("Raw content: {}", event.getMessage().getContentRaw());
+            messageRouter.route(event);
         } else {
             Logger.debug("Unhandled event: {}", genericEvent);
         }
