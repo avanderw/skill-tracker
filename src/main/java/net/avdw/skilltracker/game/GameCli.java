@@ -12,25 +12,22 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 @CommandLine.Command(name = "game", description = "Manage game information", mixinStandardHelpOptions = true,
-        subcommands = {CreateGameCli.class, RetrieveGameCli.class, DeleteGameCli.class})
+        subcommands = {ListGameCli.class, CreateGameCli.class, RetrieveGameCli.class, DeleteGameCli.class})
 public class GameCli implements Runnable {
-    @Spec
-    private CommandSpec spec;
-
-    @Parameters(arity = "0..1")
-    private String game;
-
     @Inject
     @Game
     private ResourceBundle bundle;
+    @Parameters(arity = "0..1")
+    private String game;
     @Inject
     private GameService gameService;
     @Inject
     private MatchService matchService;
+    @Spec
+    private CommandSpec spec;
 
     @Override
     public void run() {
-
         GameTable gameTable = gameService.retrieveGame(game);
         List<MatchTable> matchTableList = matchService.retrieveAllMatchesForGame(gameTable);
         matchTableList.forEach(match -> {

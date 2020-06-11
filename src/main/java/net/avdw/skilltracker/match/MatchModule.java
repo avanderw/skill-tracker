@@ -18,7 +18,7 @@ public class MatchModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ResourceBundle.class).annotatedWith(Match.class).toInstance(ResourceBundle.getBundle("session", Locale.ENGLISH));
+        bind(ResourceBundle.class).annotatedWith(Match.class).toInstance(ResourceBundle.getBundle("match", Locale.ENGLISH));
         bind(SkillCalculator.class).to(FactorGraphTrueSkillCalculator.class).in(Singleton.class);
         bind(MatchMapper.class).toInstance(MatchMapper.INSTANCE);
     }

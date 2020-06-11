@@ -88,7 +88,7 @@ public class MatchService {
     }
 
     public BigDecimal calculateMatchQuality(final GameTable gameTable, final List<ITeam> teams) {
-        GameInfo gameInfo = gameMapper.map(gameTable);;
+        GameInfo gameInfo = gameMapper.map(gameTable);
         return BigDecimal.valueOf(skillCalculator.calculateMatchQuality(gameInfo, teams));
     }
 }

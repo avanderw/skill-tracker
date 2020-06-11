@@ -16,7 +16,7 @@ public interface MatchMapper {
 
     default Rating map(MatchTable sessionTable) {
         return new Rating(sessionTable.getMean().doubleValue(), sessionTable.getStandardDeviation().doubleValue());
-    };
+    }
 
     @Mappings({
             @Mapping(target = MatchTable.SESSION_ID),

@@ -7,20 +7,22 @@ import java.math.BigDecimal;
 
 @DatabaseTable(tableName = "Game")
 public class GameTable {
-    @DatabaseField(generatedId = true)
-    private Integer pk;
+    public static final String NAME = "Name";
+
     @DatabaseField
-    private String name;
+    private BigDecimal beta;
+    @DatabaseField
+    private BigDecimal drawProbability;
+    @DatabaseField
+    private BigDecimal dynamicsFactor;
     @DatabaseField
     private BigDecimal initialMean;
     @DatabaseField
     private BigDecimal initialStandardDeviation;
     @DatabaseField
-    private BigDecimal beta;
-    @DatabaseField
-    private BigDecimal dynamicsFactor;
-    @DatabaseField
-    private BigDecimal drawProbability;
+    private String name;
+    @DatabaseField(generatedId = true)
+    private Integer pk;
 
     public GameTable() {
 
@@ -35,21 +37,28 @@ public class GameTable {
         this.drawProbability = BigDecimal.valueOf(drawProbability);
     }
 
-    public Integer getPk() {
-
-        return pk;
+    public BigDecimal getBeta() {
+        return beta;
     }
 
-    public void setPk(final Integer pk) {
-        this.pk = pk;
+    public void setBeta(final BigDecimal beta) {
+        this.beta = beta;
     }
 
-    public String getName() {
-        return name;
+    public BigDecimal getDrawProbability() {
+        return drawProbability;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setDrawProbability(final BigDecimal drawProbability) {
+        this.drawProbability = drawProbability;
+    }
+
+    public BigDecimal getDynamicsFactor() {
+        return dynamicsFactor;
+    }
+
+    public void setDynamicsFactor(final BigDecimal dynamicsFactor) {
+        this.dynamicsFactor = dynamicsFactor;
     }
 
     public BigDecimal getInitialMean() {
@@ -68,27 +77,20 @@ public class GameTable {
         this.initialStandardDeviation = initialStandardDeviation;
     }
 
-    public BigDecimal getBeta() {
-        return beta;
+    public String getName() {
+        return name;
     }
 
-    public void setBeta(final BigDecimal beta) {
-        this.beta = beta;
+    public void setName(final String name) {
+        this.name = name;
     }
 
-    public BigDecimal getDynamicsFactor() {
-        return dynamicsFactor;
+    public Integer getPk() {
+
+        return pk;
     }
 
-    public void setDynamicsFactor(final BigDecimal dynamicsFactor) {
-        this.dynamicsFactor = dynamicsFactor;
-    }
-
-    public BigDecimal getDrawProbability() {
-        return drawProbability;
-    }
-
-    public void setDrawProbability(final BigDecimal drawProbability) {
-        this.drawProbability = drawProbability;
+    public void setPk(final Integer pk) {
+        this.pk = pk;
     }
 }

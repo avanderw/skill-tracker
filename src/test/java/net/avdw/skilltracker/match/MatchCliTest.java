@@ -49,7 +49,7 @@ public class MatchCliTest {
     @BeforeClass
     public static void beforeClass() throws SQLException, IOException {
         injector = Guice.createInjector(new TestModule());
-        sessionBundle = ResourceBundle.getBundle("session", Locale.ENGLISH);
+        sessionBundle = ResourceBundle.getBundle("match", Locale.ENGLISH);
 
         jdbcUrl = injector.getInstance(Key.get(String.class, Names.named(PropertyName.JDBC_URL)));
         String jdbcPathUrl = jdbcUrl.replace("jdbc:sqlite:", "");

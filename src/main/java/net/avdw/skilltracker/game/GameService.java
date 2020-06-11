@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class GameService {
     private final Dao<GameTable, Integer> gameDao;
@@ -34,11 +35,28 @@ public class GameService {
         }
     }
 
+    public List<GameTable> retrieveAllGames() {
+        try {
+            return gameDao.queryForAll();
+        } catch (SQLException e) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
     public GameTable retrieveGame(final String game) {
         try {
             return gameDao.queryForFirst(gameDao.queryBuilder().where().eq("name", game).prepare());
         } catch (SQLException e) {
             throw new UnsupportedOperationException(e);
         }
+    }
+
+    public List<GameTable> retrieveGamesLikeName(String name) {
+        try {
+            return gameDao.queryBuilder().where().like(GameTable.NAME, String.format("%%%s%%", name)).query();
+        } catch (SQLException e) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 }
