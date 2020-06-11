@@ -120,6 +120,12 @@ public class GameCliTest {
     }
 
     @Test
+    public void test_EmptyGame_Fail() {
+        assertSuccess(commandLine.execute("game"));
+        assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
+    }
+
+    @Test
     public void test_ListAll_Success() throws SQLException {
         gameDao.create(new GameTable("Northgard", 0, 0, 0, 0, 0));
         assertSuccess(commandLine.execute("game", "list"));

@@ -51,7 +51,7 @@ public class GameService {
         }
     }
 
-    public List<GameTable> retrieveGamesLikeName(String name) {
+    public List<GameTable> retrieveGamesLikeName(final String name) {
         try {
             return gameDao.queryBuilder().where().like(GameTable.NAME, String.format("%%%s%%", name)).query();
         } catch (SQLException e) {

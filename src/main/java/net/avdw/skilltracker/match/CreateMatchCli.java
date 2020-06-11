@@ -2,48 +2,36 @@ package net.avdw.skilltracker.match;
 
 import com.google.inject.Inject;
 import de.gesundkrank.jskills.ITeam;
-import de.gesundkrank.jskills.Rating;
 import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
-import net.avdw.skilltracker.player.PlayerService;
-import net.avdw.skilltracker.player.PlayerTable;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 @Command(name = "create", description = "Some fancy description", mixinStandardHelpOptions = true)
 class CreateMatchCli implements Runnable {
-    @Spec
-    private CommandSpec spec;
-
-    @Parameters()
-    private List<String> teams; // player,player,player
-
-    @Option(names = {"-g", "--game"}, required = true)
-    private String game;
-
-    @Option(names = {"-r", "--ranks"}, split = ",", required = true)
-    private int[] ranks;
-
     @Inject
     @Match
     private ResourceBundle bundle;
+    @Option(names = {"-g", "--game"}, required = true)
+    private String game;
     @Inject
-    private PlayerService playerService;
-    @Inject
-    private MatchService matchService;
-    @Inject
-    private MatchMapper matchMapper;
+    private GameService gameService;
     @Inject
     private MatchCliMapper matchCliMapper;
     @Inject
-    private GameService gameService;
+    private MatchService matchService;
+    @Option(names = {"-r", "--ranks"}, split = ",", required = true)
+    private int[] ranks;
+    @Spec
+    private CommandSpec spec;
+    @Parameters()
+    private List<String> teams; // player,player,player
 
     @Override
     public void run() {

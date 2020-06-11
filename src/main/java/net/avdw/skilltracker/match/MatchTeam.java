@@ -7,4 +7,5 @@ import de.gesundkrank.jskills.Rating;
 import java.util.HashMap;
 
 public class MatchTeam extends HashMap<IPlayer, Rating> implements ITeam {
+    private static final long serialVersionUID = 1741153417170419910L;
 }

@@ -1,14 +1,11 @@
 package net.avdw.skilltracker.discord;
 
 import com.google.inject.Inject;
-import net.avdw.skilltracker.GuiceFactory;
-import net.avdw.skilltracker.MainCli;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.tinylog.Logger;
 import picocli.CommandLine;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -21,7 +18,7 @@ public class HelpService {
         this.commandLine = commandLine;
     }
 
-    public void processEvent(MessageReceivedEvent event) {
+    public void processEvent(final MessageReceivedEvent event) {
         Logger.trace("Processing help event");
         StringWriter out = new StringWriter();
         commandLine.usage(new PrintWriter(out));

@@ -8,11 +8,11 @@ import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SkillTrackerService {
-    private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm");
     private final CommandLine commandLine;
     private final String prefix;
 
@@ -22,7 +22,7 @@ public class SkillTrackerService {
         this.commandLine = commandLine;
     }
 
-    public void processEvent(MessageReceivedEvent event) {
+    public void processEvent(final MessageReceivedEvent event) {
         Logger.trace("Processing skill tracker event");
         StringWriter out = new StringWriter();
         StringWriter err = new StringWriter();
@@ -41,7 +41,7 @@ public class SkillTrackerService {
         }
 
         if (!err.toString().isEmpty()) {
-            event.getChannel().sendFile(err.toString().getBytes(), String.format("error-%s.txt", simpleDateFormat.format(new Date()))).queue();
+            event.getChannel().sendFile(err.toString().getBytes(StandardCharsets.UTF_8), String.format("error-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
         }
     }
 }

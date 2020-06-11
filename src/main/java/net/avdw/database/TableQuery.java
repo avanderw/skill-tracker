@@ -1,6 +1,7 @@
 package net.avdw.database;
 
 import com.google.inject.Inject;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.tinylog.Logger;
 
 import java.sql.Connection;
@@ -20,6 +21,7 @@ public class TableQuery<T> {
         this.tableBuilder = tableBuilder;
     }
 
+    @SuppressFBWarnings({"RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"})
     public List<T> query(final String sql) {
         Logger.trace("Executing query: {}", sql);
         List<T> list = new ArrayList<>();

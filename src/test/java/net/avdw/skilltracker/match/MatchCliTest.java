@@ -14,7 +14,10 @@ import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.tinylog.Logger;
 import picocli.CommandLine;
 
@@ -33,18 +36,17 @@ import java.util.ResourceBundle;
 import static org.junit.Assert.*;
 
 public class MatchCliTest {
-    private static Injector injector;
-    private static ResourceBundle sessionBundle;
-    private static String jdbcUrl;
-    private static Dao<MatchTable, Integer> gamePlayerDao;
-    private static Dao<PlayerTable, Integer> playerDao;
     private static Dao<GameTable, Integer> gameDao;
-    private static Dao<MatchTable, Integer> matchDao;
+    private static Dao<MatchTable, Integer> gamePlayerDao;
     private static GameTable gameTable;
+    private static Injector injector;
+    private static String jdbcUrl;
+    private static Dao<MatchTable, Integer> matchDao;
+    private static Dao<PlayerTable, Integer> playerDao;
+    private static ResourceBundle sessionBundle;
+    private CommandLine commandLine;
     private StringWriter errWriter;
     private StringWriter outWriter;
-    private CommandLine commandLine;
-
 
     @BeforeClass
     public static void beforeClass() throws SQLException, IOException {
@@ -72,6 +74,19 @@ public class MatchCliTest {
         matchDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
     }
 
+    @After
+    public void afterTest() throws SQLException {
+        matchDao.delete(matchDao.deleteBuilder().prepare());
+        gameDao.delete(gameDao.deleteBuilder().prepare());
+        playerDao.delete(playerDao.deleteBuilder().prepare());
+    }
+
+    private void assertSuccess(int exitCode) {
+        assertEquals("The command must not have error output", "", errWriter.toString());
+        assertNotEquals("The command needs standard output", "", outWriter.toString());
+        assertEquals(0, exitCode);
+    }
+
     @Before
     public void beforeTest() throws SQLException {
         commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
@@ -87,13 +102,6 @@ public class MatchCliTest {
         GameInfo g = GameInfo.getDefaultGameInfo();
         gameTable = new GameTable("Northgard", g.getInitialMean(), g.getInitialStandardDeviation(), g.getBeta(), g.getDynamicsFactor(), g.getDrawProbability());
         gameDao.create(gameTable);
-    }
-
-    @After
-    public void afterTest() throws SQLException {
-        matchDao.delete(matchDao.deleteBuilder().prepare());
-        gameDao.delete(gameDao.deleteBuilder().prepare());
-        playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
     @Test
@@ -119,8 +127,8 @@ public class MatchCliTest {
         assertNotNull(jacoSession);
         assertEquals(andrewSession.getTeam(), karlSession.getTeam());
         assertNotEquals(andrewSession.getTeam(), jacoSession.getTeam());
-        assertEquals(new Integer(1), andrewSession.getRank());
-        assertEquals(new Integer(2), jacoSession.getRank());
+        assertEquals(Integer.valueOf(1), andrewSession.getRank());
+        assertEquals(Integer.valueOf(2), jacoSession.getRank());
 
         assertNotEquals(25.00, andrewSession.getMean().doubleValue(), 0.01);
         assertNotEquals(25.00, jacoSession.getMean().doubleValue(), 0.01);
@@ -130,12 +138,9 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_TeamCountRankCountMismatch_Fail() throws SQLException {
-        int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
-
-        assertEquals("", errWriter.toString());
-        assertEquals(0, exitCode);
-        assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
+    public void test_EmptyMatch_Fail() {
+        assertSuccess(commandLine.execute("match"));
+        assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
     }
 
     @Test
@@ -144,7 +149,17 @@ public class MatchCliTest {
         assertEquals("", errWriter.toString());
         assertNotEquals("", outWriter.toString());
         assertEquals(0, exitCode);
+        Logger.trace(outWriter.toString());
         assertTrue(outWriter.toString().contains("44.721360%"));
+    }
+
+    @Test
+    public void test_TeamCountRankCountMismatch_Fail() throws SQLException {
+        int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+
+        assertEquals("", errWriter.toString());
+        assertEquals(0, exitCode);
+        assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
     }
 
 }

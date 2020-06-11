@@ -10,8 +10,12 @@ import net.dv8tion.jda.api.entities.Activity;
 
 import javax.security.auth.login.LoginException;
 
-public class DiscordDaemon {
-    public static void main(String[] args) throws LoginException, InterruptedException {
+public final class DiscordDaemon {
+    private DiscordDaemon() {
+
+    }
+
+    public static void main(final String[] args) throws LoginException, InterruptedException {
         Injector injector = Guice.createInjector(new DiscordModule());
         // Note: It is important to register your ReadyListener before building
         JDA jda = JDABuilder.createDefault(injector.getInstance(Key.get(String.class, Names.named(DiscordPropertyKey.API_TOKEN))))

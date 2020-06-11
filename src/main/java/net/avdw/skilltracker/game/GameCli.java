@@ -9,15 +9,11 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 @CommandLine.Command(name = "game", description = "Manage game information", mixinStandardHelpOptions = true,
         subcommands = {ListGameCli.class, CreateGameCli.class, RetrieveGameCli.class, DeleteGameCli.class})
 public class GameCli implements Runnable {
-    @Inject
-    @Game
-    private ResourceBundle bundle;
-    @Parameters(arity = "0..1")
+    @Parameters(arity = "0..1") // cannot force this to 1 as it eats the sub-commands
     private String game;
     @Inject
     private GameService gameService;
@@ -28,10 +24,14 @@ public class GameCli implements Runnable {
 
     @Override
     public void run() {
-        GameTable gameTable = gameService.retrieveGame(game);
-        List<MatchTable> matchTableList = matchService.retrieveAllMatchesForGame(gameTable);
-        matchTableList.forEach(match -> {
-            spec.commandLine().getOut().println(match);
-        });
+        if (game == null) {
+            spec.commandLine().usage(spec.commandLine().getOut());
+        } else {
+            GameTable gameTable = gameService.retrieveGame(game);
+            List<MatchTable> matchTableList = matchService.retrieveAllMatchesForGame(gameTable);
+            matchTableList.forEach(match -> {
+                spec.commandLine().getOut().println(match);
+            });
+        }
     }
 }

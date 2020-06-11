@@ -22,7 +22,7 @@ public class PlayerService {
         }
     }
 
-    public PlayerTable retrievePlayer(String name) {
+    public PlayerTable retrievePlayer(final String name) {
         try {
             return playerTableDao.queryForFirst(playerTableDao.queryBuilder().where().eq(PlayerTable.NAME, name).prepare());
         } catch (SQLException e) {

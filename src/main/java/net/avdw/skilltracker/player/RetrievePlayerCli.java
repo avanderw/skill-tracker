@@ -36,8 +36,6 @@ public class RetrievePlayerCli implements Runnable {
         }
 
         List<MatchTable> matchList = matchService.retrieveAllMatchesForPlayer(playerTable);
-        matchList.forEach(match-> {
-            spec.commandLine().getOut().println(match);
-        });
+        matchList.forEach(match -> spec.commandLine().getOut().println(match));
     }
 }

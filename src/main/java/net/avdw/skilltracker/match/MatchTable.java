@@ -39,7 +39,7 @@ public class MatchTable {
         this.playerFk = playerFk;
         this.team = team;
         this.rank = rank;
-        this.playDate = playDate;
+        this.playDate = new Date(playDate.getTime());
         this.mean = mean;
         this.standardDeviation = standardDeviation;
     }
@@ -96,11 +96,11 @@ public class MatchTable {
     }
 
     public Date getPlayDate() {
-        return playDate;
+        return new Date(playDate.getTime());
     }
 
     public void setPlayDate(final Date playDate) {
-        this.playDate = playDate;
+        this.playDate = new Date(playDate.getTime());
     }
 
     public String getSessionId() {

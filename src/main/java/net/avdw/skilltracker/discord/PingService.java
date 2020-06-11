@@ -7,7 +7,7 @@ import org.tinylog.Logger;
 public class PingService {
     public static final String COMMAND = "ping";
 
-    public void processEvent(MessageReceivedEvent event) {
+    public void processEvent(final MessageReceivedEvent event) {
         Logger.trace("Processing ping event");
         MessageChannel channel = event.getChannel();
         long time = System.currentTimeMillis();

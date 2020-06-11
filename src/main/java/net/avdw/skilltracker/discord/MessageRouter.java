@@ -22,7 +22,7 @@ public class MessageRouter {
         this.skillTrackerService = skillTrackerService;
     }
 
-    public void route(MessageReceivedEvent event) {
+    public void route(final MessageReceivedEvent event) {
         if (event.getAuthor().isBot()) {
             Logger.trace("Author is bot, doing nothing");
             return;

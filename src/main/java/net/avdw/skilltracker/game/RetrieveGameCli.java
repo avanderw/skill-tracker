@@ -9,23 +9,17 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 @CommandLine.Command(name = "view", description = "View the details of a game", mixinStandardHelpOptions = true)
 public class RetrieveGameCli implements Runnable {
-    @Spec
-    private CommandSpec spec;
-
     @Parameters(arity = "1")
     private String game;
-
-    @Inject
-    @Game
-    private ResourceBundle resourceBundle;
     @Inject
     private GameService gameService;
     @Inject
     private MatchService matchService;
+    @Spec
+    private CommandSpec spec;
 
     @Override
     public void run() {

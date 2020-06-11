@@ -71,7 +71,7 @@ public class MatchService {
         }
     }
 
-    public List<MatchTable> retrieveAllMatchesForPlayer(PlayerTable playerTable) {
+    public List<MatchTable> retrieveAllMatchesForPlayer(final PlayerTable playerTable) {
         try {
             return matchTableDao.queryForEq(MatchTable.PLAYER_FK, playerTable.getPk());
         } catch (SQLException e) {
@@ -79,7 +79,7 @@ public class MatchService {
         }
     }
 
-    public List<MatchTable> retrieveAllMatchesForGame(GameTable gameTable) {
+    public List<MatchTable> retrieveAllMatchesForGame(final GameTable gameTable) {
         try {
             return matchTableDao.queryForEq(MatchTable.GAME_FK, gameTable.getPk());
         } catch (SQLException e) {
