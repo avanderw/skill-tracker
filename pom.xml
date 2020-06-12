@@ -19,6 +19,9 @@
             <build>
                 <resources>
                     <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
                         <directory>src/develop/resources</directory>
                         <includes>
                             <include>tinylog-dev.properties</include>
@@ -213,9 +216,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>4.0.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.1.1_161</version>
+            <version>4.1.1_162</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -310,12 +319,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.7.0-M1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-annotations</artifactId>
-            <version>4.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

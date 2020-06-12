@@ -39,7 +39,7 @@ public class GameService {
         try {
             return gameDao.queryForAll();
         } catch (SQLException e) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(e);
         }
     }
 

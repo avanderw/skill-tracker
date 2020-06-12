@@ -13,7 +13,7 @@ import picocli.CommandLine.Spec;
 import java.util.List;
 import java.util.ResourceBundle;
 
-@Command(name = "create", description = "Some fancy description", mixinStandardHelpOptions = true)
+@Command(name = "add", description = "Add a match with an outcome", mixinStandardHelpOptions = true)
 class CreateMatchCli implements Runnable {
     @Inject
     @Match

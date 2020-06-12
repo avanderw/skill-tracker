@@ -107,7 +107,7 @@ public class MatchCliTest {
     @Test
     public void test_Create_Pass() throws SQLException {
 //        commandLine.execute("session", "create", "Andrew,Marius", "John-Keith,Wicus", "--ranks", "1,2", "--game", "Northgard", "--date", "2020-05-29");
-        int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        int exitCode = commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
         assertEquals("", errWriter.toString());
         assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.CREATE_SUCCESS)));
         assertEquals(0, exitCode);
@@ -138,7 +138,7 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_EmptyMatch_Fail() {
+    public void test_Empty_Fail() {
         assertSuccess(commandLine.execute("match"));
         assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
     }
@@ -155,7 +155,7 @@ public class MatchCliTest {
 
     @Test
     public void test_TeamCountRankCountMismatch_Fail() throws SQLException {
-        int exitCode = commandLine.execute("match", "create", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        int exitCode = commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
 
         assertEquals("", errWriter.toString());
         assertEquals(0, exitCode);

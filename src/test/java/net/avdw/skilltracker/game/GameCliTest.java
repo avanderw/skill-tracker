@@ -34,13 +34,13 @@ import java.util.ResourceBundle;
 import static org.junit.Assert.*;
 
 public class GameCliTest {
+    private static CommandLine commandLine;
     private static Dao<GameTable, Integer> gameDao;
     private static Injector injector;
     private static String jdbcUrl;
     private static Dao<MatchTable, Integer> matchDao;
     private static Dao<PlayerTable, Integer> playerDao;
     private static ResourceBundle resourceBundle;
-    private CommandLine commandLine;
     private StringWriter errWriter;
     private StringWriter outWriter;
 
@@ -48,6 +48,7 @@ public class GameCliTest {
     public static void beforeClass() throws IOException, SQLException {
         injector = Guice.createInjector(new TestModule());
         resourceBundle = ResourceBundle.getBundle("game", Locale.ENGLISH);
+        commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
 
         jdbcUrl = injector.getInstance(Key.get(String.class, Names.named(PropertyName.JDBC_URL)));
         String jdbcPathUrl = jdbcUrl.replace("jdbc:sqlite:", "");
@@ -83,24 +84,26 @@ public class GameCliTest {
 
     @Before
     public void beforeTest() throws SQLException {
-        commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
-        errWriter = new StringWriter();
-        outWriter = new StringWriter();
-        commandLine.setOut(new PrintWriter(outWriter));
-        commandLine.setErr(new PrintWriter(errWriter));
+        resetOutput();
 
         matchDao.delete(matchDao.deleteBuilder().prepare());
         gameDao.delete(gameDao.deleteBuilder().prepare());
         playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
+    private void resetOutput() {
+        errWriter = new StringWriter();
+        outWriter = new StringWriter();
+        commandLine.setOut(new PrintWriter(outWriter));
+        commandLine.setErr(new PrintWriter(errWriter));
+    }
+
     @Test
     public void test_CreateDuplicate_Fail() throws SQLException {
-        int exitCode = commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        assertEquals(0, exitCode);
-        exitCode = commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        assertEquals(1, exitCode);
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
+        resetOutput();
 
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
         assertNotNull(gameDao.queryForEq("name", "Northgard"));
     }
 
@@ -108,60 +111,78 @@ public class GameCliTest {
     public void test_Create_Pass() throws SQLException {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(GameBundleKey.ADD_SUCCESS)));
-
         assertNotNull(gameDao.queryForEq("name", "Northgard"));
     }
 
     @Test
-    public void test_Delete_Pass() throws SQLException {
-        gameDao.create(new GameTable("Northgard", 0, 0, 0, 0, 0));
+    public void test_Delete_Fail() {
+        assertSuccess(commandLine.execute("game", "rm", "Northgard"));
+    }
+
+    @Test
+    public void test_Delete_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        resetOutput();
 
         assertSuccess(commandLine.execute("game", "rm", "Northgard"));
     }
 
     @Test
-    public void test_EmptyGame_Fail() {
+    public void test_Empty_Fail() {
         assertSuccess(commandLine.execute("game"));
         assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
     }
 
     @Test
-    public void test_ListAll_Success() throws SQLException {
-        gameDao.create(new GameTable("Northgard", 0, 0, 0, 0, 0));
-        assertSuccess(commandLine.execute("game", "list"));
+    public void test_GameDetail_Success() {
+        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        resetOutput();
+
+        assertSuccess(commandLine.execute("game", "Northgard"));
+    }
+
+    @Test
+    public void test_GameNotFound_Fail() {
+        assertSuccess(commandLine.execute("game", "random"));
+    }
+
+    @Test
+    public void test_ListAllEmpty_Fail() {
+        assertSuccess(commandLine.execute("game", "ls"));
+    }
+
+    @Test
+    public void test_ListAll_Success() {
+        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        assertSuccess(commandLine.execute("game", "ls"));
 
         assertFalse("Should find a game", outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND)));
     }
 
     @Test
-    public void test_ListFilter_Success() throws SQLException {
-        gameDao.create(new GameTable("Northgard", 0, 0, 0, 0, 0));
-        assertSuccess(commandLine.execute("game", "list", "north"));
+    public void test_ListFilter_Success() {
+        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        resetOutput();
 
+        assertSuccess(commandLine.execute("game", "ls", "north"));
         assertFalse("Should find a game", outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND)));
     }
 
     @Test
     public void test_ViewGameSummary_Success() {
-        commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        commandLine.execute("match", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        resetOutput();
 
-        errWriter = new StringWriter();
-        outWriter = new StringWriter();
-        commandLine.setOut(new PrintWriter(outWriter));
-        commandLine.setErr(new PrintWriter(errWriter));
         assertSuccess(commandLine.execute("game", "Northgard"));
     }
 
     @Test
     public void test_ViewGame_Success() {
         commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        commandLine.execute("match", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        resetOutput();
 
-        errWriter = new StringWriter();
-        outWriter = new StringWriter();
-        commandLine.setOut(new PrintWriter(outWriter));
-        commandLine.setErr(new PrintWriter(errWriter));
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
     }
 

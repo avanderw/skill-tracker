@@ -10,13 +10,13 @@ import picocli.CommandLine.Spec;
 
 import java.util.ResourceBundle;
 
-@Command(name = "add", description = "Add a game which people can create sessions against", mixinStandardHelpOptions = true)
+@Command(name = "add", description = "Add a game which people can create matches against", mixinStandardHelpOptions = true)
 class CreateGameCli implements Runnable {
     @Spec
     private CommandSpec spec;
 
     @Parameters(description = "Name of the game {e.g. Tennis}", arity = "1")
-    private String name;
+    private String game;
 
     @Option(names = "--draw-probability",
             description = "Probability of drawing the game {e.g. 0.10 equates to a 10% chance}",
@@ -25,14 +25,18 @@ class CreateGameCli implements Runnable {
 
     @Inject
     @Game
-    private ResourceBundle bundle;
+    private ResourceBundle resourceBundle;
     @Inject
     private GameService gameService;
 
     @Override
     public void run() {
-        GameInfo defaultGameInfo = GameInfo.getDefaultGameInfo();
-        gameService.createGame(name, defaultGameInfo.getInitialMean(), defaultGameInfo.getInitialStandardDeviation(), defaultGameInfo.getBeta(), defaultGameInfo.getDynamicsFactor(), drawProbability);
-        spec.commandLine().getOut().println(bundle.getString(GameBundleKey.ADD_SUCCESS));
+        if (gameService.retrieveGame(game) == null) {
+            GameInfo defaultGameInfo = GameInfo.getDefaultGameInfo();
+            gameService.createGame(game, defaultGameInfo.getInitialMean(), defaultGameInfo.getInitialStandardDeviation(), defaultGameInfo.getBeta(), defaultGameInfo.getDynamicsFactor(), drawProbability);
+            spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.ADD_SUCCESS));
+        } else {
+            spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.GAME_EXIST_FAILURE));
+        }
     }
 }

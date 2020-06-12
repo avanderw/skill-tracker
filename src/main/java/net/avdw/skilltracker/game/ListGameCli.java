@@ -9,7 +9,7 @@ import picocli.CommandLine.Spec;
 import java.util.List;
 import java.util.ResourceBundle;
 
-@Command(name = "list", description = "List registered games", mixinStandardHelpOptions = true)
+@Command(name = "ls", description = "List registered games", mixinStandardHelpOptions = true)
 public class ListGameCli implements Runnable {
 
     @Parameters(arity = "0..1")

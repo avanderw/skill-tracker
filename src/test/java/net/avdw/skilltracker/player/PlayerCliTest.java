@@ -95,7 +95,7 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_EmptPlayer_Fail() {
+    public void test_Empty_Fail() {
         assertSuccess(commandLine.execute("player"));
         assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
     }
@@ -112,7 +112,7 @@ public class PlayerCliTest {
     @Test
     public void test_ViewPlayer_Success() {
         commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
-        commandLine.execute("match", "create", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
 
         errWriter = new StringWriter();
         outWriter = new StringWriter();

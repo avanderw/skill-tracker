@@ -1,10 +1,11 @@
 package net.avdw.skilltracker;
 
 import net.avdw.skilltracker.game.GameCli;
-import net.avdw.skilltracker.player.PlayerCli;
 import net.avdw.skilltracker.match.MatchCli;
-import org.tinylog.Logger;
+import net.avdw.skilltracker.player.PlayerCli;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Spec;
 
 @Command(name = "skill-tracker", description = "Some fancy description", version = "1.0-SNAPSHOT", mixinStandardHelpOptions = true,
         subcommands = {
@@ -12,12 +13,14 @@ import picocli.CommandLine.Command;
                 MatchCli.class,
                 PlayerCli.class})
 public class MainCli implements Runnable {
+    @Spec
+    private CommandSpec spec;
 
     /**
      * Entry point for picocli.
      */
     @Override
     public void run() {
-        Logger.debug("MainCli.java entry point. Start coding here");
+        spec.commandLine().usage(spec.commandLine().getOut());
     }
 }
