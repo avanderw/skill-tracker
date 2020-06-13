@@ -1,11 +1,15 @@
 package net.avdw.skilltracker.game;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
 import com.google.inject.Inject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -35,6 +39,12 @@ public class ListGameCli implements Runnable {
         if (gameTableList.isEmpty()) {
             spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND));
         }
-        gameTableList.forEach(spec.commandLine().getOut()::println);
+
+        gameTableList.forEach(game->{
+            Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(resourceBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
+            StringWriter stringWriter = new StringWriter();
+            mustache.execute(stringWriter, game);
+            spec.commandLine().getOut().println(stringWriter.toString());
+        });
     }
 }

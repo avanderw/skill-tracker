@@ -37,11 +37,19 @@ public class SkillTrackerService {
         }
 
         if (!out.toString().isEmpty()) {
-            event.getChannel().sendMessage(out.toString()).queue();
+            if (out.toString().length() > 2000) {
+                event.getChannel().sendFile(out.toString().getBytes(StandardCharsets.UTF_8), String.format("output-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
+            } else {
+                event.getChannel().sendMessage(out.toString()).queue();
+            }
         }
 
         if (!err.toString().isEmpty()) {
-            event.getChannel().sendFile(err.toString().getBytes(StandardCharsets.UTF_8), String.format("error-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
+            if (err.toString().length() > 2000) {
+                event.getChannel().sendFile(err.toString().getBytes(StandardCharsets.UTF_8), String.format("error-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
+            } else {
+                event.getChannel().sendMessage(err.toString()).queue();
+            }
         }
     }
 }

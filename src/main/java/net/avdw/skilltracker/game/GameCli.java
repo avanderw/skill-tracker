@@ -1,5 +1,7 @@
 package net.avdw.skilltracker.game;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
 import com.google.inject.Inject;
 import net.avdw.skilltracker.match.MatchService;
 import net.avdw.skilltracker.match.MatchTable;
@@ -8,7 +10,10 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 @CommandLine.Command(name = "game", description = "Manage game information", mixinStandardHelpOptions = true,
@@ -16,7 +21,7 @@ import java.util.ResourceBundle;
 public class GameCli implements Runnable {
     @Inject
     @Game
-    ResourceBundle resourceBundle;
+    ResourceBundle gameBundle;
     @Parameters(arity = "0..1") // cannot force this to 1 as it eats the sub-commands
     private String game;
     @Inject
@@ -33,14 +38,22 @@ public class GameCli implements Runnable {
         } else {
             GameTable gameTable = gameService.retrieveGame(game);
             if (gameTable == null) {
-                spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND));
+                spec.commandLine().getOut().println(gameBundle.getString(GameBundleKey.NO_GAME_FOUND));
             } else {
-                List<MatchTable> matchTableList = matchService.retrieveAllMatchesForGame(gameTable);
-                if (matchTableList.isEmpty()) {
-                    spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_MATCH_FOUND));
+                Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveAllMatchesForGame(gameTable);
+                if (matchPlayerMap.isEmpty()) {
+                    Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(gameBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
+                    StringWriter stringWriter = new StringWriter();
+                    mustache.execute(stringWriter, gameTable);
+                    spec.commandLine().getOut().println(stringWriter.toString());
+                    spec.commandLine().getOut().println(gameBundle.getString(GameBundleKey.NO_MATCH_FOUND));
                 } else {
-                    matchTableList.forEach(match -> spec.commandLine().getOut().println(match));
+                    Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(gameBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
+                    StringWriter stringWriter = new StringWriter();
+                    mustache.execute(stringWriter, gameTable);
+                    spec.commandLine().getOut().println(stringWriter.toString());
 
+                    matchPlayerMap.forEach((key, matchTableList) -> spec.commandLine().getOut().println(key));
                 }
             }
         }

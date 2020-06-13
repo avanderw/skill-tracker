@@ -43,9 +43,9 @@ public class GameService {
         }
     }
 
-    public GameTable retrieveGame(final String game) {
+    public GameTable retrieveGame(final String name) {
         try {
-            return gameDao.queryForFirst(gameDao.queryBuilder().where().eq("name", game).prepare());
+            return gameDao.queryForFirst(gameDao.queryBuilder().where().like(GameTable.NAME, String.format("%%%s%%", name)).prepare());
         } catch (SQLException e) {
             throw new UnsupportedOperationException(e);
         }

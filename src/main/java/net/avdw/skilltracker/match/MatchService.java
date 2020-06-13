@@ -10,10 +10,8 @@ import org.tinylog.Logger;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MatchService {
     private final Dao<MatchTable, Integer> matchTableDao;
@@ -32,7 +30,7 @@ public class MatchService {
         this.gameMapper = gameMapper;
     }
 
-    public void createSessionForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
+    public void createMatchForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
         String sessionId = UUID.randomUUID().toString();
         GameInfo gameInfo = gameMapper.map(gameTable);
         Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, ranks);
@@ -79,9 +77,9 @@ public class MatchService {
         }
     }
 
-    public List<MatchTable> retrieveAllMatchesForGame(final GameTable gameTable) {
+    public Map<String, List<MatchTable>> retrieveAllMatchesForGame(final GameTable gameTable) {
         try {
-            return matchTableDao.queryForEq(MatchTable.GAME_FK, gameTable.getPk());
+            return matchTableDao.queryForEq(MatchTable.GAME_FK, gameTable.getPk()).stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
         } catch (SQLException e) {
             throw new UnsupportedOperationException(e);
         }

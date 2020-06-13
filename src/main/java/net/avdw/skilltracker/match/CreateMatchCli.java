@@ -30,8 +30,8 @@ class CreateMatchCli implements Runnable {
     private int[] ranks;
     @Spec
     private CommandSpec spec;
-    @Parameters()
-    private List<String> teams; // player,player,player
+    @Parameters(description = "Teams in the match; team=<player1,player2> (no spaces)", arity = "2..*")
+    private List<String> teams;
 
     @Override
     public void run() {
@@ -41,7 +41,7 @@ class CreateMatchCli implements Runnable {
 
         GameTable gameTable = gameService.retrieveGame(game);
         List<ITeam> teamList = matchCliMapper.map(gameTable, teams);
-        matchService.createSessionForGame(gameTable, teamList, ranks);
+        matchService.createMatchForGame(gameTable, teamList, ranks);
         spec.commandLine().getOut().println(bundle.getString(MatchBundleKey.CREATE_SUCCESS));
     }
 }

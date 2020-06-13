@@ -9,6 +9,7 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 import java.util.List;
+import java.util.Map;
 
 @CommandLine.Command(name = "view", description = "View the details of a game", mixinStandardHelpOptions = true)
 public class RetrieveGameCli implements Runnable {
@@ -24,9 +25,9 @@ public class RetrieveGameCli implements Runnable {
     @Override
     public void run() {
         GameTable gameTable = gameService.retrieveGame(game);
-        List<MatchTable> matchTableList = matchService.retrieveAllMatchesForGame(gameTable);
-        matchTableList.forEach(match -> {
-            spec.commandLine().getOut().println(match);
+        Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveAllMatchesForGame(gameTable);
+        matchPlayerMap.forEach((key, matchTableList) -> {
+            spec.commandLine().getOut().println(key);
         });
     }
 }

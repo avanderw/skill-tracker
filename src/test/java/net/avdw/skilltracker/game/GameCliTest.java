@@ -136,9 +136,13 @@ public class GameCliTest {
     @Test
     public void test_GameDetail_Success() {
         assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "Northgard"));
+        assertFalse("Should find the game", outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND)));
+        assertFalse("Should list a single match", outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_MATCH_FOUND)));
+        assertEquals(2, outWriter.toString().split("\n").length);
     }
 
     @Test

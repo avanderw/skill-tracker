@@ -106,11 +106,8 @@ public class MatchCliTest {
 
     @Test
     public void test_Create_Pass() throws SQLException {
-//        commandLine.execute("session", "create", "Andrew,Marius", "John-Keith,Wicus", "--ranks", "1,2", "--game", "Northgard", "--date", "2020-05-29");
-        int exitCode = commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
-        assertEquals("", errWriter.toString());
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.CREATE_SUCCESS)));
-        assertEquals(0, exitCode);
 
         PlayerTable andrew = playerDao.queryForFirst(playerDao.queryBuilder().where().eq(PlayerTable.NAME, "Andrew").prepare());
         PlayerTable karl = playerDao.queryForFirst(playerDao.queryBuilder().where().eq(PlayerTable.NAME, "Karl").prepare());
@@ -145,20 +142,13 @@ public class MatchCliTest {
 
     @Test
     public void test_MatchQuality_Success() {
-        int exitCode = commandLine.execute("match", "quality", "Andrew,Karl", "Marius,Raoul", "--game", "Northgard");
-        assertEquals("", errWriter.toString());
-        assertNotEquals("", outWriter.toString());
-        assertEquals(0, exitCode);
-        Logger.trace(outWriter.toString());
+        assertSuccess(commandLine.execute("match", "quality", "Andrew,Karl", "Marius,Raoul", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("44.721360%"));
     }
 
     @Test
-    public void test_TeamCountRankCountMismatch_Fail() throws SQLException {
-        int exitCode = commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
-
-        assertEquals("", errWriter.toString());
-        assertEquals(0, exitCode);
+    public void test_TeamCountRankCountMismatch_Fail() {
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
     }
 
