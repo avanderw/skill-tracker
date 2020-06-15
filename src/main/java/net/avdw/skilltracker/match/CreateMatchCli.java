@@ -21,9 +21,9 @@ class CreateMatchCli implements Runnable {
     @Option(names = {"-g", "--game"}, required = true)
     private String game;
     @Inject
-    private GameService gameService;
+    private GameMatchTeamBuilder gameMatchTeamBuilder;
     @Inject
-    private MatchCliMapper matchCliMapper;
+    private GameService gameService;
     @Inject
     private MatchService matchService;
     @Option(names = {"-r", "--ranks"}, split = ",", required = true)
@@ -40,7 +40,7 @@ class CreateMatchCli implements Runnable {
         }
 
         GameTable gameTable = gameService.retrieveGame(game);
-        List<ITeam> teamList = matchCliMapper.map(gameTable, teams);
+        List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, teams);
         matchService.createMatchForGame(gameTable, teamList, ranks);
         spec.commandLine().getOut().println(bundle.getString(MatchBundleKey.CREATE_SUCCESS));
     }

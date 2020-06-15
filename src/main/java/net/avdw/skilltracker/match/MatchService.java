@@ -10,7 +10,10 @@ import org.tinylog.Logger;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MatchService {
@@ -37,7 +40,7 @@ public class MatchService {
         List<MatchTable> matchTableList = new ArrayList<>();
         newRatings.forEach((p, r) -> {
             PlayerTable playerTable = (PlayerTable) p;
-            Logger.debug(String.format("%s (%s)", r, playerTable.getName()));
+            Logger.debug(String.format("%s (%s)", playerTable.getName(), r));
             MatchTable matchTable = matchMapper.map(gameTable, playerTable, r);
             matchTable.setSessionId(sessionId);
             int teamIdx = -1;

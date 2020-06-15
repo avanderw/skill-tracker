@@ -19,14 +19,7 @@ public interface MatchMapper {
     }
 
     @Mappings({
-            @Mapping(target = MatchTable.SESSION_ID),
-            @Mapping(target = MatchTable.GAME_FK, source = "gameTable.pk"),
-            @Mapping(target = MatchTable.PLAYER_FK, source = "playerTable.pk"),
-            @Mapping(target = MatchTable.TEAM),
-            @Mapping(target = MatchTable.RANK),
-            @Mapping(target = MatchTable.PLAY_DATE, expression = "java(new Date())"),
-            @Mapping(target = MatchTable.MEAN),
-            @Mapping(target = MatchTable.STANDARD_DEVIATION),
+            @Mapping(target = MatchTable.PLAY_DATE, expression = "java(new Date())")
     })
     MatchTable map(GameTable gameTable, PlayerTable playerTable, Rating rating);
 }

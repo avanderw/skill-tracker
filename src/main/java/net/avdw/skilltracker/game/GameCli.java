@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public class GameCli implements Runnable {
     @Inject
     @Game
-    ResourceBundle gameBundle;
+    private ResourceBundle gameBundle;
     @Parameters(arity = "0..1") // cannot force this to 1 as it eats the sub-commands
     private String game;
     @Inject

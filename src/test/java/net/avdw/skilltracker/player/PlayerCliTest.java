@@ -11,6 +11,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import net.avdw.database.LiquibaseRunner;
 import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
+import net.avdw.skilltracker.game.GameBundleKey;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.match.MatchTable;
 import org.junit.After;
@@ -84,14 +85,18 @@ public class PlayerCliTest {
     @Before
     public void beforeTest() throws SQLException {
         commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
-        errWriter = new StringWriter();
-        outWriter = new StringWriter();
-        commandLine.setOut(new PrintWriter(outWriter));
-        commandLine.setErr(new PrintWriter(errWriter));
+        resetOutput();
 
         matchDao.delete(matchDao.deleteBuilder().prepare());
         gameDao.delete(gameDao.deleteBuilder().prepare());
         playerDao.delete(playerDao.deleteBuilder().prepare());
+    }
+
+    private void resetOutput() {
+        errWriter = new StringWriter();
+        outWriter = new StringWriter();
+        commandLine.setOut(new PrintWriter(outWriter));
+        commandLine.setErr(new PrintWriter(errWriter));
     }
 
     @Test
@@ -101,28 +106,38 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_ViewPlayer_Fail() {
-        int exitCode = commandLine.execute("player", "view", "Andrew");
+    public void test_ListAll_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        resetOutput();
 
-        assertEquals("", errWriter.toString());
-        assertEquals(0, exitCode);
+        assertSuccess(commandLine.execute("player", "ls"));
+        assertFalse("Should find a player", outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.NO_PLAYER_FOUND)));
+    }
+
+    @Test
+    public void test_ListFilter_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        resetOutput();
+
+        assertSuccess(commandLine.execute("player", "ls", "Andrew"));
+        assertFalse("Should find a player", outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.NO_PLAYER_FOUND)));
+    }
+
+    @Test
+    public void test_ViewPlayer_Fail() {
+        assertSuccess(commandLine.execute("player", "view", "Andrew"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 
     @Test
     public void test_ViewPlayer_Success() {
-        commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
 
-        errWriter = new StringWriter();
-        outWriter = new StringWriter();
-        commandLine.setOut(new PrintWriter(outWriter));
-        commandLine.setErr(new PrintWriter(errWriter));
-        int exitCode = commandLine.execute("player", "view", "Andrew");
-
-        assertEquals("", errWriter.toString());
-        assertNotEquals("", outWriter.toString());
-        assertEquals(0, exitCode);
+        resetOutput();
+        assertSuccess(commandLine.execute("player", "view", "Andrew"));
         assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 

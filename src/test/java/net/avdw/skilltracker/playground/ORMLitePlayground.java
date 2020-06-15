@@ -6,6 +6,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import net.avdw.skilltracker.game.GameTable;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class ORMLitePlayground {
@@ -14,7 +15,7 @@ public class ORMLitePlayground {
         ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
 
         Dao<GameTable, String> gameDao = DaoManager.createDao(connectionSource, GameTable.class);
-        gameDao.create(new GameTable("Northgard", 5, 4, 3, 2, 1));
+        gameDao.create(new GameTable(BigDecimal.ONE, "Northgard"));
 
         System.out.println(gameDao.queryForId("Northgard"));
     }

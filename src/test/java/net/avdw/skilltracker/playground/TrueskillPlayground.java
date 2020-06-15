@@ -20,7 +20,11 @@ public class TrueskillPlayground {
         play(twoTeamSkillCalculator);
         play(factorGraphSkillCalculator);
 
-        GameInfo gameInfo = GameInfo.getDefaultGameInfo();
+        GameInfo defaultGameInfo = GameInfo.getDefaultGameInfo();
+        GameInfo gameInfo = new GameInfo(defaultGameInfo.getInitialMean(),
+                defaultGameInfo.getInitialStandardDeviation(),
+                defaultGameInfo.getBeta(),
+                defaultGameInfo.getDynamicsFactor(), 0);
 
         Player<Integer> andrew = new Player<>(1);
         Player<Integer> karl = new Player<>(2);

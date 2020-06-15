@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
+import de.gesundkrank.jskills.GameInfo;
 
 import java.sql.SQLException;
 import java.util.Locale;
@@ -18,6 +19,7 @@ public class GameModule extends AbstractModule {
     protected void configure() {
         bind(ResourceBundle.class).annotatedWith(Game.class).toInstance(ResourceBundle.getBundle("game", Locale.ENGLISH));
         bind(GameMapper.class).toInstance(GameMapper.INSTANCE);
+        bind(GameInfo.class).toInstance(GameInfo.getDefaultGameInfo());
     }
 
     @Provides

@@ -5,7 +5,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
 @Command(name = "player", description = "Manage players", version = "1.0-SNAPSHOT", mixinStandardHelpOptions = true,
-        subcommands = {RetrievePlayerCli.class})
+        subcommands = {RetrievePlayerCli.class, ListPlayerCli.class})
 public class PlayerCli implements Runnable {
     @Spec
     private CommandSpec spec;

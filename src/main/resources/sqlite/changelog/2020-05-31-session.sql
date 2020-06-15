@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset andrew:2020-05-31
-CREATE TABLE "Session" (
+CREATE TABLE "Match" (
     "SessionId" TEXT NOT NULL,
 	"GameFk"	INTEGER NOT NULL,
 	"PlayerFk"	INTEGER NOT NULL,

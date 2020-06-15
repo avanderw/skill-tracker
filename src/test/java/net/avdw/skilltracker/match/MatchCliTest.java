@@ -37,7 +37,6 @@ import static org.junit.Assert.*;
 
 public class MatchCliTest {
     private static Dao<GameTable, Integer> gameDao;
-    private static Dao<MatchTable, Integer> gamePlayerDao;
     private static GameTable gameTable;
     private static Injector injector;
     private static String jdbcUrl;
@@ -68,7 +67,6 @@ public class MatchCliTest {
         liquibaseRunner.update();
 
         ConnectionSource jdbcConnectionSource = new JdbcConnectionSource(jdbcUrl);
-        gamePlayerDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
         playerDao = DaoManager.createDao(jdbcConnectionSource, PlayerTable.class);
         gameDao = DaoManager.createDao(jdbcConnectionSource, GameTable.class);
         matchDao = DaoManager.createDao(jdbcConnectionSource, MatchTable.class);
@@ -90,22 +88,25 @@ public class MatchCliTest {
     @Before
     public void beforeTest() throws SQLException {
         commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
-        errWriter = new StringWriter();
-        outWriter = new StringWriter();
-        commandLine.setOut(new PrintWriter(outWriter));
-        commandLine.setErr(new PrintWriter(errWriter));
+        resetOutput();
 
         matchDao.delete(matchDao.deleteBuilder().prepare());
         gameDao.delete(gameDao.deleteBuilder().prepare());
         playerDao.delete(playerDao.deleteBuilder().prepare());
+    }
 
-        GameInfo g = GameInfo.getDefaultGameInfo();
-        gameTable = new GameTable("Northgard", g.getInitialMean(), g.getInitialStandardDeviation(), g.getBeta(), g.getDynamicsFactor(), g.getDrawProbability());
-        gameDao.create(gameTable);
+    private void resetOutput() {
+        errWriter = new StringWriter();
+        outWriter = new StringWriter();
+        commandLine.setOut(new PrintWriter(outWriter));
+        commandLine.setErr(new PrintWriter(errWriter));
     }
 
     @Test
     public void test_Create_Pass() throws SQLException {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        resetOutput();
+
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.CREATE_SUCCESS)));
 
@@ -116,9 +117,9 @@ public class MatchCliTest {
         assertNotNull(karl);
         assertNotNull(jaco);
 
-        MatchTable andrewSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, andrew.getPk()).prepare());
-        MatchTable karlSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, karl.getPk()).prepare());
-        MatchTable jacoSession = gamePlayerDao.queryForFirst(gamePlayerDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, jaco.getPk()).prepare());
+        MatchTable andrewSession = matchDao.queryForFirst(matchDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, andrew.getPk()).prepare());
+        MatchTable karlSession = matchDao.queryForFirst(matchDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, karl.getPk()).prepare());
+        MatchTable jacoSession = matchDao.queryForFirst(matchDao.queryBuilder().where().eq(MatchTable.PLAYER_FK, jaco.getPk()).prepare());
         assertNotNull(andrewSession);
         assertNotNull(karlSession);
         assertNotNull(jacoSession);
@@ -129,8 +130,8 @@ public class MatchCliTest {
 
         assertNotEquals(25.00, andrewSession.getMean().doubleValue(), 0.01);
         assertNotEquals(25.00, jacoSession.getMean().doubleValue(), 0.01);
-        assertEquals(28.56, andrewSession.getMean().doubleValue(), 0.01);
-        assertEquals(23.21, jacoSession.getMean().doubleValue(), 0.01);
+        assertEquals(24.75, andrewSession.getMean().doubleValue(), 0.01);
+        assertEquals(15.12, jacoSession.getMean().doubleValue(), 0.01);
         assertEquals(andrewSession.getSessionId(), karlSession.getSessionId());
     }
 
@@ -142,12 +143,14 @@ public class MatchCliTest {
 
     @Test
     public void test_MatchQuality_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertSuccess(commandLine.execute("match", "quality", "Andrew,Karl", "Marius,Raoul", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("44.721360%"));
     }
 
     @Test
     public void test_TeamCountRankCountMismatch_Fail() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(sessionBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH)));
     }

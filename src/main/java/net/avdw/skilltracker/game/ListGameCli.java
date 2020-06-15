@@ -3,8 +3,8 @@ package net.avdw.skilltracker.game;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.google.inject.Inject;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
@@ -25,7 +25,7 @@ public class ListGameCli implements Runnable {
     @Game
     private ResourceBundle resourceBundle;
     @Spec
-    private CommandLine.Model.CommandSpec spec;
+    private CommandSpec spec;
 
     @Override
     public void run() {
@@ -40,7 +40,7 @@ public class ListGameCli implements Runnable {
             spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND));
         }
 
-        gameTableList.forEach(game->{
+        gameTableList.forEach(game -> {
             Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(resourceBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
             StringWriter stringWriter = new StringWriter();
             mustache.execute(stringWriter, game);

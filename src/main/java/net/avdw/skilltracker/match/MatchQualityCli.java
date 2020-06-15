@@ -21,9 +21,9 @@ public class MatchQualityCli implements Runnable {
     @Inject
     private GameService gameService;
     @Inject
-    private MatchCliMapper matchCliMapper;
-    @Inject
     private MatchService matchService;
+    @Inject
+    private GameMatchTeamBuilder gameMatchTeamBuilder;
     @Spec
     private CommandLine.Model.CommandSpec spec;
     @Parameters
@@ -32,7 +32,8 @@ public class MatchQualityCli implements Runnable {
     @Override
     public void run() {
         GameTable gameTable = gameService.retrieveGame(game);
-        List<ITeam> teamList = matchCliMapper.map(gameTable, teams);
+        List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, teams);
         spec.commandLine().getOut().println(String.format(Locale.ENGLISH, "%,f%%", matchService.calculateMatchQuality(gameTable, teamList).multiply(BigDecimal.valueOf(100))));
     }
+
 }

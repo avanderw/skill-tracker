@@ -100,16 +100,16 @@ public class GameCliTest {
 
     @Test
     public void test_CreateDuplicate_Fail() throws SQLException {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         resetOutput();
 
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertNotNull(gameDao.queryForEq("name", "Northgard"));
     }
 
     @Test
     public void test_Create_Pass() throws SQLException {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(GameBundleKey.ADD_SUCCESS)));
         assertNotNull(gameDao.queryForEq("name", "Northgard"));
     }
@@ -121,7 +121,7 @@ public class GameCliTest {
 
     @Test
     public void test_Delete_Pass() {
-        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "rm", "Northgard"));
@@ -135,7 +135,7 @@ public class GameCliTest {
 
     @Test
     public void test_GameDetail_Success() {
-        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
@@ -157,7 +157,7 @@ public class GameCliTest {
 
     @Test
     public void test_ListAll_Success() {
-        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertSuccess(commandLine.execute("game", "ls"));
 
         assertFalse("Should find a game", outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND)));
@@ -165,7 +165,7 @@ public class GameCliTest {
 
     @Test
     public void test_ListFilter_Success() {
-        assertSuccess(commandLine.execute("game", "add", "--draw-probability=0", "Northgard"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "ls", "north"));
@@ -174,7 +174,7 @@ public class GameCliTest {
 
     @Test
     public void test_ViewGameSummary_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "--draw-probability", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
@@ -183,7 +183,7 @@ public class GameCliTest {
 
     @Test
     public void test_ViewGame_Success() {
-        commandLine.execute("game", "add", "Northgard", "--draw-probability", "0");
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
         resetOutput();
 

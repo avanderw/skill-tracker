@@ -3,8 +3,8 @@ package net.avdw.skilltracker;
 import com.google.inject.name.Names;
 import net.avdw.property.AbstractPropertyModule;
 import net.avdw.skilltracker.game.GameModule;
-import net.avdw.skilltracker.player.PlayerModule;
 import net.avdw.skilltracker.match.MatchModule;
+import net.avdw.skilltracker.player.PlayerModule;
 
 import java.util.LinkedList;
 import java.util.List;

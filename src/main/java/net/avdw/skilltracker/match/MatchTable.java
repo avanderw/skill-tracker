@@ -2,98 +2,44 @@ package net.avdw.skilltracker.match;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.avdw.skilltracker.game.GameTable;
+import net.avdw.skilltracker.player.PlayerTable;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-@DatabaseTable(tableName = "Session")
+@Data
+@DatabaseTable(tableName = "Match")
+@NoArgsConstructor
+@SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 public class MatchTable {
-    public static final String SESSION_ID = "sessionId";
     public static final String GAME_FK = "gameFk";
-    public static final String PLAYER_FK = "playerFk";
-    public static final String TEAM = "team";
-    public static final String RANK = "rank";
-    public static final String PLAY_DATE = "playDate";
     public static final String MEAN = "mean";
+    public static final String PLAYER_FK = "playerFk";
+    public static final String PLAY_DATE = "playDate";
+    public static final String RANK = "rank";
+    public static final String SESSION_ID = "sessionId";
     public static final String STANDARD_DEVIATION = "standardDeviation";
-
-    @DatabaseField(columnName = SESSION_ID, canBeNull = false)
-    private String sessionId;
-    @DatabaseField(columnName = GAME_FK, canBeNull = false)
-    private Integer gameFk;
-    @DatabaseField(columnName = PLAYER_FK, canBeNull = false)
-    private Integer playerFk;
-    @DatabaseField(canBeNull = false)
-    private Integer team;
-    @DatabaseField(canBeNull = false)
-    private Integer rank;
-    @DatabaseField(canBeNull = false)
-    private Date playDate;
+    public static final String TEAM = "team";
+    @DatabaseField(columnName = GAME_FK, foreign = true, foreignAutoRefresh = true)
+    private GameTable gameTable;
     @DatabaseField(canBeNull = false)
     private BigDecimal mean;
     @DatabaseField(canBeNull = false)
+    private Date playDate;
+    @DatabaseField(columnName = PLAYER_FK, foreign = true, foreignAutoRefresh = true)
+    private PlayerTable playerTable;
+    @DatabaseField(canBeNull = false)
+    private Integer rank;
+    @DatabaseField(columnName = SESSION_ID, canBeNull = false)
+    private String sessionId;
+    @DatabaseField(canBeNull = false)
     private BigDecimal standardDeviation;
-
-    public MatchTable(final Integer gameFk, final Integer playerFk, final Integer team, final Integer rank, final Date playDate, final BigDecimal mean, final BigDecimal standardDeviation) {
-        this.gameFk = gameFk;
-        this.playerFk = playerFk;
-        this.team = team;
-        this.rank = rank;
-        this.playDate = new Date(playDate.getTime());
-        this.mean = mean;
-        this.standardDeviation = standardDeviation;
-    }
-
-    public MatchTable() {
-    }
-
-    public BigDecimal getMean() {
-        return mean;
-    }
-
-    public void setMean(final BigDecimal mean) {
-        this.mean = mean;
-    }
-
-    public BigDecimal getStandardDeviation() {
-        return standardDeviation;
-    }
-
-    public void setStandardDeviation(final BigDecimal standardDeviation) {
-        this.standardDeviation = standardDeviation;
-    }
-
-    public Integer getGameFk() {
-        return gameFk;
-    }
-
-    public void setGameFk(final Integer gameFk) {
-        this.gameFk = gameFk;
-    }
-
-    public Integer getPlayerFk() {
-        return playerFk;
-    }
-
-    public void setPlayerFk(final Integer playerFk) {
-        this.playerFk = playerFk;
-    }
-
-    public Integer getTeam() {
-        return team;
-    }
-
-    public void setTeam(final Integer team) {
-        this.team = team;
-    }
-
-    public Integer getRank() {
-        return rank;
-    }
-
-    public void setRank(final Integer rank) {
-        this.rank = rank;
-    }
+    @DatabaseField(canBeNull = false)
+    private Integer team;
 
     public Date getPlayDate() {
         return new Date(playDate.getTime());
@@ -102,12 +48,7 @@ public class MatchTable {
     public void setPlayDate(final Date playDate) {
         this.playDate = new Date(playDate.getTime());
     }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(final String sessionId) {
-        this.sessionId = sessionId;
-    }
 }
+
+
+
