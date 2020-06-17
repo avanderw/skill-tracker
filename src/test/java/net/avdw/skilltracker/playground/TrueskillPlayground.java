@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class TrueskillPlayground {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SkillCalculator twoPlayerSkillCalculator = new TwoPlayerTrueSkillCalculator();
         SkillCalculator twoTeamSkillCalculator = new TwoTeamTrueSkillCalculator();
         SkillCalculator factorGraphSkillCalculator = new FactorGraphTrueSkillCalculator();
@@ -45,21 +45,26 @@ public class TrueskillPlayground {
 
         Collection<ITeam> teams = Team.concat(team1, team2, team3);
         print("Northgard test", gameInfo, teams, factorGraphSkillCalculator, 1, 2, 2);
+        System.out.println(factorGraphSkillCalculator.calculateMatchQuality(gameInfo, Arrays.asList(
+                new Team().addPlayer(andrew, gameInfo.getDefaultRating()),
+                new Team().addPlayer(karl, gameInfo.getDefaultRating()),
+                new Team().addPlayer(jaco, gameInfo.getDefaultRating()),
+                new Team().addPlayer(etienne, gameInfo.getDefaultRating()))));
     }
 
-    private static void play(SkillCalculator skillCalculator) {
+    private static void play(final SkillCalculator skillCalculator) {
         playTwoPlayer(skillCalculator);
         playTwoTeam(skillCalculator);
         playMultiTeam(skillCalculator);
     }
 
-    private static void playMultiTeam(SkillCalculator skillCalculator) {
+    private static void playMultiTeam(final SkillCalculator skillCalculator) {
         twoOnFourOnTwoWinDraw(skillCalculator);
         threeTeamsOfOne(skillCalculator);
         threeTeamsOfOneDraw(skillCalculator);
     }
 
-    private static void playTwoTeam(SkillCalculator skillCalculator) {
+    private static void playTwoTeam(final SkillCalculator skillCalculator) {
         twoOnTwoSimple(skillCalculator);
         twoOnTwoDraw(skillCalculator);
         twoOnTwoUnbalanced(skillCalculator);
@@ -74,7 +79,7 @@ public class TrueskillPlayground {
         threeOnTwo(skillCalculator);
     }
 
-    private static void threeTeamsOfOneDraw(SkillCalculator skillCalculator) {
+    private static void threeTeamsOfOneDraw(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
         Player<Integer> player2 = new Player<Integer>(2);
         Player<Integer> player3 = new Player<Integer>(3);
@@ -88,7 +93,7 @@ public class TrueskillPlayground {
         print("1(draw) v 1(draw) v 1(draw)", gameInfo, teams, skillCalculator, 1, 1, 1);
     }
 
-    private static void threeTeamsOfOne(SkillCalculator skillCalculator) {
+    private static void threeTeamsOfOne(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
         Player<Integer> player2 = new Player<Integer>(2);
         Player<Integer> player3 = new Player<Integer>(3);
@@ -102,15 +107,15 @@ public class TrueskillPlayground {
         print("1(win) v 1(second) v 1(third)", gameInfo, teams, skillCalculator, 1, 2, 3);
     }
 
-    private static void twoOnFourOnTwoWinDraw(SkillCalculator skillCalculator) {
+    private static void twoOnFourOnTwoWinDraw(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
         Player<Integer> player2 = new Player<Integer>(2);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
 
         Team team1 = new Team()
-                .addPlayer(player1, new Rating(40,4))
-                .addPlayer(player2, new Rating(45,3));
+                .addPlayer(player1, new Rating(40, 4))
+                .addPlayer(player2, new Rating(45, 3));
 
         Player<Integer> player3 = new Player<Integer>(3);
         Player<Integer> player4 = new Player<Integer>(4);
@@ -127,14 +132,14 @@ public class TrueskillPlayground {
         Player<Integer> player8 = new Player<Integer>(8);
 
         Team team3 = new Team()
-                .addPlayer(player7, new Rating(50,5))
-                .addPlayer(player8, new Rating(30,2));
+                .addPlayer(player7, new Rating(50, 5))
+                .addPlayer(player8, new Rating(30, 2));
 
         Collection<ITeam> teams = Team.concat(team1, team2, team3);
         print("2(win) v 4(draw) v 2(draw)", gameInfo, teams, skillCalculator, 1, 2, 2);
     }
 
-    private static void threeOnTwo(SkillCalculator skillCalculator) {
+    private static void threeOnTwo(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
         Player<Integer> player2 = new Player<Integer>(2);
         Player<Integer> player3 = new Player<Integer>(3);
@@ -158,7 +163,7 @@ public class TrueskillPlayground {
         print("3(win) v 2(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void oneOnSevenSimple(SkillCalculator skillCalculator) {
+    private static void oneOnSevenSimple(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -187,7 +192,7 @@ public class TrueskillPlayground {
         print("1(win) v 7(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void oneOnThreeDraw(SkillCalculator skillCalculator) {
+    private static void oneOnThreeDraw(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -208,7 +213,7 @@ public class TrueskillPlayground {
         print("1(draw) v 3(draw)", gameInfo, teams, skillCalculator, 1, 1);
     }
 
-    private static void oneOnTwoDraw(SkillCalculator skillCalculator) {
+    private static void oneOnTwoDraw(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -227,7 +232,7 @@ public class TrueskillPlayground {
         print("1(draw) v 2(draw)", gameInfo, teams, skillCalculator, 1, 1);
     }
 
-    private static void oneOnThreeSimple(SkillCalculator skillCalculator) {
+    private static void oneOnThreeSimple(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -248,7 +253,7 @@ public class TrueskillPlayground {
         print("1(win) v 3(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void oneOnTwoBalanced(SkillCalculator skillCalculator) {
+    private static void oneOnTwoBalanced(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -267,7 +272,7 @@ public class TrueskillPlayground {
         print("1(win) v 2(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void oneOnTwoSimple(SkillCalculator skillCalculator) {
+    private static void oneOnTwoSimple(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
 
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -286,7 +291,7 @@ public class TrueskillPlayground {
         print("1(win) v 2(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void fourOnFourSimple(SkillCalculator skillCalculator) {
+    private static void fourOnFourSimple(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
         Player<Integer> player2 = new Player<Integer>(2);
         Player<Integer> player3 = new Player<Integer>(3);
@@ -316,7 +321,7 @@ public class TrueskillPlayground {
         print("4(win) v 4(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void twoOnTwoUpset(SkillCalculator skillCalculator) {
+    private static void twoOnTwoUpset(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<Integer>(1);
         Player<Integer> player2 = new Player<Integer>(2);
 
@@ -337,7 +342,7 @@ public class TrueskillPlayground {
         print("2(win) v 2(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void twoOnTwoUnbalanced(SkillCalculator skillCalculator) {
+    private static void twoOnTwoUnbalanced(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<>(1);
         Player<Integer> player2 = new Player<>(2);
 
@@ -358,7 +363,7 @@ public class TrueskillPlayground {
         print("2(draw) v 2(draw)", gameInfo, teams, skillCalculator, 1, 1);
     }
 
-    private static void twoOnTwoDraw(SkillCalculator skillCalculator) {
+    private static void twoOnTwoDraw(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<>(1);
         Player<Integer> player2 = new Player<>(2);
 
@@ -379,7 +384,7 @@ public class TrueskillPlayground {
         print("2(draw) v 2(draw)", gameInfo, teams, skillCalculator, 1, 1);
     }
 
-    private static void twoOnTwoSimple(SkillCalculator skillCalculator) {
+    private static void twoOnTwoSimple(final SkillCalculator skillCalculator) {
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
 
         Player<Integer> player1 = new Player<>(1);
@@ -398,28 +403,28 @@ public class TrueskillPlayground {
         print("2(win) v 2(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void print(String title, GameInfo gameInfo, Collection<ITeam> teams, SkillCalculator skillCalculator, int... teamRanks) {
+    private static void print(final String title, final GameInfo gameInfo, final Collection<ITeam> teams, final SkillCalculator skillCalculator, final int... teamRanks) {
         System.out.println(String.format("[Game] %s [Calculator] %s", title, skillCalculator.getClass().getSimpleName()));
         System.out.println(String.format("[GameInfo] %s", gameInfo));
-        teams.forEach(team-> System.out.println(String.format("[Team] %s", team)));
+        teams.forEach(team -> System.out.println(String.format("[Team] %s", team)));
         System.out.println(String.format("[TeamRanks] %s", Arrays.toString(teamRanks)));
         try {
             Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, teamRanks);
             newRatings.forEach((p, r) -> System.out.println(String.format("[Player%s] %s", p, r)));
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             System.out.println(String.format("[%s] Unsupported", skillCalculator.getClass().getSimpleName()));
         }
         System.out.println();
     }
 
-    private static void playTwoPlayer(SkillCalculator skillCalculator) {
+    private static void playTwoPlayer(final SkillCalculator skillCalculator) {
         twoPlayer1(skillCalculator);
         twoPlayerDrawn(skillCalculator);
         twoPlayerChessBug(skillCalculator);
         twoPlayerMassiveUpsetDraw(skillCalculator);
     }
 
-    private static void twoPlayerMassiveUpsetDraw(SkillCalculator skillCalculator) {
+    private static void twoPlayerMassiveUpsetDraw(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<>(1);
         Player<Integer> player2 = new Player<>(2);
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -431,7 +436,7 @@ public class TrueskillPlayground {
         print("1(draw) v 1(draw)", gameInfo, teams, skillCalculator, 1, 1);
     }
 
-    private static void twoPlayerChessBug(SkillCalculator skillCalculator) {
+    private static void twoPlayerChessBug(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<>(1);
         Player<Integer> player2 = new Player<>(2);
         GameInfo gameInfo = new GameInfo(1200.0, 1200.0 / 3.0, 200.0, 1200.0 / 300.0, 0.03);
@@ -443,7 +448,7 @@ public class TrueskillPlayground {
         print("1(win) v 1(lose)", gameInfo, teams, skillCalculator, 1, 2);
     }
 
-    private static void twoPlayerDrawn(SkillCalculator skillCalculator) {
+    private static void twoPlayerDrawn(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<>(1);
         Player<Integer> player2 = new Player<>(2);
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();
@@ -455,7 +460,7 @@ public class TrueskillPlayground {
         print("1(draw) v 1(draw)", gameInfo, teams, skillCalculator, 1, 1);
     }
 
-    private static void twoPlayer1(SkillCalculator skillCalculator) {
+    private static void twoPlayer1(final SkillCalculator skillCalculator) {
         Player<Integer> player1 = new Player<>(1);
         Player<Integer> player2 = new Player<>(2);
         GameInfo gameInfo = GameInfo.getDefaultGameInfo();

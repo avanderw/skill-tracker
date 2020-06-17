@@ -1,5 +1,6 @@
 package net.avdw.skilltracker.match;
 
+import de.gesundkrank.jskills.GameInfo;
 import de.gesundkrank.jskills.Rating;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
@@ -14,8 +15,12 @@ import java.util.Date;
 public interface MatchMapper {
     MatchMapper INSTANCE = Mappers.getMapper(MatchMapper.class);
 
-    default Rating map(MatchTable sessionTable) {
-        return new Rating(sessionTable.getMean().doubleValue(), sessionTable.getStandardDeviation().doubleValue());
+    default Rating map(final MatchTable matchTable) {
+        if (matchTable == null) {
+            return GameInfo.getDefaultGameInfo().getDefaultRating();
+        } else {
+            return new Rating(matchTable.getMean().doubleValue(), matchTable.getStandardDeviation().doubleValue());
+        }
     }
 
     @Mappings({

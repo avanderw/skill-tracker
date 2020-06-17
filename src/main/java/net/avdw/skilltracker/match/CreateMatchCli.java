@@ -17,11 +17,11 @@ import java.util.ResourceBundle;
 class CreateMatchCli implements Runnable {
     @Inject
     @Match
-    private ResourceBundle bundle;
+    private ResourceBundle resourceBundle;
     @Option(names = {"-g", "--game"}, required = true)
     private String game;
     @Inject
-    private GameMatchTeamBuilder gameMatchTeamBuilder;
+    private PlayerRankingMapBuilder gameMatchTeamBuilder;
     @Inject
     private GameService gameService;
     @Inject
@@ -36,12 +36,12 @@ class CreateMatchCli implements Runnable {
     @Override
     public void run() {
         if (ranks.length != teams.size()) {
-            spec.commandLine().getOut().println(bundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
+            spec.commandLine().getOut().println(resourceBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
         }
 
         GameTable gameTable = gameService.retrieveGame(game);
         List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, teams);
         matchService.createMatchForGame(gameTable, teamList, ranks);
-        spec.commandLine().getOut().println(bundle.getString(MatchBundleKey.CREATE_SUCCESS));
+        spec.commandLine().getOut().println(resourceBundle.getString(MatchBundleKey.CREATE_SUCCESS));
     }
 }

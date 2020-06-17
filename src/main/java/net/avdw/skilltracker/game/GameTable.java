@@ -4,10 +4,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import net.avdw.skilltracker.match.MatchTable;
 
 import java.math.BigDecimal;
@@ -22,11 +19,13 @@ public class GameTable {
     @DatabaseField
     @NonNull
     private BigDecimal drawProbability;
+    @ToString.Exclude
     @ForeignCollectionField(columnName = MatchTable.GAME_FK)
     private ForeignCollection<MatchTable> matchTableList;
     @DatabaseField
     @NonNull
     private String name;
+    @ToString.Exclude
     @DatabaseField(generatedId = true)
     private Integer pk;
 }
