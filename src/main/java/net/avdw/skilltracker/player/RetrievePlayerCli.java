@@ -36,6 +36,10 @@ public class RetrievePlayerCli implements Runnable {
         }
 
         List<MatchTable> matchList = matchService.retrieveAllMatchesForPlayer(playerTable);
-        matchList.forEach(match -> spec.commandLine().getOut().println(match));
+        if (matchList.isEmpty()) {
+            spec.commandLine().getOut().println(resourceBundle.getString(PlayerBundleKey.NO_MATCH_FOUND));
+        } else {
+            matchList.forEach(match -> spec.commandLine().getOut().println(match));
+        }
     }
 }

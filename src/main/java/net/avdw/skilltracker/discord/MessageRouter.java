@@ -9,17 +9,17 @@ public class MessageRouter {
     private final String prefix;
     private final PingService pingService;
     private final HelpService helpService;
-    private final SkillTrackerService skillTrackerService;
+    private final SkillTrackerWrapper skillTrackerWrapper;
 
     @Inject
     MessageRouter(@Named(DiscordPropertyKey.PREFIX) final String prefix,
                   final PingService pingService,
                   final HelpService helpService,
-                  final SkillTrackerService skillTrackerService) {
+                  final SkillTrackerWrapper skillTrackerWrapper) {
         this.prefix = prefix;
         this.pingService = pingService;
         this.helpService = helpService;
-        this.skillTrackerService = skillTrackerService;
+        this.skillTrackerWrapper = skillTrackerWrapper;
     }
 
     public void route(final MessageReceivedEvent event) {
@@ -42,7 +42,7 @@ public class MessageRouter {
                 helpService.processEvent(event);
                 break;
             default:
-                skillTrackerService.processEvent(event);
+                skillTrackerWrapper.processEvent(event);
         }
     }
 }

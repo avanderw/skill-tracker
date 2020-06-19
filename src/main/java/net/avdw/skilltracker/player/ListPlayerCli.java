@@ -37,7 +37,7 @@ public class ListPlayerCli implements Runnable {
         }
 
         if (playerTableList.isEmpty()) {
-            spec.commandLine().getOut().println(resourceBundle.getString(PlayerBundleKey.NO_PLAYER_FOUND));
+            spec.commandLine().getOut().println(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST));
         }
 
         playerTableList.forEach(playerTable -> {

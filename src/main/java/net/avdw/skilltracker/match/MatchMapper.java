@@ -15,7 +15,7 @@ import java.util.Date;
 public interface MatchMapper {
     MatchMapper INSTANCE = Mappers.getMapper(MatchMapper.class);
 
-    default Rating map(final MatchTable matchTable) {
+    default Rating toRating(final MatchTable matchTable) {
         if (matchTable == null) {
             return GameInfo.getDefaultGameInfo().getDefaultRating();
         } else {
@@ -26,5 +26,5 @@ public interface MatchMapper {
     @Mappings({
             @Mapping(target = MatchTable.PLAY_DATE, expression = "java(new Date())")
     })
-    MatchTable map(GameTable gameTable, PlayerTable playerTable, Rating rating);
+    MatchTable toMatchTable(GameTable gameTable, PlayerTable playerTable, Rating rating);
 }

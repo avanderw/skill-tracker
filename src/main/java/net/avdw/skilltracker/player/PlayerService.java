@@ -3,6 +3,7 @@ package net.avdw.skilltracker.player;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import lombok.SneakyThrows;
+import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class PlayerService {
 
     @SneakyThrows
     public PlayerTable createOrRetrievePlayer(final String name) {
+        Logger.trace("Create or retrieve player {}", name);
         PlayerTable playerTable = retrievePlayer(name);
         if (playerTable == null) {
             playerTable = playerTableDao.createIfNotExists(new PlayerTable(name));
@@ -24,6 +26,7 @@ public class PlayerService {
     }
 
     public PlayerTable instanceOrRetrievePlayer(final String name) {
+        Logger.trace("Instance or retrieve player {}", name);
         PlayerTable playerTable = retrievePlayer(name);
         if (playerTable == null) {
             playerTable = new PlayerTable(name);

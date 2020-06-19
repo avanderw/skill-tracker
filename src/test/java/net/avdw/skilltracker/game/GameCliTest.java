@@ -136,7 +136,7 @@ public class GameCliTest {
     @Test
     public void test_GameDetail_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "Northgard"));
@@ -175,7 +175,7 @@ public class GameCliTest {
     @Test
     public void test_ViewGameSummary_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "Northgard"));
@@ -184,7 +184,7 @@ public class GameCliTest {
     @Test
     public void test_ViewGame_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard");
+        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "view", "Northgard"));

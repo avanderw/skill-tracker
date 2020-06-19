@@ -40,18 +40,22 @@ public class MatchService {
 
     @SneakyThrows
     public void createMatchForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
+        Logger.debug("Create match for game GAME={}, TEAMS={}, RANKS={}", gameTable, teams, ranks);
         String sessionId = UUID.randomUUID().toString();
         GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
         Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, ranks);
         List<MatchTable> matchTableList = new ArrayList<>();
         newRatings.forEach((p, r) -> {
             PlayerTable playerTable = (PlayerTable) p;
-            Logger.debug(String.format("%s (%s)", playerTable.getName(), r));
-            MatchTable matchTable = matchMapper.map(gameTable, playerTable, r);
+            Logger.debug(String.format("new Ratings for %s = (%s)", playerTable.getName(), r));
+
+            MatchTable matchTable = matchMapper.toMatchTable(gameTable, playerTable, r);
             matchTable.setSessionId(sessionId);
             int teamIdx = -1;
             for (int i = 0; i < teams.size(); i++) {
-                if (teams.get(i).containsKey(playerTable)) {
+                Logger.trace("Test {} == {}", teams.get(i), playerTable);
+
+                if (teams.get(i).keySet().stream().anyMatch(key -> key.equals(playerTable))) {
                     teamIdx = i;
                     break;
                 }
@@ -89,7 +93,7 @@ public class MatchService {
 
         MatchTable matchTable;
         if (matchTableList.isEmpty()) {
-            matchTable = matchMapper.map(gameTable, playerTable, gameMapper.toRating(gameTable));
+            matchTable = matchMapper.toMatchTable(gameTable, playerTable, gameMapper.toRating(gameTable));
         } else {
             Logger.trace("Matches for {} {}", playerTable, matchTableList);
             matchTable = matchTableList.get(0);

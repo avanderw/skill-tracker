@@ -1,7 +1,5 @@
 package net.avdw.skilltracker.match;
 
-import com.github.freva.asciitable.AsciiTable;
-import com.github.freva.asciitable.Column;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.google.inject.Inject;
@@ -76,25 +74,24 @@ public class SuggestMatchCli implements Runnable {
         spec.commandLine().getOut().println(suggestCliTitleWriter.toString());
         playerTableList.forEach(playerTable -> {
             MatchTable matchTable = matchService.retrieveLatestPlayerMatchForGame(gameTable, playerTable);
-            Map<String, Object> context = new HashMap<>();
-            context.put("name", playerTable.getName());
-            context.put("mean", matchTable.getMean().setScale(2, RoundingMode.HALF_UP));
-            context.put("standardDeviation", matchTable.getStandardDeviation().setScale(2, RoundingMode.HALF_UP));
-
-            Mustache suggestCliPlayerTemplate = new DefaultMustacheFactory().compile(new StringReader(resourceBundle.getString(MatchBundleKey.SUGGEST_CLI_PLAYER)), MatchBundleKey.SUGGEST_CLI_PLAYER);
-            StringWriter suggestCliPlayerWriter = new StringWriter();
-            suggestCliPlayerTemplate.execute(suggestCliPlayerWriter, context);
-            spec.commandLine().getOut().println(suggestCliPlayerWriter.toString());
+            spec.commandLine().getOut().println(String.format("> (μ)=%s (σ)=%s \t %s",
+                    matchTable.getMean().setScale(2, RoundingMode.HALF_UP),
+                    matchTable.getStandardDeviation().setScale(2, RoundingMode.HALF_UP),
+                    playerTable.getName()
+            ));
         });
-        spec.commandLine().getOut().println(AsciiTable.getTable(AsciiTable.BASIC_ASCII_NO_DATA_SEPARATORS,
-                matchSet.stream().sorted(Comparator.comparingDouble((MatchData matchData) -> matchData.getQuality().doubleValue()).reversed()).collect(Collectors.toList()),
-                Arrays.asList(new Column().header(resourceBundle.getString(MatchBundleKey.SUGGEST_TABLE_QUALITY_HEADER))
-                                .with(matchData -> String.format("%s%%", matchData.getQuality().multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString())),
-                        new Column().header(resourceBundle.getString(MatchBundleKey.SUGGEST_TABLE_TEAM_HEADER))
-                                .with(matchData -> matchData.getTeamDataSet().stream().map(teamData ->
-                                        String.format("(%s)", teamData.getPlayerTableSet().stream().map(PlayerTable::getName).collect(Collectors.joining(", ")))
-                                ).collect(Collectors.joining(" vs. ")))
-                ))
-        );
+
+        spec.commandLine().getOut().println(String.format("%n%s \t %s",
+                resourceBundle.getString(MatchBundleKey.SUGGEST_TABLE_QUALITY_HEADER),
+                resourceBundle.getString(MatchBundleKey.SUGGEST_TABLE_TEAM_HEADER)
+        ));
+        matchSet.stream().sorted(Comparator.comparingDouble((MatchData matchData) -> matchData.getQuality().doubleValue()).reversed()).forEach(matchData ->
+                spec.commandLine().getOut().println(String.format("%s%%\t%s",
+                        matchData.getQuality().multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString(),
+                        matchData.getTeamDataSet().stream().map(teamData -> String.format("(%s)",
+                                teamData.getPlayerTableSet().stream().map(PlayerTable::getName).collect(Collectors.joining(", "))))
+                                .collect(Collectors.joining(" vs. "))
+                        )
+                ));
     }
 }

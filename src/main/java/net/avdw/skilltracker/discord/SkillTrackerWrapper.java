@@ -12,12 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SkillTrackerService {
+public class SkillTrackerWrapper {
     private final CommandLine commandLine;
     private final String prefix;
 
     @Inject
-    SkillTrackerService(@Named(DiscordPropertyKey.PREFIX) final String prefix, final CommandLine commandLine) {
+    SkillTrackerWrapper(@Named(DiscordPropertyKey.PREFIX) final String prefix, final CommandLine commandLine) {
         this.prefix = prefix;
         this.commandLine = commandLine;
     }

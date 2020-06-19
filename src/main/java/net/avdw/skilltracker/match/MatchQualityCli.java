@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import de.gesundkrank.jskills.ITeam;
 import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
-import net.avdw.skilltracker.player.PlayerService;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -24,37 +23,19 @@ public class MatchQualityCli implements Runnable {
     @Inject
     private GameService gameService;
     @Inject
-    private MatchService matchService;
+    private MatchDataBuilder matchDataBuilder;
     @Inject
-    private PlayerService playerService;
+    private MatchService matchService;
     @Spec
     private CommandLine.Model.CommandSpec spec;
     @Parameters
-    private List<String> teams; // player,player,player
+    private List<String> teams; // player;player;player
 
     @Override
     public void run() {
         GameTable gameTable = gameService.retrieveGame(game);
-
-        MatchData matchData = new MatchData();
-        if (teams.size() == 1) {
-            for (final String player : teams.get(0).split(";")) {
-                TeamData teamData = new TeamData();
-                teamData.add(playerService.instanceOrRetrievePlayer(player));
-                matchData.add(teamData);
-            }
-        } else {
-            teams.forEach(team -> {
-                TeamData teamData = new TeamData();
-                for (final String player : team.split(";")) {
-                    teamData.add(playerService.instanceOrRetrievePlayer(player));
-                }
-                matchData.add(teamData);
-            });
-        }
-
+        MatchData matchData = matchDataBuilder.build(teams);
         List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, matchData);
         spec.commandLine().getOut().println(String.format(Locale.ENGLISH, "%,f%%", matchService.calculateMatchQuality(gameTable, teamList).multiply(BigDecimal.valueOf(100))));
     }
-
 }
