@@ -29,7 +29,7 @@ public class SuggestMatchCli implements Runnable {
     private GameService gameService;
     @Inject
     private MatchService matchService;
-    @Parameters(description = "Players in the game", split = ";", arity = "1", index = "1")
+    @Parameters(description = "Players in the game", split = ",", arity = "1", index = "1")
     private List<String> playerList;
     @Inject
     private PlayerRankingMapBuilder playerRankingMapBuilder;

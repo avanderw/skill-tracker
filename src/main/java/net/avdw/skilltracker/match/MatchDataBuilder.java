@@ -16,7 +16,7 @@ public class MatchDataBuilder {
     public MatchData build(final List<String> teams) {
         MatchData matchData = new MatchData();
         if (teams.size() == 1) {
-            for (final String player : teams.get(0).split(";")) {
+            for (final String player : teams.get(0).split(",")) {
                 TeamData teamData = new TeamData();
                 teamData.add(playerService.createOrRetrievePlayer(player));
                 matchData.add(teamData);
@@ -24,7 +24,7 @@ public class MatchDataBuilder {
         } else {
             teams.forEach(team -> {
                 TeamData teamData = new TeamData();
-                for (final String player : team.split(";")) {
+                for (final String player : team.split(",")) {
                     teamData.add(playerService.createOrRetrievePlayer(player));
                 }
                 matchData.add(teamData);

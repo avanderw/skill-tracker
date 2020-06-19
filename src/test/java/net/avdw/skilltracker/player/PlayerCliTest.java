@@ -108,7 +108,7 @@ public class PlayerCliTest {
     @Test
     public void test_ListAll_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("player", "ls"));
@@ -118,7 +118,7 @@ public class PlayerCliTest {
     @Test
     public void test_ListFilter_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("player", "ls", "Andrew"));
@@ -134,7 +134,7 @@ public class PlayerCliTest {
     @Test
     public void test_ViewPlayer_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("player", "view", "Andrew"));

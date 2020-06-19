@@ -36,8 +36,6 @@ import static org.junit.Assert.*;
 public class GameCliTest {
     private static CommandLine commandLine;
     private static Dao<GameTable, Integer> gameDao;
-    private static Injector injector;
-    private static String jdbcUrl;
     private static Dao<MatchTable, Integer> matchDao;
     private static Dao<PlayerTable, Integer> playerDao;
     private static ResourceBundle resourceBundle;
@@ -46,11 +44,11 @@ public class GameCliTest {
 
     @BeforeClass
     public static void beforeClass() throws IOException, SQLException {
-        injector = Guice.createInjector(new TestModule());
+        Injector injector = Guice.createInjector(new TestModule());
         resourceBundle = ResourceBundle.getBundle("game", Locale.ENGLISH);
         commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
 
-        jdbcUrl = injector.getInstance(Key.get(String.class, Names.named(PropertyName.JDBC_URL)));
+        String jdbcUrl = injector.getInstance(Key.get(String.class, Names.named(PropertyName.JDBC_URL)));
         String jdbcPathUrl = jdbcUrl.replace("jdbc:sqlite:", "");
         Path jdbcDirPath = Paths.get(jdbcPathUrl).getParent();
         if (Files.exists(jdbcDirPath)) {
@@ -76,7 +74,7 @@ public class GameCliTest {
         playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
-    private void assertSuccess(int exitCode) {
+    private void assertSuccess(final int exitCode) {
         assertEquals("The command must not have error output", "", errWriter.toString());
         assertNotEquals("The command needs standard output", "", outWriter.toString());
         assertEquals(0, exitCode);
@@ -136,7 +134,7 @@ public class GameCliTest {
     @Test
     public void test_GameDetail_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "Northgard"));
@@ -180,7 +178,7 @@ public class GameCliTest {
     @Test
     public void test_ViewGameSummary_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "Northgard"));
@@ -189,7 +187,7 @@ public class GameCliTest {
     @Test
     public void test_ViewGame_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew;Karl", "Jaco;Etienne", "Marius;Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
