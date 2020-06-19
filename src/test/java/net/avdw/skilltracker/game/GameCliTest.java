@@ -146,6 +146,11 @@ public class GameCliTest {
     }
 
     @Test
+    public void test_GameProbabilityOptional_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+    }
+
+    @Test
     public void test_GameNotFound_Fail() {
         assertSuccess(commandLine.execute("game", "random"));
     }

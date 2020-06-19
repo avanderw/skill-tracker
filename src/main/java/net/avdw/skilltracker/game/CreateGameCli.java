@@ -21,7 +21,7 @@ class CreateGameCli implements Runnable {
     private String game;
 
     @Parameters(description = "Probability of drawing the game {e.g. 0.10 equates to a 10% chance}",
-            arity = "1", index = "1")
+            arity = "0..1", index = "1")
     private BigDecimal drawProbability = BigDecimal.valueOf(defaultGameInfo.getDrawProbability());
 
     @Inject
