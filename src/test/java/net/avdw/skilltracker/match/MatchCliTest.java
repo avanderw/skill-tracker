@@ -241,4 +241,18 @@ public class MatchCliTest {
         assertTrue("Team player mismatch count", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
     }
 
+    @Test
+    public void test_ListLastFewMatches_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "ls"));
+    }
+
+    @Test
+    public void test_ListLastFewMatchesEmpty_Success() {
+        assertSuccess(commandLine.execute("match", "ls"));
+        assertTrue("Should mention no matches", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.NO_MATCH_FOUND)));
+    }
 }

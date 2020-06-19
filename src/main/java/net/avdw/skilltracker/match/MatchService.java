@@ -78,6 +78,11 @@ public class MatchService {
     }
 
     @SneakyThrows
+    public List<MatchTable> retrieveLastFewMatches(final Long limit) {
+        return matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false).limit(limit).query();
+    }
+
+    @SneakyThrows
     public MatchTable retrieveLatestPlayerMatchForGame(final GameTable gameTable, final PlayerTable playerTable) {
         Logger.trace("Retrieve latest player match for {}", playerTable);
 
