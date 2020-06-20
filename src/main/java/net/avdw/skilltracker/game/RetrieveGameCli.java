@@ -8,12 +8,18 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "view", description = "View the details of a game", mixinStandardHelpOptions = true)
 public class RetrieveGameCli implements Runnable {
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     @Parameters(arity = "1")
     private String game;
     @Inject
@@ -35,7 +41,13 @@ public class RetrieveGameCli implements Runnable {
             spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_MATCH_FOUND));
         } else {
             matchPlayerMap.forEach((key, matchTableList) -> {
-                spec.commandLine().getOut().println(key);
+                Date date = matchTableList.stream().findAny().get().getPlayDate();
+                String teams = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
+                        .map(teamList -> teamList.stream()
+                                .map(matchTable -> String.format("[%s]%s(%s)", matchTable.getRank(), matchTable.getPlayerTable().getName(), matchTable.getMean().setScale(2, RoundingMode.HALF_UP)))
+                                .collect(Collectors.joining(" & ")))
+                        .collect(Collectors.joining(" vs. "));
+                spec.commandLine().getOut().println(String.format("%s %s %s", SIMPLE_DATE_FORMAT.format(date), gameTable.getName(), teams));
             });
         }
     }
