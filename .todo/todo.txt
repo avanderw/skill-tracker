@@ -1,0 +1,3 @@
+2020-06-21 Add top players for a game in order of skill
+2020-06-21 Add shorthand FFA for adding a match
+2020-06-22 Add remove match feature

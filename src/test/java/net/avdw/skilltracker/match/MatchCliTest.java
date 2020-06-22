@@ -13,10 +13,7 @@ import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.tinylog.Logger;
 import picocli.CommandLine;
 
@@ -250,9 +247,16 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "ls"));
     }
 
+    @Ignore
     @Test
     public void test_ListLastFewMatchesEmpty_Success() {
         assertSuccess(commandLine.execute("match", "ls"));
         assertTrue("Should mention no matches", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.NO_MATCH_FOUND)));
+    }
+
+    @Ignore
+    @Test
+    public void test_DeleteMatch_Success() {
+        assertSuccess(commandLine.execute("match", "rm", "session-id"));
     }
 }
