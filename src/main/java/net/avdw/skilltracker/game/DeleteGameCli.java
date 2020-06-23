@@ -7,7 +7,7 @@ import picocli.CommandLine.Spec;
 
 import java.util.ResourceBundle;
 
-@CommandLine.Command(name = "rm", description = "Remove a game from the library", mixinStandardHelpOptions = true)
+@CommandLine.Command(name = "rm", description = "Remove a registered game", mixinStandardHelpOptions = true)
 public class DeleteGameCli implements Runnable {
 
     @Spec

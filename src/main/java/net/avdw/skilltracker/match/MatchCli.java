@@ -5,7 +5,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
 @Command(name = "match", description = "Manage matches and outcomes", version = "1.0-SNAPSHOT", mixinStandardHelpOptions = true,
-        subcommands = {ListMatchCli.class, CreateMatchCli.class, MatchQualityCli.class, SuggestMatchCli.class})
+        subcommands = {ListMatchCli.class, CreateMatchCli.class, DeleteMatchCli.class, MatchQualityCli.class, SuggestMatchCli.class})
 public class MatchCli implements Runnable {
     @Spec
     private CommandSpec spec;

@@ -1,7 +1,9 @@
 package net.avdw.skilltracker.match;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import de.gesundkrank.jskills.ITeam;
+import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
 import org.tinylog.Logger;
@@ -11,11 +13,16 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Command(name = "add", description = "Add a match with an outcome", mixinStandardHelpOptions = true)
 class CreateMatchCli implements Runnable {
+    private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final Gson gson = new Gson();
     @Option(names = {"-g", "--game"}, required = true)
     private String game;
     @Inject
@@ -28,25 +35,51 @@ class CreateMatchCli implements Runnable {
     private MatchService matchService;
     @Option(names = {"-r", "--ranks"}, split = ",", required = true)
     private int[] ranks;
-    @Inject
-    @Match
-    private ResourceBundle resourceBundle;
     @Spec
     private CommandSpec spec;
     @Parameters(description = "Teams in the match; team=<player1,player2> (no spaces)", arity = "2..*")
     private List<String> teams;
+    @Inject
+    @Match
+    private Templator templator;
 
     @Override
     public void run() {
         Logger.trace("Creating match");
         if (ranks.length != teams.size()) {
-            spec.commandLine().getOut().println(resourceBundle.getString(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
+            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
         }
 
         GameTable gameTable = gameService.retrieveGame(game);
         MatchData matchData = matchDataBuilder.build(teams);
         List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, matchData);
-        matchService.createMatchForGame(gameTable, teamList, ranks);
-        spec.commandLine().getOut().println(resourceBundle.getString(MatchBundleKey.CREATE_SUCCESS));
+        List<MatchTable> matchTableList = matchService.createMatchForGame(gameTable, teamList, ranks);
+
+        spec.commandLine().getOut().println(templator.populate(MatchBundleKey.CREATE_SUCCESS));
+        matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getSessionId)).forEach((key, matchTables) -> {
+            String teams = matchTables.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
+                    .map(t -> {
+                        String team = t.stream().map(matchTable -> templator.populate(MatchBundleKey.MATCH_TEAM_PLAYER_ENTRY,
+                                gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
+                                        matchTable.getRank(),
+                                        matchTable.getPlayerTable().getName(),
+                                        matchTable.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
+                                .collect(Collectors.joining(" & "));
+                        team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
+                                gson.fromJson(String.format("{rank:'%s',team:'%s'}",
+                                        t.stream().findAny().get().getRank(),
+                                        team), Map.class));
+                        return team;
+                    })
+                    .collect(Collectors.joining(" vs. "));
+
+            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.LAST_MATCH_LIST_ENTRY,
+                    gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s'}",
+                            key.substring(0, key.indexOf("-")),
+                            teams,
+                            SIMPLE_DATE_FORMAT.format(matchTableList.stream().findAny().get().getPlayDate()),
+                            matchTableList.stream().findAny().get().getGameTable().getName()), Map.class)));
+        });
+
     }
 }

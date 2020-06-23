@@ -10,7 +10,7 @@ import picocli.CommandLine.Spec;
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
 
-@Command(name = "add", description = "Add a game which people can create matches against", mixinStandardHelpOptions = true)
+@Command(name = "add", description = "Register a game to play", mixinStandardHelpOptions = true)
 class CreateGameCli implements Runnable {
     private static GameInfo defaultGameInfo = GameInfo.getDefaultGameInfo();
 

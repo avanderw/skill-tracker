@@ -13,7 +13,10 @@ import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.tinylog.Logger;
 import picocli.CommandLine;
 
@@ -25,9 +28,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -92,6 +95,17 @@ public class MatchCliTest {
         playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
+    private List<String> getMatchIdList() {
+        List<String> sessionIdList = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\(([a-z0-9]*)\\)");
+        Matcher matcher = pattern.matcher(outWriter.toString());
+        while (matcher.find()) {
+            sessionIdList.add(matcher.group(1));
+        }
+        Logger.trace("sessionIdList={}", sessionIdList);
+        return sessionIdList;
+    }
+
     private void resetOutput() {
         errWriter = new StringWriter();
         outWriter = new StringWriter();
@@ -142,9 +156,55 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_DeleteBadId_Fail() {
+        assertSuccess(commandLine.execute("match", "rm", "session-id"));
+        assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
+    }
+
+    @Test
+    public void test_DeleteMatch_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+        List<String> matchIdList = getMatchIdList();
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "rm", matchIdList.get(0)));
+        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
+    }
+
+    @Test
+    public void test_DeleteMultipleMatches_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+        List<String> matchIdList = getMatchIdList();
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "rm", matchIdList.get(0), matchIdList.get(1)));
+        assertTrue(outWriter.toString().contains(matchIdList.get(0)));
+        assertTrue(outWriter.toString().contains(matchIdList.get(1)));
+        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
+    }
+
+    @Test
     public void test_Empty_Fail() {
         assertSuccess(commandLine.execute("match"));
         assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
+    }
+
+    @Test
+    public void test_ListLastFewMatchesEmpty_Success() {
+        assertSuccess(commandLine.execute("match", "ls"));
+        assertTrue("Should mention no matches", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.NO_MATCH_FOUND)));
+    }
+
+    @Test
+    public void test_ListLastFewMatches_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "ls"));
     }
 
     @Test
@@ -236,27 +296,5 @@ public class MatchCliTest {
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
         assertTrue("Team player mismatch count", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
-    }
-
-    @Test
-    public void test_ListLastFewMatches_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
-
-        resetOutput();
-        assertSuccess(commandLine.execute("match", "ls"));
-    }
-
-    @Ignore
-    @Test
-    public void test_ListLastFewMatchesEmpty_Success() {
-        assertSuccess(commandLine.execute("match", "ls"));
-        assertTrue("Should mention no matches", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.NO_MATCH_FOUND)));
-    }
-
-    @Ignore
-    @Test
-    public void test_DeleteMatch_Success() {
-        assertSuccess(commandLine.execute("match", "rm", "session-id"));
     }
 }

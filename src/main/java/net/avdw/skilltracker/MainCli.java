@@ -7,7 +7,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
-@Command(name = "skill-tracker", description = "Some fancy description", version = "1.0-SNAPSHOT", mixinStandardHelpOptions = true,
+@Command(name = "skill-tracker", description = "Game & Player skill tracking", version = "1.0.0", mixinStandardHelpOptions = true,
         subcommands = {
                 GameCli.class,
                 MatchCli.class,

@@ -39,7 +39,7 @@ public class MatchService {
     }
 
     @SneakyThrows
-    public void createMatchForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
+    public List<MatchTable> createMatchForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
         Logger.debug("Create match for game GAME={}, TEAMS={}, RANKS={}", gameTable, teams, ranks);
         String sessionId = UUID.randomUUID().toString();
         GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
@@ -65,6 +65,12 @@ public class MatchService {
             matchTableList.add(matchTable);
         });
         matchTableDao.create(matchTableList);
+        return matchTableList;
+    }
+
+    @SneakyThrows
+    public boolean deleteMatch(final String partial) {
+        return matchTableDao.delete(matchTableDao.queryBuilder().where().like(MatchTable.SESSION_ID, String.format("%s%%", partial)).query()) > 0;
     }
 
     @SneakyThrows

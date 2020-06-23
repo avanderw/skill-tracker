@@ -1,6 +1,10 @@
 package net.avdw.skilltracker.match;
 
 public final class MatchBundleKey {
+    public static final String DELETE_COMMAND = "delete.command";
+    public static final String DELETE_ENTRY_FAILURE = "delete.entry.failure(id)";
+    public static final String DELETE_ENTRY_SUCCESS = "delete.entry.success(id)";
+    public static final String DELETE_COMMAND_FAILURE = "delete.command.failure";
     public static final String LAST_MATCH_LIST_TITLE = "last.match.list.title(limit)";
     public static final String LAST_MATCH_LIST_ENTRY = "last.match.list.entry(date,session,game,teams)";
     public static final String MATCH_TEAM_ENTRY = "match.team.entry(rank,team)";

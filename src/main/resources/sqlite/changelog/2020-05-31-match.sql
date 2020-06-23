@@ -1,6 +1,7 @@
 --liquibase formatted sql
 --changeset andrew:2020-05-31
 CREATE TABLE "Match" (
+    "Pk"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
     "SessionId" TEXT NOT NULL,
 	"GameFk"	INTEGER NOT NULL,
 	"PlayerFk"	INTEGER NOT NULL,

@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerTable;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 public class MatchTable {
+    public static final String PK = "pk";
     public static final String GAME_FK = "gameFk";
     public static final String MEAN = "mean";
     public static final String PLAYER_FK = "playerFk";
@@ -40,6 +42,9 @@ public class MatchTable {
     private BigDecimal standardDeviation;
     @DatabaseField(canBeNull = false)
     private Integer team;
+    @ToString.Exclude
+    @DatabaseField(generatedId = true)
+    private Integer pk;
 
     public Date getPlayDate() {
         return new Date(playDate.getTime());
