@@ -1,4 +1,4 @@
-(A) 2020-06-23 Fix view player output to list top games and last played games
+x 2020-06-24 2020-06-23 Fix 'match ls' to display AgeOfEmpires2 players correctly
 (B) 2020-06-23 Fix match suggest and match quality adding players
 2020-06-21 Add shorthand FFA for adding a match
 2020-06-22 Add clean player
@@ -7,8 +7,8 @@
 2020-06-23 Add Afrikaans language
 2020-06-23 Add a dynamic changelog announcer to discord interface
 2020-06-23 Enhance discord wrapper to make use of embeds https://discordjs.guide/popular-topics/embeds.html#embed-preview
+2020-06-23 Simplify adding of a FFA match
+(A) 2020-06-24 Add 'match ls <id>' to optionally list only a match
 x 2020-06-23 2020-06-21 Add top players for a game in order of skill
 x 2020-06-23 2020-06-22 Add remove match feature
-2020-06-23 Fix 'match ls' to display AgeOfEmpires2 players correctly
-2020-06-23 Simplify adding of a FFA match
-2020-06-24 Add 'match ls <id>' to optionally list only a match
+x 2020-06-24 2020-06-23 Fix view player output to list top games and last played games

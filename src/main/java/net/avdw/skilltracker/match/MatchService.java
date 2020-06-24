@@ -93,7 +93,13 @@ public class MatchService {
 
     @SneakyThrows
     public List<MatchTable> retrieveLastFewMatches(final Long limit) {
-        return matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false).limit(limit).query();
+        List<MatchTable> matchTableList = new ArrayList<>();
+        for (final MatchTable matchTable : matchTableDao.queryBuilder()
+                .groupBy(MatchTable.SESSION_ID).limit(limit).orderBy(MatchTable.PLAY_DATE, false).query()) {
+            String sessionId = matchTable.getSessionId();
+            matchTableList.addAll(matchTableDao.queryBuilder().where().eq(MatchTable.SESSION_ID, sessionId).query());
+        }
+        return matchTableList;
     }
 
     @SneakyThrows

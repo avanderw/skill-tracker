@@ -10,6 +10,7 @@ import picocli.CommandLine.Spec;
 
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,15 +40,19 @@ public class ListMatchCli implements Runnable {
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.LAST_MATCH_LIST_TITLE,
                 gson.fromJson(String.format("{limit:'%s'}", limit), Map.class)));
 
-        matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getSessionId)).forEach((key, matchTables) -> {
-            String teams = matchTables.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
+        Map<String, List<MatchTable>> sessionMatchTableMap = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
+        List<Map.Entry<String, List<MatchTable>>> sortedEntryList = sessionMatchTableMap.entrySet().stream()
+                .sorted(Comparator.comparing((Map.Entry<String, List<MatchTable>> entry) -> entry.getValue().get(0).getPlayDate()).reversed())
+                .collect(Collectors.toList());
+        sortedEntryList.forEach(entry -> {
+            String teams = entry.getValue().stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
                     .map(teamList -> {
                         String team = teamList.stream().map(matchTable -> templator.populate(MatchBundleKey.MATCH_TEAM_PLAYER_ENTRY,
-                                    gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
-                                            matchTable.getRank(),
-                                            matchTable.getPlayerTable().getName(),
-                                            matchTable.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
-                                    .collect(Collectors.joining(" & "));
+                                gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
+                                        matchTable.getRank(),
+                                        matchTable.getPlayerTable().getName(),
+                                        matchTable.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
+                                .collect(Collectors.joining(" & "));
                         team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
                                         teamList.stream().findAny().get().getRank(),
@@ -58,10 +63,10 @@ public class ListMatchCli implements Runnable {
 
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.LAST_MATCH_LIST_ENTRY,
                     gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s'}",
-                            key.substring(0, key.indexOf("-")),
+                            entry.getKey().substring(0, entry.getKey().indexOf("-")),
                             teams,
-                            simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate()),
-                            matchTableList.stream().findAny().get().getGameTable().getName()), Map.class)));
+                            simpleDateFormat.format(entry.getValue().stream().findAny().get().getPlayDate()),
+                            entry.getValue().stream().findAny().get().getGameTable().getName()), Map.class)));
         });
     }
 }
