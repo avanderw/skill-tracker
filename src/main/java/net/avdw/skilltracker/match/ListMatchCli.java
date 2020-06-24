@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "ls", description = "List last few matches", mixinStandardHelpOptions = true)
 public class ListMatchCli implements Runnable {
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Gson gson = new Gson();
     @Option(names = {"-l", "--limit"}, description = "Limit the result list")
     private Long limit = 10L;
@@ -60,7 +60,7 @@ public class ListMatchCli implements Runnable {
                     gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s'}",
                             key.substring(0, key.indexOf("-")),
                             teams,
-                            SIMPLE_DATE_FORMAT.format(matchTableList.stream().findAny().get().getPlayDate()),
+                            simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate()),
                             matchTableList.stream().findAny().get().getGameTable().getName()), Map.class)));
         });
     }

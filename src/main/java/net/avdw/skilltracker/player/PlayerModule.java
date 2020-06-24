@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
+import net.avdw.skilltracker.Templator;
 
 import java.sql.SQLException;
 import java.util.Locale;
@@ -15,13 +16,25 @@ public class PlayerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ResourceBundle.class).annotatedWith(Player.class).toInstance(ResourceBundle.getBundle("player", Locale.ENGLISH));
-
     }
 
     @Provides
     @Singleton
     Dao<PlayerTable, Integer> gameDao(final ConnectionSource connectionSource) throws SQLException {
         return DaoManager.createDao(connectionSource, PlayerTable.class);
+    }
+
+    @Provides
+    @Singleton
+    @Player
+    ResourceBundle resourceBundle() {
+        return ResourceBundle.getBundle("player", Locale.ENGLISH);
+    }
+
+    @Provides
+    @Singleton
+    @Player
+    Templator templatePopulator(@Player final ResourceBundle resourceBundle) {
+        return new Templator(resourceBundle);
     }
 }

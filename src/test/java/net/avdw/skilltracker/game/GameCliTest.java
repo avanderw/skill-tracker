@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.tinylog.Logger;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -78,6 +79,7 @@ public class GameCliTest {
         assertEquals("The command must not have error output", "", errWriter.toString());
         assertNotEquals("The command needs standard output", "", outWriter.toString());
         assertEquals(0, exitCode);
+        Logger.debug(outWriter.toString());
     }
 
     @Before
@@ -107,7 +109,7 @@ public class GameCliTest {
 
     @Test
     public void test_Create_Pass() throws SQLException {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.2"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(GameBundleKey.ADD_SUCCESS)));
         assertNotNull(gameDao.queryForEq("name", "Northgard"));
     }
@@ -133,7 +135,7 @@ public class GameCliTest {
 
     @Test
     public void test_GameDetail_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.3"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
@@ -160,7 +162,7 @@ public class GameCliTest {
 
     @Test
     public void test_ListAll_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("game", "ls"));
 
         assertFalse("Should find a game", outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND)));
@@ -168,7 +170,7 @@ public class GameCliTest {
 
     @Test
     public void test_ListFilter_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "ls", "north"));
@@ -177,7 +179,7 @@ public class GameCliTest {
 
     @Test
     public void test_ViewGameSummary_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
@@ -186,11 +188,18 @@ public class GameCliTest {
 
     @Test
     public void test_ViewGame_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
+    }
+
+    @Test
+    public void test_AddGameWithZeroProbability() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertTrue("Should not allow adding games with 0 probability, causes NaN error on ratings for e.g. Andrew,Karl,Jaco 1,2,2",
+                outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_ZERO_DRAW_PROBABILITY)));
     }
 
 }

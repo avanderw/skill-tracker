@@ -13,6 +13,7 @@ public final class GameBundleKey {
     public static final String VIEW_GAME_MATCH_LIST_ENTRY = "view.game.match.list.entry(date,teams,session)";
     public static final String MATCH_TEAM_ENTRY = "match.team.entry(rank,team)";
     public static final String MATCH_TEAM_PLAYER_ENTRY = "match.team.player.entry(rank,name,mean)";
+    public static final String NO_ZERO_DRAW_PROBABILITY = "no.zero.draw.probability";
 
     private GameBundleKey() {
     }

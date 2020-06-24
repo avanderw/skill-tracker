@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "view", description = "View the details of a game", mixinStandardHelpOptions = true)
 public class RetrieveGameCli implements Runnable {
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Parameters(arity = "1")
     private String game;
     @Inject
@@ -86,7 +86,7 @@ public class RetrieveGameCli implements Runnable {
                         gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s'}",
                                 key.substring(0, key.indexOf("-")),
                                 teams,
-                                SIMPLE_DATE_FORMAT.format(matchTableList.stream().findAny().get().getPlayDate())
+                                simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate())
                         ), Map.class)));
             });
         }

@@ -33,8 +33,12 @@ class CreateGameCli implements Runnable {
     @Override
     public void run() {
         if (gameService.retrieveGame(game) == null) {
-            gameService.createGame(game, drawProbability);
-            spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.ADD_SUCCESS));
+            if (drawProbability.equals(BigDecimal.ZERO)) {
+                spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_ZERO_DRAW_PROBABILITY));
+            } else {
+                gameService.createGame(game, drawProbability);
+                spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.ADD_SUCCESS));
+            }
         } else {
             spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.GAME_EXIST_FAILURE));
         }

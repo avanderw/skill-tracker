@@ -68,7 +68,7 @@ public class PlayerService {
         matchTableList.forEach(matchTable -> playerMatchMap.putIfAbsent(matchTable.getPlayerTable().getName(), matchTable));
 
         return playerMatchMap.values().stream()
-                .sorted(Comparator.comparing((MatchTable m)->m.getMean().subtract(m.getStandardDeviation().multiply(BigDecimal.valueOf(3)))).reversed())
+                .sorted(Comparator.comparing((MatchTable m) -> m.getMean().subtract(m.getStandardDeviation().multiply(BigDecimal.valueOf(3)))).reversed())
                 .limit(limit)
                 .collect(Collectors.toList());
     }

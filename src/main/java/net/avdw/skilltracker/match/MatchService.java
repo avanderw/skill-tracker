@@ -10,10 +10,7 @@ import net.avdw.skilltracker.player.PlayerTable;
 import org.tinylog.Logger;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MatchService {
@@ -40,7 +37,7 @@ public class MatchService {
 
     @SneakyThrows
     public List<MatchTable> createMatchForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
-        Logger.debug("Create match for game GAME={}, TEAMS={}, RANKS={}", gameTable, teams, ranks);
+        Logger.debug("Create match for game GAME={}, TEAMS={}, RANKS={}", gameTable, teams, Arrays.toString(ranks));
         String sessionId = UUID.randomUUID().toString();
         GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
         Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, ranks);
@@ -80,7 +77,18 @@ public class MatchService {
 
     @SneakyThrows
     public List<MatchTable> retrieveAllMatchesForPlayer(final PlayerTable playerTable) {
-        return matchTableDao.queryForEq(MatchTable.PLAYER_FK, playerTable.getPk());
+        return matchTableDao.queryBuilder()
+                .orderBy(MatchTable.PLAY_DATE, false)
+                .where().eq(MatchTable.PLAYER_FK, playerTable.getPk())
+                .query();
+    }
+
+    @SneakyThrows
+    public List<MatchTable> retrieveLastFewMatchesForPlayer(final PlayerTable playerTable, final Long limit) {
+        return matchTableDao.queryBuilder().limit(limit)
+                .orderBy(MatchTable.PLAY_DATE, false)
+                .where().eq(MatchTable.PLAYER_FK, playerTable.getPk())
+                .query();
     }
 
     @SneakyThrows

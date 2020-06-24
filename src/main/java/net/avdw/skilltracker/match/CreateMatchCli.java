@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Command(name = "add", description = "Add a match with an outcome", mixinStandardHelpOptions = true)
 class CreateMatchCli implements Runnable {
-    private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Gson gson = new Gson();
     @Option(names = {"-g", "--game"}, required = true)
     private String game;
@@ -77,7 +77,7 @@ class CreateMatchCli implements Runnable {
                     gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s'}",
                             key.substring(0, key.indexOf("-")),
                             teams,
-                            SIMPLE_DATE_FORMAT.format(matchTableList.stream().findAny().get().getPlayDate()),
+                            simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate()),
                             matchTableList.stream().findAny().get().getGameTable().getName()), Map.class)));
         });
 

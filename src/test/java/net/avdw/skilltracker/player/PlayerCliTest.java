@@ -18,6 +18,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.tinylog.Logger;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -76,10 +77,11 @@ public class PlayerCliTest {
         playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
-    private void assertSuccess(int exitCode) {
+    private void assertSuccess(final int exitCode) {
         assertEquals("The command must not have error output", "", errWriter.toString());
         assertNotEquals("The command needs standard output", "", outWriter.toString());
         assertEquals(0, exitCode);
+        Logger.debug(outWriter.toString());
     }
 
     @Before
@@ -107,7 +109,7 @@ public class PlayerCliTest {
 
     @Test
     public void test_ListAll_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
@@ -117,7 +119,7 @@ public class PlayerCliTest {
 
     @Test
     public void test_ListFilter_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
@@ -133,8 +135,11 @@ public class PlayerCliTest {
 
     @Test
     public void test_ViewPlayer_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
+        assertSuccess(commandLine.execute("game", "add", "AgeOfEmpires", "0.1"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,3", "--game", "AgeOfEmpires"));
 
         resetOutput();
         assertSuccess(commandLine.execute("player", "view", "Andrew"));

@@ -1,7 +1,9 @@
 package net.avdw.skilltracker.player;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
-import net.avdw.skilltracker.game.GameTable;
+import net.avdw.skilltracker.Templator;
+import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.match.MatchService;
 import net.avdw.skilltracker.match.MatchTable;
 import picocli.CommandLine.Command;
@@ -11,47 +13,60 @@ import picocli.CommandLine.Spec;
 
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Command(name = "view", description = "View player information", mixinStandardHelpOptions = true)
 public class RetrievePlayerCli implements Runnable {
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private Long gameLimit = 10L;
+    @Inject
+    private GameService gameService;
+    @Inject
+    private Gson gson;
+    private Long matchLimit = 5L;
     @Inject
     private MatchService matchService;
     @Parameters(arity = "1")
     private String name;
     @Inject
     private PlayerService playerService;
-    @Inject
-    @Player
-    private ResourceBundle resourceBundle;
     @Spec
     private CommandSpec spec;
+    @Inject
+    @Player
+    private Templator templator;
 
     @Override
     public void run() {
         PlayerTable playerTable = playerService.retrievePlayer(name);
         if (playerTable == null) {
-            spec.commandLine().getOut().println(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST));
+            spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_NOT_EXIST));
             return;
         }
 
-        List<MatchTable> matchTableList = matchService.retrieveAllMatchesForPlayer(playerTable);
-        if (matchTableList.isEmpty()) {
-            spec.commandLine().getOut().println(resourceBundle.getString(PlayerBundleKey.NO_MATCH_FOUND));
-        } else {
-            Date date = matchTableList.stream().findAny().get().getPlayDate();
-            GameTable gameTable = matchTableList.stream().findAny().get().getGameTable();
-            String teams = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
-                    .map(teamList -> teamList.stream()
-                            .map(matchTable -> String.format("[%s]%s(%s)", matchTable.getRank(), matchTable.getPlayerTable().getName(), matchTable.getMean().setScale(2, RoundingMode.HALF_UP)))
-                            .collect(Collectors.joining(" & ")))
-                    .collect(Collectors.joining(" vs. "));
-            spec.commandLine().getOut().println(String.format("%s %s %s", SIMPLE_DATE_FORMAT.format(date), gameTable.getName(), teams));
+        spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_TOP_GAME_LIST_TITLE,
+                gson.fromJson(String.format("{limit:'%s'}", gameLimit), Map.class)));
+        List<MatchTable> topGameList = gameService.retrieveTopGamesForPlayer(playerTable, gameLimit);
+        for (int i = 0; i < topGameList.size(); i++) {
+            MatchTable table = topGameList.get(i);
+            spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_TOP_GAME_LIST_ENTRY,
+                    gson.fromJson(String.format("{name:'%s',mean:'%s',stdev:'%s',rank:'%s'}",
+                            table.getGameTable().getName(),
+                            table.getMean().setScale(0, RoundingMode.HALF_UP),
+                            table.getStandardDeviation().setScale(0, RoundingMode.HALF_UP),
+                            i + 1), Map.class)));
         }
+
+        spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_LAST_PLAYED_TITLE,
+                gson.fromJson(String.format("{limit:'%s'}", matchLimit), Map.class)));
+        List<MatchTable> lastFewGameList = matchService.retrieveLastFewMatchesForPlayer(playerTable, matchLimit);
+        lastFewGameList.forEach(matchTable ->
+                spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_LAST_PLAYED_ENTRY,
+                        gson.fromJson(String.format("{date:'%s',game:'%s',rank:'%s',session:'%s'}",
+                                simpleDateFormat.format(matchTable.getPlayDate()),
+                                matchTable.getGameTable().getName(),
+                                matchTable.getRank(),
+                                matchTable.getSessionId().substring(0, matchTable.getSessionId().indexOf("-"))), Map.class))));
     }
 }
