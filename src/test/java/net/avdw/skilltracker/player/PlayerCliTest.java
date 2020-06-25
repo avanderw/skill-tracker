@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
@@ -152,7 +153,20 @@ public class PlayerCliTest {
 
         resetOutput();
         assertSuccess(commandLine.execute("player", "view", "Andrew"));
+        assertEquals(5, countLinesStartingWith(">"));
         assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
+    }
+
+    private int countLinesStartingWith(String prefix) {
+        int count = 0;
+        Scanner lineScanner = new Scanner(outWriter.toString());
+        while (lineScanner.hasNextLine()) {
+            String line = lineScanner.nextLine();
+            if (line.startsWith(prefix)) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }

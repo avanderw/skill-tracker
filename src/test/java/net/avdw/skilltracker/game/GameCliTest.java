@@ -201,6 +201,8 @@ public class GameCliTest {
         assertSuccess(commandLine.execute("match", "add", "Andrew,Four", "Jaco,Pieter", "--ranks", "1,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Five", "Jaco,Bot", "--ranks", "1,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Six", "Jaco,Bot", "--ranks", "1,2", "--game", "Northgard"));
+
+        resetOutput();
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
         assertFalse(outWriter.toString().contains("Andrew & One"));
         assertFalse(outWriter.toString().contains("One & Andrew"));

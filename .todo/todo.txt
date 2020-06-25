@@ -3,7 +3,7 @@
 x 2020-06-25 2020-06-22 Add command for game ranks release:1.0.0
 (D) 2020-06-23 Simplify adding of a FFA match release:1.0.0
 (E) 2020-06-21 Add shorthand FFA for adding a match release:1.0.0
-(F) 2020-06-24 Fix 'game view <game>' to list last 5 matches correctly release:1.0.0
+x 2020-06-25 2020-06-24 Fix 'game view <game>' to list last 5 matches correctly release:1.0.0
 (G) 2020-06-24 Update 'player view <player> --game' to show progression release:1.0.0
 (H) 2020-06-24 Update suggest to remove decimals release:1.0.0
 (I) 2020-06-24 Fix quality allowing 1v1 release:1.0.0

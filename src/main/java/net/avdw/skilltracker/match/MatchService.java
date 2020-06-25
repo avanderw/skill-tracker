@@ -84,11 +84,28 @@ public class MatchService {
     }
 
     @SneakyThrows
+    public List<MatchTable> retrieveLastFewMatchesForGame(final GameTable gameTable, final Long limit) {
+        List<MatchTable> matchTableList = new ArrayList<>();
+        for (final MatchTable matchTable : matchTableDao.queryBuilder()
+                .groupBy(MatchTable.SESSION_ID).limit(limit).orderBy(MatchTable.PLAY_DATE, false)
+                .where().eq(MatchTable.GAME_FK, gameTable).query()) {
+            String sessionId = matchTable.getSessionId();
+            matchTableList.addAll(matchTableDao.queryBuilder().where().eq(MatchTable.SESSION_ID, sessionId).query());
+        }
+        return matchTableList;
+    }
+
+    @SneakyThrows
     public List<MatchTable> retrieveLastFewMatchesForPlayer(final PlayerTable playerTable, final Long limit) {
-        return matchTableDao.queryBuilder().limit(limit)
-                .orderBy(MatchTable.PLAY_DATE, false)
-                .where().eq(MatchTable.PLAYER_FK, playerTable.getPk())
-                .query();
+        List<MatchTable> matchTableList = new ArrayList<>();
+        for (final MatchTable matchTable : matchTableDao.queryBuilder()
+        .groupBy(MatchTable.SESSION_ID).limit(limit).orderBy(MatchTable.PLAY_DATE, false)
+        .where().eq(MatchTable.PLAYER_FK, playerTable)
+                .query()) {
+            String sessionId = matchTable.getSessionId();
+            matchTableList.addAll(matchTableDao.queryBuilder().where().eq(MatchTable.SESSION_ID, sessionId).query());
+        }
+        return matchTableList;
     }
 
     @SneakyThrows

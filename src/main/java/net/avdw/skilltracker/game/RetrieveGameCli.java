@@ -26,11 +26,11 @@ public class RetrieveGameCli implements Runnable {
     @Inject
     private GameService gameService;
     private Gson gson = new Gson();
-    @Option(names="--last")
+    @Option(names = "--last")
     private Long matchLimit = 5L;
     @Inject
     private MatchService matchService;
-    @Option(names="--top")
+    @Option(names = "--top")
     private Long playerLimit = 10L;
     @Inject
     private PlayerService playerService;
@@ -45,7 +45,8 @@ public class RetrieveGameCli implements Runnable {
         GameTable gameTable = gameService.retrieveGame(game);
 
         List<MatchTable> topPlayerList = playerService.retrieveTopPlayersForGame(gameTable, playerLimit);
-        Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveAllMatchesForGame(gameTable);
+        Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveLastFewMatchesForGame(gameTable, matchLimit)
+                .stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
         if (matchPlayerMap.isEmpty()) {
             templator.populate(GameBundleKey.NO_MATCH_FOUND);
         } else {
