@@ -114,12 +114,37 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_CreateExistingPlayer_Success() {
+    public void test_CreateExistingPlayer_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
 
         assertSuccess(commandLine.execute("match", "add", "Andrew", "Etienne", "Marius,Dean", "--ranks", "1,2,2", "--game", "Northgard"));
+    }
+
+    @Test
+    public void test_CreateRank_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
+        assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman"));
+        assertTrue(outWriter.toString().contains("#2:JK & BOT-Inhuman"));
+    }
+
+    @Test
+    public void test_QualityAllowingTeamSetup_Fail() {
+        assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
+        assertSuccess(commandLine.execute("match", "quality", "1v1", "Andrew", "Mark", "-g=UnrealTournament"));
+        assertFalse(outWriter.toString().contains("1v1"));
+        fail("update to print players for quality metric");
+    }
+
+    @Test
+    public void test_ViewMatchDetail_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
+        assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman"));
+        String id = getMatchIdList().get(0);
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "view", id));
     }
 
     @Test
@@ -162,7 +187,7 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_DeleteMatch_Success() {
+    public void test_DeleteMatch_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
         List<String> matchIdList = getMatchIdList();
@@ -173,7 +198,7 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_DeleteMultipleMatches_Success() {
+    public void test_DeleteMultipleMatches_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
         assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
@@ -193,13 +218,13 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_ListLastFewMatchesEmpty_Success() {
+    public void test_ListLastFewMatchesEmpty_Pass() {
         assertSuccess(commandLine.execute("match", "ls"));
         assertTrue("Should mention no matches", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.NO_MATCH_FOUND)));
     }
 
     @Test
-    public void test_ListLastFewMatches_Success() {
+    public void test_ListLastFewMatches_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
 
@@ -208,25 +233,25 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_MatchQualityFFA_Success() {
+    public void test_MatchQualityFFA_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "quality", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("8.944272%"));
+        assertTrue(outWriter.toString().contains("9%"));
     }
 
     @Test
-    public void test_MatchQuality_Success() {
+    public void test_MatchQuality_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "quality", "Andrew,Karl", "Marius,Raoul", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("44.721360%"));
+        assertTrue(outWriter.toString().contains("45%"));
     }
 
     @Test
-    public void test_MatchSuggest1v1v1_Success() {
+    public void test_MatchSuggest1v1v1_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "1v1v1", "Andrew,Karl,JK", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("20.00%"));
+        assertTrue(outWriter.toString().contains("20%"));
     }
 
     @Test
@@ -237,43 +262,43 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_TeamSuggestFresh_Success() {
+    public void test_TeamSuggestFresh_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,MikeAssassin640", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("44.72%"));
+        assertTrue(outWriter.toString().contains("45%"));
     }
 
     @Test
-    public void test_TeamSuggestOddTeam_Success() {
+    public void test_TeamSuggestOddTeam_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "2v1v1", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("11.75%"));
+        assertTrue(outWriter.toString().contains("12%"));
     }
 
     @Test
-    public void test_TeamSuggestPlaySuggest_Success() {
+    public void test_TeamSuggestPlaySuggest_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Marius", "Karl,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("49.71%"));
+        assertTrue(outWriter.toString().contains("50%"));
     }
 
     @Test
-    public void test_TeamSuggestPlayedGame_Success() {
+    public void test_TeamSuggestPlayedGame_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
-        assertTrue(outWriter.toString().contains("47.22%"));
+        assertTrue(outWriter.toString().contains("47%"));
     }
 
     @Test

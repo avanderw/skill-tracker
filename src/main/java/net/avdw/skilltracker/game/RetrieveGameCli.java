@@ -8,6 +8,7 @@ import net.avdw.skilltracker.match.MatchTable;
 import net.avdw.skilltracker.player.PlayerService;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
@@ -25,9 +26,11 @@ public class RetrieveGameCli implements Runnable {
     @Inject
     private GameService gameService;
     private Gson gson = new Gson();
+    @Option(names="--last")
     private Long matchLimit = 5L;
     @Inject
     private MatchService matchService;
+    @Option(names="--top")
     private Long playerLimit = 10L;
     @Inject
     private PlayerService playerService;

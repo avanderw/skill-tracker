@@ -99,6 +99,13 @@ public class GameCliTest {
     }
 
     @Test
+    public void test_AddGameWithZeroProbability_Fail() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        assertTrue("Should not allow adding games with 0 probability, causes NaN error on ratings for e.g. Andrew,Karl,Jaco 1,2,2",
+                outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_ZERO_DRAW_PROBABILITY)));
+    }
+
+    @Test
     public void test_CreateDuplicate_Fail() throws SQLException {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         resetOutput();
@@ -112,6 +119,14 @@ public class GameCliTest {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0.2"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(GameBundleKey.ADD_SUCCESS)));
         assertNotNull(gameDao.queryForEq("name", "Northgard"));
+    }
+
+    @Test
+    public void test_DeleteGameWithMatches_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("game", "rm", "Northgard"));
+        assertSuccess(commandLine.execute("player", "view", "Andrew"));
     }
 
     @Test
@@ -146,13 +161,13 @@ public class GameCliTest {
     }
 
     @Test
-    public void test_GameProbabilityOptional_Success() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+    public void test_GameNotFound_Fail() {
+        assertSuccess(commandLine.execute("game", "random"));
     }
 
     @Test
-    public void test_GameNotFound_Fail() {
-        assertSuccess(commandLine.execute("game", "random"));
+    public void test_GameProbabilityOptional_Success() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
     }
 
     @Test
@@ -178,6 +193,29 @@ public class GameCliTest {
     }
 
     @Test
+    public void test_ViewDetailMatchListLimit_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,One", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Two", "Jaco,JK", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Three", "Jaco,Marius", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Four", "Jaco,Pieter", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Five", "Jaco,Bot", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Six", "Jaco,Bot", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("game", "view", "Northgard"));
+        assertFalse(outWriter.toString().contains("Andrew & One"));
+        assertFalse(outWriter.toString().contains("One & Andrew"));
+    }
+
+    @Test
+    public void test_ViewGameLimit_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,One", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("game", "view", "Northgard", "--top=1", "--last=2"));
+    }
+
+    @Test
     public void test_ViewGameSummary_Success() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
@@ -193,13 +231,6 @@ public class GameCliTest {
         resetOutput();
 
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
-    }
-
-    @Test
-    public void test_AddGameWithZeroProbability() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        assertTrue("Should not allow adding games with 0 probability, causes NaN error on ratings for e.g. Andrew,Karl,Jaco 1,2,2",
-                outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_ZERO_DRAW_PROBABILITY)));
     }
 
 }

@@ -1,0 +1,1 @@
+(B) 2020-06-23 Fix match suggest and match quality adding players release:1.0.0

@@ -108,7 +108,7 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_ListAll_Success() {
+    public void test_ListAll_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
@@ -118,7 +118,7 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_ListFilter_Success() {
+    public void test_ListFilter_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
@@ -128,13 +128,22 @@ public class PlayerCliTest {
     }
 
     @Test
+    public void test_ViewPlayerProgression_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("player", "view", "Andrew", "-g=Northgard"));
+    }
+
+    @Test
     public void test_ViewPlayer_Fail() {
         assertSuccess(commandLine.execute("player", "view", "Andrew"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 
     @Test
-    public void test_ViewPlayer_Success() {
+    public void test_ViewPlayer_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("game", "add", "AgeOfEmpires", "0.1"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
