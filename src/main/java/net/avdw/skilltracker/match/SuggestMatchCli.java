@@ -76,7 +76,7 @@ public class SuggestMatchCli implements Runnable {
             MatchTable matchTable = matchService.retrieveLatestPlayerMatchForGame(gameTable, playerTable);
             spec.commandLine().getOut().println(String.format("> (μ)=%s (σ)=%s \t %s",
                     matchTable.getMean().setScale(2, RoundingMode.HALF_UP),
-                    matchTable.getStandardDeviation().setScale(2, RoundingMode.HALF_UP),
+                    matchTable.getStandardDeviation().setScale(0, RoundingMode.HALF_UP),
                     playerTable.getName()
             ));
         });
@@ -87,7 +87,7 @@ public class SuggestMatchCli implements Runnable {
         ));
         matchSet.stream().sorted(Comparator.comparingDouble((MatchData matchData) -> matchData.getQuality().doubleValue()).reversed()).forEach(matchData ->
                 spec.commandLine().getOut().println(String.format("%s%%\t%s",
-                        matchData.getQuality().multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString(),
+                        matchData.getQuality().multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).toString(),
                         matchData.getTeamDataSet().stream().map(teamData -> String.format("(%s)",
                                 teamData.getPlayerTableSet().stream().map(PlayerTable::getName).collect(Collectors.joining(", "))))
                                 .collect(Collectors.joining(" vs. "))

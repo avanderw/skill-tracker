@@ -157,7 +157,7 @@ public class PlayerCliTest {
         assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 
-    private int countLinesStartingWith(String prefix) {
+    private int countLinesStartingWith(final String prefix) {
         int count = 0;
         Scanner lineScanner = new Scanner(outWriter.toString());
         while (lineScanner.hasNextLine()) {

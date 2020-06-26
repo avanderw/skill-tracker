@@ -40,7 +40,7 @@ public class MatchService {
         Logger.debug("Create match for game GAME={}, TEAMS={}, RANKS={}", gameTable, teams, Arrays.toString(ranks));
         String sessionId = UUID.randomUUID().toString();
         GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
-        Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, ranks);
+        Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, Arrays.copyOf(ranks, ranks.length));
         List<MatchTable> matchTableList = new ArrayList<>();
         newRatings.forEach((p, r) -> {
             PlayerTable playerTable = (PlayerTable) p;
@@ -57,6 +57,7 @@ public class MatchService {
                     break;
                 }
             }
+
             matchTable.setTeam(teamIdx);
             matchTable.setRank(ranks[teamIdx]);
             matchTableList.add(matchTable);

@@ -11,6 +11,7 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,6 +37,6 @@ public class MatchQualityCli implements Runnable {
         GameTable gameTable = gameService.retrieveGame(game);
         MatchData matchData = matchDataBuilder.build(teams);
         List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, matchData);
-        spec.commandLine().getOut().println(String.format(Locale.ENGLISH, "%,f%%", matchService.calculateMatchQuality(gameTable, teamList).multiply(BigDecimal.valueOf(100))));
+        spec.commandLine().getOut().println(String.format(Locale.ENGLISH, "%s%%", matchService.calculateMatchQuality(gameTable, teamList).multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP)));
     }
 }
