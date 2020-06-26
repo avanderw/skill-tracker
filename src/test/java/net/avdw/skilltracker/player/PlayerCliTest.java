@@ -132,6 +132,8 @@ public class PlayerCliTest {
     public void test_ViewPlayerProgression_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "2,1", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("player", "view", "Andrew", "-g=Northgard"));

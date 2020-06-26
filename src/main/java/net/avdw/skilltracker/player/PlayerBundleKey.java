@@ -11,6 +11,8 @@ public final class PlayerBundleKey {
     public static final String PLAYER_TITLE = "player.title";
     public static final String PLAYER_TOP_GAME_LIST_ENTRY = "player.top.game.list.entry(name,mean,stdev,rank)";
     public static final String PLAYER_TOP_GAME_LIST_TITLE = "player.top.game.list.title(limit)";
+    public static final String SPECIFIC_GAME_LAST_PLAYED_ENTRY = "specific.game.last.played.entry(date,mean,stdev,teams,session)";
+    public static final String SPECIFIC_GAME_TITLE = "specific.game.title(game,person,mean,stdev,played)";
 
     private PlayerBundleKey() {
 
