@@ -7,7 +7,7 @@ x 2020-06-25 2020-06-24 Fix 'game view <game>' to list last 5 matches correctly 
 (G) 2020-06-24 Update 'player view <player> --game' to show progression release:1.0.0
 x 2020-06-26 2020-06-24 Update suggest to remove decimals release:1.0.0
 (I) 2020-06-24 Fix quality allowing 1v1 release:1.0.0
-(J) 2020-06-24 Change view last matches for player to include vs data release:1.0.0
+x 2020-06-26 2020-06-24 Change view last matches for player to include vs data release:1.0.0
 x 2020-06-26 2020-06-24 Fix bug in match list where the rank is 2,1 in 2v2 release:1.0.0
 (M) 2020-06-24 Update getting last score to average out mean and standard deviation if player is in the match more than once release:1.0.0
 (N) 2020-06-25 Consider removing view for player detail to 'player JK' release:1.0.0
@@ -23,4 +23,4 @@ x 2020-06-23 2020-06-21 Add top players for a game in order of skill
 x 2020-06-23 2020-06-22 Add remove match feature
 x 2020-06-24 2020-06-23 Fix 'match ls' to display AgeOfEmpires2 players correctly
 x 2020-06-24 2020-06-23 Fix view player output to list top games and last played games
-(C) 2020-06-25 Fix order of match lists for game view
+x 2020-06-26 2020-06-25 Fix order of match lists for game view
