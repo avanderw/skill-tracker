@@ -129,6 +129,11 @@ public class PlayerCliTest {
     }
 
     @Test
+    public void test_BadPlayerView_Fail() {
+        assertSuccess(commandLine.execute("player", "view", "BadName"));
+    }
+
+    @Test
     public void test_ViewPlayerProgression_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));

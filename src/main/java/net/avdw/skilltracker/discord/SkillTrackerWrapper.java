@@ -36,20 +36,14 @@ public class SkillTrackerWrapper {
             Logger.debug("Command has no output: {}", command);
         }
 
-        if (!out.toString().isEmpty()) {
-            if (out.toString().length() > 2000) {
-                event.getChannel().sendFile(out.toString().getBytes(StandardCharsets.UTF_8), String.format("output-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
-            } else {
-                event.getChannel().sendMessage(out.toString()).queue();
-            }
-        }
 
-        if (!err.toString().isEmpty()) {
-            if (err.toString().length() > 2000) {
-                event.getChannel().sendFile(err.toString().getBytes(StandardCharsets.UTF_8), String.format("error-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
-            } else {
-                event.getChannel().sendMessage(err.toString()).queue();
-            }
+        String output = out.toString().isEmpty() ? err.toString() : out.toString();
+        String response = String.format("```%s```", output);
+
+        if (response.length() > 2000) {
+            event.getChannel().sendFile(response.getBytes(StandardCharsets.UTF_8), String.format("output-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
+        } else {
+            event.getChannel().sendMessage(response).queue();
         }
     }
 }

@@ -166,4 +166,10 @@ public class MatchService {
         Logger.debug("Latest match for game {} {}", gameTable, matchTable);
         return matchTable;
     }
+
+    @SneakyThrows
+    public List<MatchTable> retrieveMatchWithSessionId(final String id) {
+        String sessionId = String.format("%s%%", id);
+        return matchTableDao.queryBuilder().where().like(MatchTable.SESSION_ID, sessionId).query();
+    }
 }

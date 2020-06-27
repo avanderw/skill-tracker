@@ -140,7 +140,7 @@ public class MatchCliTest {
     @Test
     public void test_ViewMatchDetail_Pass() {
         assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
-        assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman"));
+        assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1,3", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman", "Andrew"));
         String id = getMatchIdList().get(0);
 
         resetOutput();

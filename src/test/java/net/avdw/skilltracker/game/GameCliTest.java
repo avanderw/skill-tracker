@@ -130,6 +130,11 @@ public class GameCliTest {
     }
 
     @Test
+    public void test_BadGameView_Fail() {
+        assertSuccess(commandLine.execute("game", "view", "BadGame"));
+    }
+
+    @Test
     public void test_Delete_Fail() {
         assertSuccess(commandLine.execute("game", "rm", "Northgard"));
     }

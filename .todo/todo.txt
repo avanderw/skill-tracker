@@ -1,14 +1,9 @@
-(A) 2020-06-24 Add 'match ls <id>' to optionally list only a match release:1.0.0
-(B) 2020-06-24 Fix removal of match to recalculate score release:1.0.0
-x 2020-06-25 2020-06-22 Add command for game ranks release:1.0.0
+x 2020-06-27 2020-06-24 Add 'match ls <id>' to optionally list only a match release:1.0.0
+(C) 2020-06-27 Add case insensitivity to names
 (D) 2020-06-23 Simplify adding of a FFA match release:1.0.0
 (E) 2020-06-21 Add shorthand FFA for adding a match release:1.0.0
-x 2020-06-25 2020-06-24 Fix 'game view <game>' to list last 5 matches correctly release:1.0.0
-x 2020-06-26 2020-06-24 Update 'player view <player> --game' to show progression release:1.0.0
-x 2020-06-26 2020-06-24 Update suggest to remove decimals release:1.0.0
+(F) 2020-06-27 Match list size to player game view
 (I) 2020-06-24 Fix quality allowing 1v1 release:1.0.0
-x 2020-06-26 2020-06-24 Change view last matches for player to include vs data release:1.0.0
-x 2020-06-26 2020-06-24 Fix bug in match list where the rank is 2,1 in 2v2 release:1.0.0
 (M) 2020-06-24 Update getting last score to average out mean and standard deviation if player is in the match more than once release:1.0.0
 (N) 2020-06-25 Consider removing view for player detail to 'player JK' release:1.0.0
 2020-06-22 Add clean player
@@ -19,9 +14,18 @@ x 2020-06-26 2020-06-24 Fix bug in match list where the rank is 2,1 in 2v2 relea
 2020-06-24 Add backup and restore functionality 
 2020-06-24 Add command to check changelog
 2020-06-24 Add command to check todo
+2020-06-26 Consider using a graph for player game progression
 x 2020-06-23 2020-06-21 Add top players for a game in order of skill
 x 2020-06-23 2020-06-22 Add remove match feature
 x 2020-06-24 2020-06-23 Fix 'match ls' to display AgeOfEmpires2 players correctly
 x 2020-06-24 2020-06-23 Fix view player output to list top games and last played games
+x 2020-06-25 2020-06-22 Add command for game ranks release:1.0.0
+x 2020-06-25 2020-06-24 Fix 'game view <game>' to list last 5 matches correctly release:1.0.0
+x 2020-06-26 2020-06-24 Change view last matches for player to include vs data release:1.0.0
+x 2020-06-26 2020-06-24 Fix bug in match list where the rank is 2,1 in 2v2 release:1.0.0
+x 2020-06-26 2020-06-24 Update 'player view <player> --game' to show progression release:1.0.0
+x 2020-06-26 2020-06-24 Update suggest to remove decimals release:1.0.0
 x 2020-06-26 2020-06-25 Fix order of match lists for game view
-2020-06-26 Consider using a graph for player game progression
+(G) 2020-06-27 Add recalculate scores
+(H) 2020-06-27 Fix bug in player view
+(J) 2020-06-27 Fix bug when wrong game name is used

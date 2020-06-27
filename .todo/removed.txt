@@ -1,1 +1,2 @@
 (B) 2020-06-23 Fix match suggest and match quality adding players release:1.0.0
+(B) 2020-06-24 Fix removal of match to recalculate score release:1.0.0

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @CommandLine.Command(name = "ls", description = "List last few matches", mixinStandardHelpOptions = true)
 public class ListMatchCli implements Runnable {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     @Option(names = {"-l", "--limit"}, description = "Limit the result list")
     private Long limit = 10L;
     @Inject
