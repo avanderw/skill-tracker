@@ -154,13 +154,19 @@ public class PlayerCliTest {
     public void test_ViewPlayer_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("game", "add", "AgeOfEmpires", "0.1"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,3", "--game", "AgeOfEmpires"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,3", "--game", "AgeOfEmpires"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,3", "--game", "AgeOfEmpires"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,2", "--game", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,3", "--game", "AgeOfEmpires"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,2", "--game", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("player", "view", "Andrew"));
-        assertEquals(5, countLinesStartingWith(">"));
+        assertEquals(7, countLinesStartingWith(">"));
         assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 

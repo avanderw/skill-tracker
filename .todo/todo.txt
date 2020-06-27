@@ -27,5 +27,5 @@ x 2020-06-26 2020-06-24 Update 'player view <player> --game' to show progression
 x 2020-06-26 2020-06-24 Update suggest to remove decimals release:1.0.0
 x 2020-06-26 2020-06-25 Fix order of match lists for game view
 (G) 2020-06-27 Add recalculate scores
-(H) 2020-06-27 Fix bug in player view
+x 2020-06-27 2020-06-27 Fix bug in player view
 (J) 2020-06-27 Fix bug when wrong game name is used

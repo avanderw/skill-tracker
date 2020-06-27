@@ -17,7 +17,7 @@ public final class MatchBundleKey {
     public static final String TEAM_PLAYER_COUNT_MISMATCH = "team.player.count.mismatch";
     public static final String TEAM_RANK_COUNT_MISMATCH = "team.rank.count.mismatch";
     public static final String VIEW_MATCH_DETAIL_PLAYER_ENTRY = "view.match.detail.player.entry(rank,person,mean,stdev)";
-    public static final String VIEW_MATCH_DETAIL_TITLE = "view.match.detail.title(id,date)";
+    public static final String VIEW_MATCH_DETAIL_TITLE = "view.match.detail.title(id,game,date)";
 
     private MatchBundleKey() {
     }

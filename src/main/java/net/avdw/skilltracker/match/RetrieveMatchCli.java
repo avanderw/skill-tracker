@@ -38,8 +38,9 @@ public class RetrieveMatchCli implements Runnable {
         }
 
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.VIEW_MATCH_DETAIL_TITLE,
-                gson.fromJson(String.format("{id:'%s',date:'%s'}", id,
-                        simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate())),
+                gson.fromJson(String.format("{id:'%s',date:'%s',game:'%s'}", id,
+                        simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate()),
+                        matchTableList.stream().findAny().get().getGameTable().getName()),
                         Map.class)));
 
         matchTableList.stream().sorted(Comparator.comparingInt(MatchTable::getRank)).forEach(m ->

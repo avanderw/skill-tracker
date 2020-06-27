@@ -54,13 +54,14 @@ public class GameService {
 
     @SneakyThrows
     public List<MatchTable> retrieveTopGamesForPlayer(final PlayerTable playerTable, final Long limit) {
-        List<MatchTable> allMatchList = matchDao.queryBuilder().limit(limit).orderBy(MatchTable.PLAY_DATE, false)
+        List<MatchTable> allMatchList = matchDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false)
                 .where().eq(MatchTable.PLAYER_FK, playerTable).query();
 
         Map<String, MatchTable> gameMatchTableMap = new HashMap<>();
         allMatchList.forEach(matchTable -> gameMatchTableMap.putIfAbsent(matchTable.getGameTable().getName(), matchTable));
 
         return gameMatchTableMap.values().stream()
+                .limit(limit)
                 .sorted(Comparator.comparing((MatchTable matchTable) -> matchTable.getMean()
                         .subtract(matchTable.getStandardDeviation().multiply(new BigDecimal(3))))
                         .reversed())
