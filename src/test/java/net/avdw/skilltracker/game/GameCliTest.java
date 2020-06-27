@@ -132,6 +132,7 @@ public class GameCliTest {
     @Test
     public void test_BadGameView_Fail() {
         assertSuccess(commandLine.execute("game", "view", "BadGame"));
+        assertTrue(outWriter.toString().contains(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND)));
     }
 
     @Test

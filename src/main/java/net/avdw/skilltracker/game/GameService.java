@@ -6,6 +6,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import lombok.SneakyThrows;
 import net.avdw.skilltracker.match.MatchTable;
 import net.avdw.skilltracker.player.PlayerTable;
+import org.tinylog.Logger;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -31,10 +32,15 @@ public class GameService {
 
     @SneakyThrows
     public void deleteGame(final String name) {
-        final DeleteBuilder<GameTable, Integer> deleteBuilder =
-                gameDao.deleteBuilder();
-        deleteBuilder.where().eq("Name", name);
-        deleteBuilder.delete();
+        final GameTable gameTable = gameDao.queryBuilder().where().eq(GameTable.NAME, name).queryForFirst();
+        if (gameTable == null) {
+            Logger.debug("Cannot find game to delete with name {}", name);
+            return;
+        }
+        final DeleteBuilder<MatchTable, Integer> matchDeleteBuilder = matchDao.deleteBuilder();
+        matchDeleteBuilder.where().eq(MatchTable.GAME_FK, gameTable);
+        matchDeleteBuilder.delete();
+        gameDao.delete(gameTable);
     }
 
     @SneakyThrows

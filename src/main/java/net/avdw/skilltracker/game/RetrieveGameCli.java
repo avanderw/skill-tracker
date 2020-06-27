@@ -45,6 +45,11 @@ public class RetrieveGameCli implements Runnable {
     public void run() {
         GameTable gameTable = gameService.retrieveGame(game);
 
+        if (gameTable == null) {
+            spec.commandLine().getOut().println(templator.populate(GameBundleKey.NO_GAME_FOUND));
+            return;
+        }
+
         List<MatchTable> topPlayerList = playerService.retrieveTopPlayersForGame(gameTable, playerLimit);
         Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveLastFewMatchesForGame(gameTable, matchLimit)
                 .stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
