@@ -132,6 +132,8 @@ public class MatchCliTest {
     @Test
     public void test_QualityAllowingTeamSetup_Fail() {
         assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
+
+        resetOutput();
         assertSuccess(commandLine.execute("match", "quality", "1v1", "Andrew", "Mark", "-g=UnrealTournament"));
         assertFalse(outWriter.toString().contains("1v1"));
         fail("update to print players for quality metric");

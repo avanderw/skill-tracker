@@ -11,6 +11,9 @@ public final class MatchBundleKey {
     public static final String MATCH_TEAM_ENTRY = "match.team.entry(rank,team)";
     public static final String MATCH_TEAM_PLAYER_ENTRY = "match.team.player.entry(rank,name,mean)";
     public static final String NO_MATCH_FOUND = "no.match.found";
+    public static final String QUALITY_ENTRY = "quality.title(game,quality)";
+    public static final String QUALITY_TEAM_PLAYER_ENTRY = "quality.team.player.entry(mean,stdev,name)";
+    public static final String QUALITY_TEAM_PLAYER_TEAM = "quality.team.player.team(team)";
     public static final String SUGGEST_CLI_TITLE = "suggest.cli.title";
     public static final String SUGGEST_TABLE_QUALITY_HEADER = "suggest.table.quality.header";
     public static final String SUGGEST_TABLE_TEAM_HEADER = "suggest.table.team.header";
