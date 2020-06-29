@@ -15,6 +15,8 @@ import java.util.Date;
 public interface MatchMapper {
     MatchMapper INSTANCE = Mappers.getMapper(MatchMapper.class);
 
+    MatchTable toMatchTable(MatchTable matchTable);
+
     default Rating toRating(final MatchTable matchTable) {
         if (matchTable == null) {
             return GameInfo.getDefaultGameInfo().getDefaultRating();

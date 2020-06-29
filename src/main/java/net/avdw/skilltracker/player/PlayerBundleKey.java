@@ -3,7 +3,7 @@ package net.avdw.skilltracker.player;
 public final class PlayerBundleKey {
 
     public static final String MATCH_TEAM_ENTRY = "match.team.entry(rank,team)";
-    public static final String MATCH_TEAM_PLAYER_ENTRY = "match.team.player.entry(rank,name,mean)";
+    public static final String MATCH_TEAM_PLAYER_ENTRY = "match.team.player.entry(name)";
     public static final String NO_MATCH_FOUND = "no.match.found";
     public static final String PLAYER_LAST_PLAYED_ENTRY = "player.last.played.list.entry(date,game,team,session,mean,stdev)";
     public static final String PLAYER_LAST_PLAYED_TITLE = "player.last.played.list.title(limit)";

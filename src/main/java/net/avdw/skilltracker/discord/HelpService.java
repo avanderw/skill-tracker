@@ -21,7 +21,9 @@ public class HelpService {
     public void processEvent(final MessageReceivedEvent event) {
         Logger.trace("Processing help event");
         StringWriter out = new StringWriter();
+        out.write("```");
         commandLine.usage(new PrintWriter(out));
+        out.write("```");
         MessageChannel channel = event.getChannel();
         channel.sendMessage(out.toString()).queue();
     }

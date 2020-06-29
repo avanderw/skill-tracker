@@ -130,16 +130,6 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_QualityAllowingTeamSetup_Fail() {
-        assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
-
-        resetOutput();
-        assertSuccess(commandLine.execute("match", "quality", "1v1", "Andrew", "Mark", "-g=UnrealTournament"));
-        assertFalse(outWriter.toString().contains("1v1"));
-        fail("update to print players for quality metric");
-    }
-
-    @Test
     public void test_ViewMatchDetail_Pass() {
         assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
         assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1,3", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman", "Andrew"));
@@ -147,6 +137,14 @@ public class MatchCliTest {
 
         resetOutput();
         assertSuccess(commandLine.execute("match", "view", id));
+    }
+
+    @Test
+    public void test_DuplicatePlayer_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
+        assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1,3", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman", "Andrew"));
+        assertSuccess(commandLine.execute("player", "view", "BOT-Inhuman", "-g=UnrealTournament"));
+        assertTrue(outWriter.toString().contains("(μ) 26 mean skill"));
     }
 
     @Test

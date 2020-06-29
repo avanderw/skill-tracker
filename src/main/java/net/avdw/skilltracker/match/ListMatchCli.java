@@ -8,7 +8,6 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.List;
@@ -17,8 +16,8 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "ls", description = "List last few matches", mixinStandardHelpOptions = true)
 public class ListMatchCli implements Runnable {
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Gson gson = new Gson();
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Option(names = {"-l", "--limit"}, description = "Limit the result list")
     private Long limit = 10L;
     @Inject
@@ -48,10 +47,8 @@ public class ListMatchCli implements Runnable {
             String teams = entry.getValue().stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
                     .map(teamList -> {
                         String team = teamList.stream().map(matchTable -> templator.populate(MatchBundleKey.MATCH_TEAM_PLAYER_ENTRY,
-                                gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
-                                        matchTable.getRank(),
-                                        matchTable.getPlayerTable().getName(),
-                                        matchTable.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
+                                gson.fromJson(String.format("{name:'%s'}",
+                                        matchTable.getPlayerTable().getName()), Map.class)))
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",

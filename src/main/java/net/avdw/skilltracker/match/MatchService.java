@@ -120,11 +120,13 @@ public class MatchService {
         List<MatchTable> matchTableList = new ArrayList<>();
         for (final MatchTable matchTable : matchTableDao.queryBuilder()
                 .limit(limit).orderBy(MatchTable.PLAY_DATE, false)
+                .groupBy(MatchTable.SESSION_ID)
                 .where().eq(MatchTable.GAME_FK, gameTable)
                 .and().eq(MatchTable.PLAYER_FK, playerTable).query()) {
             String sessionId = matchTable.getSessionId();
             matchTableList.addAll(matchTableDao.queryBuilder().where().eq(MatchTable.SESSION_ID, sessionId).query());
         }
+        Logger.debug("game={}, player={}, matches={}", gameTable.getName(), playerTable.getName(), matchTableList.stream().map(MatchTable::getSessionId).collect(Collectors.joining(";")));
         return matchTableList;
     }
 
@@ -150,20 +152,29 @@ public class MatchService {
             return null;
         }
 
-        List<MatchTable> matchTableList = matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false).where()
-                .eq(MatchTable.GAME_FK, gameTable)
+        List<MatchTable> matchTableList = matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false)
+                .where().eq(MatchTable.GAME_FK, gameTable)
                 .and().eq(MatchTable.PLAYER_FK, playerTable)
                 .query();
 
         MatchTable matchTable;
         if (matchTableList.isEmpty()) {
             matchTable = matchMapper.toMatchTable(gameTable, playerTable, gameMapper.toRating(gameTable));
+        } else if (matchTableList.size() > 1) {
+            Date lastPlayed = matchTableList.get(0).getPlayDate();
+            Map<Date, List<MatchTable>> dateMatchTableList = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getPlayDate));
+            if (dateMatchTableList.get(lastPlayed).size() == 1) { // appears once in game
+                matchTable = dateMatchTableList.get(lastPlayed).get(0);
+            } else { // appears twice in game, combine mean and standard deviation for last match
+                matchTable = matchMapper.toMatchTable(dateMatchTableList.get(lastPlayed).get(0));
+                matchTable.setMean(BigDecimal.valueOf(dateMatchTableList.get(lastPlayed).stream().mapToDouble(m -> m.getMean().doubleValue()).average().orElseThrow(UnsupportedOperationException::new)));
+                matchTable.setStandardDeviation(BigDecimal.valueOf(dateMatchTableList.get(lastPlayed).stream().mapToDouble(m -> m.getStandardDeviation().doubleValue()).average().orElseThrow(UnsupportedOperationException::new)));
+            }
         } else {
-            Logger.trace("Matches for {} {}", playerTable, matchTableList);
             matchTable = matchTableList.get(0);
         }
 
-        Logger.debug("Latest match for game {} {}", gameTable, matchTable);
+        Logger.debug("game={}, player={}, matches={}", gameTable.getName(), playerTable.getName(), matchTableList.stream().map(MatchTable::getSessionId).collect(Collectors.joining(";")));
         return matchTable;
     }
 

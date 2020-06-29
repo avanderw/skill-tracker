@@ -72,27 +72,25 @@ public class RetrievePlayerCli implements Runnable {
                     .sorted(Comparator.comparingInt(list -> list.get(0).getRank()))
                     .map(teamList -> {
                         String team = teamList.stream().map(matchTable -> templator.populate(PlayerBundleKey.MATCH_TEAM_PLAYER_ENTRY,
-                                gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
-                                        matchTable.getRank(),
-                                        matchTable.getPlayerTable().getName(),
-                                        matchTable.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
+                                gson.fromJson(String.format("{name:'%s'}",
+                                        matchTable.getPlayerTable().getName()), Map.class)))
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(PlayerBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                        teamList.stream().findAny().get().getRank(),
+                                        teamList.stream().findAny().orElseThrow().getRank(),
                                         team), Map.class));
                         return team;
                     })
                     .collect(Collectors.joining(" vs. "));
 
             spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_LAST_PLAYED_ENTRY,
-                    gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s',mean:'%s',stdev:'%s'}",
+                    gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s',mean:'%.0f',stdev:'%.0f'}",
                             entry.getKey().substring(0, entry.getKey().indexOf("-")),
                             teams,
-                            simpleDateFormat.format(entry.getValue().stream().findAny().get().getPlayDate()),
-                            entry.getValue().stream().findAny().get().getGameTable().getName(),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).findAny().get().getMean().setScale(0, RoundingMode.HALF_UP),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).findAny().get().getStandardDeviation().setScale(0, RoundingMode.HALF_UP)),
+                            simpleDateFormat.format(entry.getValue().stream().findAny().orElseThrow().getPlayDate()),
+                            entry.getValue().stream().findAny().orElseThrow().getGameTable().getName(),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getMean().doubleValue()).average().orElseThrow(),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getStandardDeviation().doubleValue()).average().orElseThrow()),
                             Map.class)));
         });
     }
@@ -122,26 +120,24 @@ public class RetrievePlayerCli implements Runnable {
                     .map(teamList -> {
                         String team = teamList.stream()
                                 .map(m -> templator.populate(PlayerBundleKey.MATCH_TEAM_PLAYER_ENTRY,
-                                        gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
-                                                m.getRank(),
-                                                m.getPlayerTable().getName(),
-                                                m.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
+                                        gson.fromJson(String.format("{name:'%s'}",
+                                                m.getPlayerTable().getName()), Map.class)))
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(PlayerBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                        teamList.stream().findAny().get().getRank(),
+                                        teamList.stream().findAny().orElseThrow().getRank(),
                                         team), Map.class));
                         return team;
                     })
                     .collect(Collectors.joining(" vs. "));
 
             spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.SPECIFIC_GAME_LAST_PLAYED_ENTRY,
-                    gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',mean:'%s',stdev:'%s'}",
+                    gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',mean:'%.0f',stdev:'%.0f'}",
                             entry.getKey().substring(0, entry.getKey().indexOf("-")),
                             teams,
-                            simpleDateFormat.format(entry.getValue().stream().findAny().get().getPlayDate()),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(playerTable.getName())).findAny().get().getMean().setScale(0, RoundingMode.HALF_UP),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(playerTable.getName())).findAny().get().getStandardDeviation().setScale(0, RoundingMode.HALF_UP)),
+                            simpleDateFormat.format(entry.getValue().stream().findAny().orElseThrow().getPlayDate()),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getMean().doubleValue()).average().orElseThrow(),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getStandardDeviation().doubleValue()).average().orElseThrow()),
                             Map.class)));
         });
     }

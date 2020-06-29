@@ -13,7 +13,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -60,14 +59,12 @@ class CreateMatchCli implements Runnable {
             String teams = matchTables.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
                     .map(t -> {
                         String team = t.stream().map(matchTable -> templator.populate(MatchBundleKey.MATCH_TEAM_PLAYER_ENTRY,
-                                gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
-                                        matchTable.getRank(),
-                                        matchTable.getPlayerTable().getName(),
-                                        matchTable.getMean().setScale(0, RoundingMode.HALF_UP)), Map.class)))
+                                gson.fromJson(String.format("{name:'%s'}",
+                                        matchTable.getPlayerTable().getName()), Map.class)))
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                        t.stream().findAny().get().getRank(),
+                                        t.stream().findAny().orElseThrow().getRank(),
                                         team), Map.class));
                         return team;
                     })
@@ -77,8 +74,8 @@ class CreateMatchCli implements Runnable {
                     gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s'}",
                             key.substring(0, key.indexOf("-")),
                             teams,
-                            simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate()),
-                            matchTableList.stream().findAny().get().getGameTable().getName()), Map.class)));
+                            simpleDateFormat.format(matchTableList.stream().findAny().orElseThrow().getPlayDate()),
+                            matchTableList.stream().findAny().orElseThrow().getGameTable().getName()), Map.class)));
         });
 
     }
