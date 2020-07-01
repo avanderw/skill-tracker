@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
-class TeamData {
+public class TeamData {
     private final Set<PlayerTable> playerTableSet = new LinkedHashSet<>();
 
     public void add(final PlayerTable name) {

@@ -27,7 +27,7 @@ public interface MatchMapper {
 
     @Mappings({
             @Mapping(target = MatchTable.PK, ignore = true),
-            @Mapping(target = MatchTable.PLAY_DATE, expression = "java(new Date())")
+            @Mapping(target = MatchTable.PLAY_DATE, ignore = true)
     })
     MatchTable toMatchTable(GameTable gameTable, PlayerTable playerTable, Rating rating);
 }

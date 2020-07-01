@@ -11,7 +11,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import net.avdw.database.LiquibaseRunner;
 import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.PropertyName;
-import net.avdw.skilltracker.game.GameBundleKey;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.match.MatchTable;
 import org.junit.After;
@@ -29,10 +28,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -95,11 +93,39 @@ public class PlayerCliTest {
         playerDao.delete(playerDao.deleteBuilder().prepare());
     }
 
+    private int countLinesStartingWith(final String prefix) {
+        int count = 0;
+        Scanner lineScanner = new Scanner(outWriter.toString());
+        while (lineScanner.hasNextLine()) {
+            String line = lineScanner.nextLine();
+            if (line.startsWith(prefix)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private List<String> getMatchIdList() {
+        List<String> sessionIdList = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\(([a-z0-9]*)\\)");
+        Matcher matcher = pattern.matcher(outWriter.toString());
+        while (matcher.find()) {
+            sessionIdList.add(matcher.group(1));
+        }
+        Logger.trace("sessionIdList={}", sessionIdList);
+        return sessionIdList;
+    }
+
     private void resetOutput() {
         errWriter = new StringWriter();
         outWriter = new StringWriter();
         commandLine.setOut(new PrintWriter(outWriter));
         commandLine.setErr(new PrintWriter(errWriter));
+    }
+
+    @Test
+    public void test_BadPlayerView_Fail() {
+        assertSuccess(commandLine.execute("player", "view", "BadName"));
     }
 
     @Test
@@ -129,8 +155,18 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_BadPlayerView_Fail() {
-        assertSuccess(commandLine.execute("player", "view", "BadName"));
+    public void test_Recalculate_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+
+        List<String> sessionIdList = getMatchIdList();
+        assertSuccess(commandLine.execute("game", "view","Northgard"));
+        assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(0)));
+        assertSuccess(commandLine.execute("game", "view", "Northgard"));
+        resetOutput();
+        assertSuccess(commandLine.execute("admin", "recalculate"));
     }
 
     @Test
@@ -168,18 +204,6 @@ public class PlayerCliTest {
         assertSuccess(commandLine.execute("player", "view", "Andrew"));
         assertEquals(7, countLinesStartingWith(">"));
         assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
-    }
-
-    private int countLinesStartingWith(final String prefix) {
-        int count = 0;
-        Scanner lineScanner = new Scanner(outWriter.toString());
-        while (lineScanner.hasNextLine()) {
-            String line = lineScanner.nextLine();
-            if (line.startsWith(prefix)) {
-                count++;
-            }
-        }
-        return count;
     }
 
 }

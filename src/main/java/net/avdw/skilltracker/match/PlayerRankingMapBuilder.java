@@ -8,7 +8,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class PlayerRankingMapBuilder {
+public class PlayerRankingMapBuilder {
     private final MatchMapper matchMapper;
     private final MatchService matchService;
 

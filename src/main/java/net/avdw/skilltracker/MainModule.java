@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-class MainModule extends AbstractPropertyModule {
+public class MainModule extends AbstractPropertyModule {
     @Override
     protected void configure() {
         Properties properties = configureProperties();

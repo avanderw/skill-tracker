@@ -39,6 +39,7 @@ public class MatchService {
     public List<MatchTable> createMatchForGame(final GameTable gameTable, final List<ITeam> teams, final int... ranks) {
         Logger.debug("Create match for game GAME={}, TEAMS={}, RANKS={}", gameTable, teams, Arrays.toString(ranks));
         String sessionId = UUID.randomUUID().toString();
+        Date date = new Date();
         GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
         Map<IPlayer, Rating> newRatings = skillCalculator.calculateNewRatings(gameInfo, teams, Arrays.copyOf(ranks, ranks.length));
         List<MatchTable> matchTableList = new ArrayList<>();
@@ -48,6 +49,7 @@ public class MatchService {
 
             MatchTable matchTable = matchMapper.toMatchTable(gameTable, playerTable, r);
             matchTable.setSessionId(sessionId);
+            matchTable.setPlayDate(date);
             int teamIdx = -1;
             for (int i = 0; i < teams.size(); i++) {
                 Logger.trace("Test {} == {}", teams.get(i), playerTable);
@@ -69,6 +71,11 @@ public class MatchService {
     @SneakyThrows
     public boolean deleteMatch(final String partial) {
         return matchTableDao.delete(matchTableDao.queryBuilder().where().like(MatchTable.SESSION_ID, String.format("%s%%", partial)).query()) > 0;
+    }
+
+    @SneakyThrows
+    public List<MatchTable> retrieveAllMatches() {
+        return matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, true).query();
     }
 
     @SneakyThrows
@@ -126,7 +133,7 @@ public class MatchService {
             String sessionId = matchTable.getSessionId();
             matchTableList.addAll(matchTableDao.queryBuilder().where().eq(MatchTable.SESSION_ID, sessionId).query());
         }
-        Logger.debug("game={}, player={}, matches={}", gameTable.getName(), playerTable.getName(), matchTableList.stream().map(MatchTable::getSessionId).collect(Collectors.joining(";")));
+        Logger.debug("game={}, player={}, matches={}", gameTable.getName(), playerTable.getName(), matchTableList.stream().map(m->m.getSessionId().substring(0, m.getSessionId().indexOf("-"))).collect(Collectors.joining(";")));
         return matchTableList;
     }
 
@@ -163,9 +170,11 @@ public class MatchService {
         } else if (matchTableList.size() > 1) {
             Date lastPlayed = matchTableList.get(0).getPlayDate();
             Map<Date, List<MatchTable>> dateMatchTableList = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getPlayDate));
-            if (dateMatchTableList.get(lastPlayed).size() == 1) { // appears once in game
+            if (dateMatchTableList.get(lastPlayed).size() == 1) {
+                Logger.debug("Player appears once in match");
                 matchTable = dateMatchTableList.get(lastPlayed).get(0);
-            } else { // appears twice in game, combine mean and standard deviation for last match
+            } else {
+                Logger.debug("Player appears twice in match, returning average of mean and stdev");
                 matchTable = matchMapper.toMatchTable(dateMatchTableList.get(lastPlayed).get(0));
                 matchTable.setMean(BigDecimal.valueOf(dateMatchTableList.get(lastPlayed).stream().mapToDouble(m -> m.getMean().doubleValue()).average().orElseThrow(UnsupportedOperationException::new)));
                 matchTable.setStandardDeviation(BigDecimal.valueOf(dateMatchTableList.get(lastPlayed).stream().mapToDouble(m -> m.getStandardDeviation().doubleValue()).average().orElseThrow(UnsupportedOperationException::new)));

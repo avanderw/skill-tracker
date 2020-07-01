@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
+public
 class MatchData {
     private final Set<TeamData> teamDataSet = new LinkedHashSet<>();
     private BigDecimal quality;

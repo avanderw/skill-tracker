@@ -50,7 +50,7 @@ class CreateMatchCli implements Runnable {
         }
 
         GameTable gameTable = gameService.retrieveGame(game);
-        MatchData matchData = matchDataBuilder.build(teams);
+        MatchData matchData = matchDataBuilder.buildFromString(teams);
         List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, matchData);
         List<MatchTable> matchTableList = matchService.createMatchForGame(gameTable, teamList, ranks);
 
