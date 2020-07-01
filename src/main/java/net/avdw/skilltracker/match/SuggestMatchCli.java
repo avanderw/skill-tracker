@@ -73,7 +73,7 @@ public class SuggestMatchCli implements Runnable {
         suggestCliTitleTemplate.execute(suggestCliTitleWriter, gameTable);
         spec.commandLine().getOut().println(suggestCliTitleWriter.toString());
         playerTableList.forEach(playerTable -> {
-            MatchTable matchTable = matchService.retrieveLatestPlayerMatchForGame(gameTable, playerTable);
+            MatchTable matchTable = matchService.retrieveLastPlayerMatchForGame(gameTable, playerTable);
             spec.commandLine().getOut().println(String.format("> (μ)=%s (σ)=%s \t %s",
                     matchTable.getMean().setScale(2, RoundingMode.HALF_UP),
                     matchTable.getStandardDeviation().setScale(0, RoundingMode.HALF_UP),

@@ -59,7 +59,7 @@ public class MatchQualityCli implements Runnable {
             String t = Arrays.stream(team.split(","))
                     .map(name -> {
                         PlayerTable playerTable = playerService.retrievePlayer(name);
-                        MatchTable matchTable = matchService.retrieveLatestPlayerMatchForGame(gameTable, playerTable);
+                        MatchTable matchTable = matchService.retrieveLastPlayerMatchForGame(gameTable, playerTable);
                         return templator.populate(MatchBundleKey.QUALITY_TEAM_PLAYER_ENTRY,
                                 gson.fromJson(String.format("{mean:'%s',stdev:'%s',name:'%s'}",
                                         matchTable.getMean().setScale(0, RoundingMode.HALF_UP),

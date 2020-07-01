@@ -2,7 +2,7 @@ package net.avdw.skilltracker.match;
 
 public final class MatchBundleKey {
     public static final String CREATE_SUCCESS = "create.success";
-    public static final String DELETE_COMMAND = "delete.command";
+    public static final String DELETE_COMMAND = "delete.command(ids)";
     public static final String DELETE_COMMAND_FAILURE = "delete.command.failure";
     public static final String DELETE_ENTRY_FAILURE = "delete.entry.failure(id)";
     public static final String DELETE_ENTRY_SUCCESS = "delete.entry.success(id)";

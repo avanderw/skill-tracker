@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.match.MatchService;
 import net.avdw.skilltracker.match.MatchTable;
-import net.avdw.skilltracker.player.PlayerService;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -33,8 +32,6 @@ public class RetrieveGameCli implements Runnable {
     private MatchService matchService;
     @Option(names = "--top")
     private Long playerLimit = 10L;
-    @Inject
-    private PlayerService playerService;
     @Spec
     private CommandSpec spec;
     @Inject
@@ -50,7 +47,7 @@ public class RetrieveGameCli implements Runnable {
             return;
         }
 
-        List<MatchTable> topPlayerList = playerService.retrieveTopPlayersForGame(gameTable, playerLimit);
+        List<MatchTable> topPlayerMatchList = matchService.retrieveTopPlayerMatchesForGame(gameTable, playerLimit);
         Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveLastFewMatchesForGame(gameTable, matchLimit)
                 .stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
         if (matchPlayerMap.isEmpty()) {
@@ -59,8 +56,8 @@ public class RetrieveGameCli implements Runnable {
             spec.commandLine().getOut().println(templator.populate(GameBundleKey.VIEW_GAME_TOP_PLAYER_LIST_TITLE,
                     gson.fromJson(String.format("{limit:'%s'}", playerLimit), Map.class)));
 
-            for (int i = 0; i < topPlayerList.size(); i++) {
-                MatchTable table = topPlayerList.get(i);
+            for (int i = 0; i < topPlayerMatchList.size(); i++) {
+                MatchTable table = topPlayerMatchList.get(i);
                 spec.commandLine().getOut().println(templator.populate(GameBundleKey.VIEW_GAME_TOP_PLAYER_LIST_ENTRY,
                         gson.fromJson(String.format("{name:'%s',mean:'%s',stdev:'%s',rank:'%s'}",
                                 table.getPlayerTable().getName(),

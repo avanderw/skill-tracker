@@ -9,13 +9,17 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Date;
-
-@Mapper(imports = Date.class)
+@Mapper
 public interface MatchMapper {
     MatchMapper INSTANCE = Mappers.getMapper(MatchMapper.class);
 
     MatchTable toMatchTable(MatchTable matchTable);
+
+    @Mappings({
+            @Mapping(target = MatchTable.PK, ignore = true),
+            @Mapping(target = MatchTable.PLAY_DATE, ignore = true)
+    })
+    MatchTable toMatchTable(GameTable gameTable, PlayerTable playerTable, Rating rating);
 
     default Rating toRating(final MatchTable matchTable) {
         if (matchTable == null) {
@@ -24,10 +28,4 @@ public interface MatchMapper {
             return new Rating(matchTable.getMean().doubleValue(), matchTable.getStandardDeviation().doubleValue());
         }
     }
-
-    @Mappings({
-            @Mapping(target = MatchTable.PK, ignore = true),
-            @Mapping(target = MatchTable.PLAY_DATE, ignore = true)
-    })
-    MatchTable toMatchTable(GameTable gameTable, PlayerTable playerTable, Rating rating);
 }

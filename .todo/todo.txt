@@ -25,4 +25,4 @@ x 2020-06-27 2020-06-24 Add 'match ls <id>' to optionally list only a match rele
 x 2020-06-27 2020-06-27 Fix bug in player view
 x 2020-06-28 2020-06-27 Fix bug when wrong game name is used
 x 2020-06-28 2020-06-27 Match list size to player game view
-(C) 2020-06-29 Fix removing old match calculation issue release:1.0.0
+x 2020-07-01 2020-06-29 Fix removing old match calculation issue release:1.0.0

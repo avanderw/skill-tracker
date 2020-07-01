@@ -5,10 +5,8 @@ import com.google.inject.Inject;
 import de.gesundkrank.jskills.*;
 import net.avdw.skilltracker.MainModule;
 import net.avdw.skilltracker.game.GameMapper;
-import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.match.*;
-import net.avdw.skilltracker.player.PlayerService;
 import net.avdw.skilltracker.player.PlayerTable;
 import org.tinylog.Logger;
 
@@ -20,26 +18,19 @@ import java.util.stream.Collectors;
 
 public final class RecalculateDatabase implements Runnable {
     private final GameMapper gameMapper;
-    private final PlayerRankingMapBuilder gameMatchTeamBuilder;
-    private final GameService gameService;
     private final MatchDataBuilder matchDataBuilder;
-    private final MatchMapper matchMapper;
     private final MatchService matchService;
-    private final PlayerService playerService;
     private final SkillCalculator skillCalculator;
 
     @Inject
-    RecalculateDatabase(final GameService gameService, final MatchService matchService, final PlayerService playerService,
-                        final SkillCalculator skillCalculator, final GameMapper gameMapper, final MatchMapper matchMapper,
-                        final MatchDataBuilder matchDataBuilder, final PlayerRankingMapBuilder gameMatchTeamBuilder) {
-        this.gameService = gameService;
+    RecalculateDatabase(final MatchService matchService,
+                        final SkillCalculator skillCalculator,
+                        final GameMapper gameMapper,
+                        final MatchDataBuilder matchDataBuilder) {
         this.matchService = matchService;
-        this.playerService = playerService;
         this.skillCalculator = skillCalculator;
         this.gameMapper = gameMapper;
-        this.matchMapper = matchMapper;
         this.matchDataBuilder = matchDataBuilder;
-        this.gameMatchTeamBuilder = gameMatchTeamBuilder;
     }
 
     public static void main(final String[] args) {
@@ -120,17 +111,17 @@ public final class RecalculateDatabase implements Runnable {
                         Logger.trace("{} checks out", player);
                     }
                 } else {
-                    Logger.trace("Found duplicate player");
+                    Logger.debug("Found duplicate player {} ({})", player.getName(), sessionId);
                     AtomicBoolean foundMatch = new AtomicBoolean(false);
                     matchingMatchTables.forEach(matchTable -> {
                         BigDecimal mean = matchTable.getMean().setScale(5, RoundingMode.HALF_UP);
                         BigDecimal stdev = matchTable.getStandardDeviation().setScale(5, RoundingMode.HALF_UP);
-                        sessionMatchTableList.forEach(m -> Logger.debug("> session={}, pk={}, fk={}, player={}, team={}, rank={}, game={}, mean={}, stdev={}",
+                        sessionMatchTableList.forEach(m -> Logger.trace("> session={}, pk={}, fk={}, player={}, team={}, rank={}, game={}, mean={}, stdev={}",
                                 m.getSessionId(), m.getPk(), m.getPlayerTable().getPk(), m.getPlayerTable().getName(), m.getTeam(), m.getRank(), m.getGameTable().getName(), m.getMean(), m.getStandardDeviation()));
                         for (int i = 0; i < teamList.size(); i++) {
-                            Logger.debug("> rank={}, team={}", ranks[i], teamList.get(i));
+                            Logger.trace("> rank={}, team={}", ranks[i], teamList.get(i));
                         }
-                        Logger.debug("player={}, rank={}, mean={} != {}, stdev={} != {}",
+                        Logger.trace("player={}, rank={}, mean={} != {}, stdev={} != {}",
                                 matchTable.getPlayerTable().getName(), matchTable.getRank(), mean, recalcMean, stdev, recalcStdev);
 
                         if (!mean.equals(recalcMean) || !stdev.equals(recalcStdev)) {
@@ -140,7 +131,7 @@ public final class RecalculateDatabase implements Runnable {
                         }
                     });
                     if (foundMatch.get()) {
-                        Logger.trace("Duplicate: {} checks out", player);
+                        Logger.debug("Duplicate: {} checks out", player);
                         if (sessionIdList.size() != 13 && sessionIdList.size() != 17 && sessionIdList.size() != 18 && sessionIdList.size() != 34) {
                             throw new UnsupportedOperationException();
                         }

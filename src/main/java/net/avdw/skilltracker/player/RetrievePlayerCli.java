@@ -89,8 +89,8 @@ public class RetrievePlayerCli implements Runnable {
                             teams,
                             simpleDateFormat.format(entry.getValue().stream().findAny().orElseThrow().getPlayDate()),
                             entry.getValue().stream().findAny().orElseThrow().getGameTable().getName(),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getMean().doubleValue()).average().orElseThrow(),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getStandardDeviation().doubleValue()).average().orElseThrow()),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m -> m.getMean().doubleValue()).average().orElseThrow(),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m -> m.getStandardDeviation().doubleValue()).average().orElseThrow()),
                             Map.class)));
         });
     }
@@ -103,7 +103,7 @@ public class RetrievePlayerCli implements Runnable {
                 .sorted(Comparator.comparing((Map.Entry<String, List<MatchTable>> entry) -> entry.getValue().get(0).getPlayDate()).reversed())
                 .collect(Collectors.toList());
 
-        MatchTable matchTable = matchService.retrieveLatestPlayerMatchForGame(gameTable, playerTable);
+        MatchTable matchTable = matchService.retrieveLastPlayerMatchForGame(gameTable, playerTable);
         spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.SPECIFIC_GAME_TITLE,
                 gson.fromJson(String.format("{game:'%s',person:'%s',mean:'%s',stdev:'%s',played:'%s'}",
                         gameTable.getName(),
@@ -136,8 +136,8 @@ public class RetrievePlayerCli implements Runnable {
                             entry.getKey().substring(0, entry.getKey().indexOf("-")),
                             teams,
                             simpleDateFormat.format(entry.getValue().stream().findAny().orElseThrow().getPlayDate()),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getMean().doubleValue()).average().orElseThrow(),
-                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m->m.getStandardDeviation().doubleValue()).average().orElseThrow()),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m -> m.getMean().doubleValue()).average().orElseThrow(),
+                            entry.getValue().stream().filter(m -> m.getPlayerTable().getName().equals(name)).mapToDouble(m -> m.getStandardDeviation().doubleValue()).average().orElseThrow()),
                             Map.class)));
         });
     }

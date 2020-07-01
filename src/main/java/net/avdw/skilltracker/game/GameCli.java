@@ -15,15 +15,16 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "game", description = "Manage game information", mixinStandardHelpOptions = true,
         subcommands = {ListGameCli.class, CreateGameCli.class, RetrieveGameCli.class, DeleteGameCli.class})
 public class GameCli implements Runnable {
+    @Parameters(arity = "0..1") // cannot force this to 1 as it eats the sub-commands
+    private String game;
     @Inject
     @Game
     private ResourceBundle gameBundle;
-    @Parameters(arity = "0..1") // cannot force this to 1 as it eats the sub-commands
-    private String game;
     @Inject
     private GameService gameService;
     @Inject
@@ -40,8 +41,9 @@ public class GameCli implements Runnable {
             if (gameTable == null) {
                 spec.commandLine().getOut().println(gameBundle.getString(GameBundleKey.NO_GAME_FOUND));
             } else {
-                Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveAllMatchesForGame(gameTable);
-                if (matchPlayerMap.isEmpty()) {
+                Map<String, List<MatchTable>> groupBySession = matchService.retrieveAllMatchesForGame(gameTable).stream()
+                        .collect(Collectors.groupingBy(MatchTable::getSessionId));
+                if (groupBySession.isEmpty()) {
                     Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(gameBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
                     StringWriter stringWriter = new StringWriter();
                     mustache.execute(stringWriter, gameTable);
@@ -53,7 +55,7 @@ public class GameCli implements Runnable {
                     mustache.execute(stringWriter, gameTable);
                     spec.commandLine().getOut().println(stringWriter.toString());
 
-                    matchPlayerMap.forEach((key, matchTableList) -> spec.commandLine().getOut().println(key));
+                    groupBySession.forEach((key, matchTableList) -> spec.commandLine().getOut().println(key));
                 }
             }
         }

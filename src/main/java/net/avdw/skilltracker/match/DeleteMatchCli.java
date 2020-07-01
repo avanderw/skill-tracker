@@ -28,9 +28,10 @@ class DeleteMatchCli implements Runnable {
 
     @Override
     public void run() {
-        Logger.trace("Deleting matches");
+        Logger.trace("Deleting matches {}", idList);
 
-        spec.commandLine().getOut().println(templator.populate(MatchBundleKey.DELETE_COMMAND));
+        spec.commandLine().getOut().println(templator.populate(MatchBundleKey.DELETE_COMMAND,
+                gson.fromJson(String.format("{ids:'%s'}", idList), Map.class)));
 
         AtomicBoolean notDeleted = new AtomicBoolean(false);
         idList.forEach(id -> {

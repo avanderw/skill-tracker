@@ -2,7 +2,6 @@ package net.avdw.skilltracker.match;
 
 import com.google.inject.Inject;
 import net.avdw.skilltracker.player.PlayerService;
-import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,19 @@ public class MatchDataBuilder {
     @Inject
     MatchDataBuilder(final PlayerService playerService) {
         this.playerService = playerService;
+    }
+
+    public MatchData buildFromMatchTable(final List<MatchTable> sessionMatchTableList) {
+        MatchData matchData = new MatchData();
+        Map<Integer, List<MatchTable>> groupByTeam = sessionMatchTableList.stream().collect(Collectors.groupingBy(MatchTable::getTeam));
+        groupByTeam.forEach((teamId, matchList) -> {
+            TeamData teamData = new TeamData();
+            matchList.forEach(matchTable -> {
+                teamData.add(matchTable.getPlayerTable());
+            });
+            matchData.add(teamData);
+        });
+        return matchData;
     }
 
     public MatchData buildFromString(final List<String> teams) {
@@ -33,19 +45,6 @@ public class MatchDataBuilder {
                 matchData.add(teamData);
             });
         }
-        return matchData;
-    }
-
-    public MatchData buildFromMatchTable(final List<MatchTable> sessionMatchTableList) {
-        MatchData matchData = new MatchData();
-        Map<Integer, List<MatchTable>> groupByTeam = sessionMatchTableList.stream().collect(Collectors.groupingBy(MatchTable::getTeam));
-        groupByTeam.forEach((teamId, matchList)->{
-            TeamData teamData = new TeamData();
-            matchList.forEach(matchTable -> {
-                teamData.add(matchTable.getPlayerTable());
-            });
-            matchData.add(teamData);
-        });
         return matchData;
     }
 }

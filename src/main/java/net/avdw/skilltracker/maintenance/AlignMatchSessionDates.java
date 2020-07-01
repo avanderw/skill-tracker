@@ -29,10 +29,10 @@ public class AlignMatchSessionDates implements Runnable {
 
     @Override
     public void run() {
-        Map<String, List<MatchTable>> groupBySessionId =  matchService.retrieveAllMatches().stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
-        groupBySessionId.forEach((sessionId, matchList)->{
+        Map<String, List<MatchTable>> groupBySessionId = matchService.retrieveAllMatches().stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
+        groupBySessionId.forEach((sessionId, matchList) -> {
             Date date = matchList.stream().findAny().orElseThrow().getPlayDate();
-            matchList.forEach(m->{
+            matchList.forEach(m -> {
                 m.setPlayDate(date);
                 try {
                     matchDao.update(m);

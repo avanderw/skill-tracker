@@ -155,21 +155,6 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_Recalculate_Pass() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
-
-        List<String> sessionIdList = getMatchIdList();
-        assertSuccess(commandLine.execute("game", "view","Northgard"));
-        assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(0)));
-        assertSuccess(commandLine.execute("game", "view", "Northgard"));
-        resetOutput();
-        assertSuccess(commandLine.execute("admin", "recalculate"));
-    }
-
-    @Test
     public void test_ViewPlayerProgression_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
