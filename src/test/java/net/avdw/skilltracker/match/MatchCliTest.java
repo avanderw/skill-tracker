@@ -128,6 +128,12 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_CreateMatchFFS_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "-g=Northgard", "One,Two,Three,Four", "-r=1,2,3,4"));
+    }
+
+    @Test
     public void test_CreateRank_Pass() {
         assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
         assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman"));
@@ -174,31 +180,6 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_DeleteMatch_Pass() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
-        List<String> matchIdList = getMatchIdList();
-
-        resetOutput();
-        assertSuccess(commandLine.execute("match", "rm", matchIdList.get(0)));
-        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
-    }
-
-    @Test
-    public void test_DeleteMultipleMatches_Pass() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
-        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
-        List<String> matchIdList = getMatchIdList();
-
-        resetOutput();
-        assertSuccess(commandLine.execute("match", "rm", matchIdList.get(0), matchIdList.get(1)));
-        assertTrue(outWriter.toString().contains(matchIdList.get(0)));
-        assertTrue(outWriter.toString().contains(matchIdList.get(1)));
-        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
-    }
-
-    @Test
     public void test_DeleteFirstMatch_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
@@ -216,6 +197,17 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_DeleteMatch_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+        List<String> matchIdList = getMatchIdList();
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "rm", matchIdList.get(0)));
+        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
+    }
+
+    @Test
     public void test_DeleteMiddleMatch_Pass() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,3", "--game", "Northgard"));
@@ -230,6 +222,20 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
         assertTrue(outWriter.toString().contains("First (μ)=27 (σ)=6"));
         assertTrue(outWriter.toString().contains("First (μ)=19 (σ)=7"));
+    }
+
+    @Test
+    public void test_DeleteMultipleMatches_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+        assertSuccess(commandLine.execute("match", "add", "--game", "Northgard", "Andrew,Karl", "Etienne,Jaco", "--ranks", "1,2"));
+        List<String> matchIdList = getMatchIdList();
+
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "rm", matchIdList.get(0), matchIdList.get(1)));
+        assertTrue(outWriter.toString().contains(matchIdList.get(0)));
+        assertTrue(outWriter.toString().contains(matchIdList.get(1)));
+        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
     }
 
     @Test

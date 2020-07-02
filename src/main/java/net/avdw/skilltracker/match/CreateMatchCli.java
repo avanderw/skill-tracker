@@ -14,14 +14,15 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Command(name = "add", description = "Add a match with an outcome", mixinStandardHelpOptions = true)
 class CreateMatchCli implements Runnable {
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Gson gson = new Gson();
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Option(names = {"-g", "--game"}, required = true)
     private String game;
     @Inject
@@ -36,7 +37,7 @@ class CreateMatchCli implements Runnable {
     private int[] ranks;
     @Spec
     private CommandSpec spec;
-    @Parameters(description = "Teams in the match; team=<player1,player2> (no spaces)", arity = "2..*")
+    @Parameters(description = "Teams in the match; team=<player1,player2> (no spaces)", arity = "1..*")
     private List<String> teams;
     @Inject
     @Match
@@ -44,7 +45,13 @@ class CreateMatchCli implements Runnable {
 
     @Override
     public void run() {
+        if (teams == null) {
+            throw new UnsupportedOperationException();
+        }
         Logger.trace("Creating match");
+        if (teams.size() == 1) {
+            teams = Arrays.asList(teams.get(0).split(","));
+        }
         if (ranks.length != teams.size()) {
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
         }

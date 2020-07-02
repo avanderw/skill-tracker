@@ -112,7 +112,7 @@ public class MatchService {
         return deleted;
     }
 
-    private void recalculate(final PlayerTable player) {
+    public void recalculate(final PlayerTable player) {
         Logger.trace("=> recalculate {}", player.getName());
         List<MatchTable> matchList = retrieveAllMatchesForPlayer(player);
         Map<String, Rating> lastPlayerGameRatingMap = new HashMap<>();
