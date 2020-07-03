@@ -1,6 +1,6 @@
 x 2020-07-01 2020-06-27 Add recalculate scores release:1.0.0
 (A) 2020-06-28 Add 'player combine <name> <name>' feature release:1.0.0
-(B) 2020-06-27 Add case insensitivity to names
+x 2020-07-03 2020-06-27 Add case insensitivity to names release:1.0.0
 (B) 2020-06-28 Add a script for auto backup of the sqlite.db release:1.0.0
 x 2020-07-02 2020-06-23 Simplify adding of a FFA match release:1.0.0
 x 2020-07-02 2020-06-21 Add shorthand FFA for adding a match release:1.0.0
@@ -26,3 +26,4 @@ x 2020-06-27 2020-06-27 Fix bug in player view
 x 2020-06-28 2020-06-27 Fix bug when wrong game name is used
 x 2020-06-28 2020-06-27 Match list size to player game view
 x 2020-07-01 2020-06-29 Fix removing old match calculation issue release:1.0.0
+(C) 2020-07-03 Add 'player mv <name> <name>' release:1.0.0

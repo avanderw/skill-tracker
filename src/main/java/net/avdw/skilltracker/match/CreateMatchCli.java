@@ -48,6 +48,7 @@ class CreateMatchCli implements Runnable {
         if (teams == null) {
             throw new UnsupportedOperationException();
         }
+
         Logger.trace("Creating match");
         if (teams.size() == 1) {
             teams = Arrays.asList(teams.get(0).split(","));

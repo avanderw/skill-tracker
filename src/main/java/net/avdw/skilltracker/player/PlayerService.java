@@ -32,7 +32,7 @@ public class PlayerService {
 
     @SneakyThrows
     public PlayerTable retrievePlayer(final String name) {
-        return playerTableDao.queryForFirst(playerTableDao.queryBuilder().where().eq(PlayerTable.NAME, name).prepare());
+        return playerTableDao.queryForFirst(playerTableDao.queryBuilder().where().like(PlayerTable.NAME, name).prepare());
     }
 
     @SneakyThrows
