@@ -204,8 +204,8 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(0)));
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(1)));
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
-        assertTrue(outWriter.toString().contains("Karl (μ)=31 (σ)=7"));
-        assertTrue(outWriter.toString().contains("Karl (μ)=29 (σ)=8"));
+        assertTrue(outWriter.toString().contains("(μ)=31 (σ)=7 Karl"));
+        assertTrue(outWriter.toString().contains("(μ)=29 (σ)=8 Karl"));
     }
 
     @Test
@@ -232,8 +232,8 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(1)));
         assertSuccess(commandLine.execute("player", "view", "First", "-g=Northgard"));
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
-        assertTrue(outWriter.toString().contains("First (μ)=27 (σ)=6"));
-        assertTrue(outWriter.toString().contains("First (μ)=19 (σ)=7"));
+        assertTrue(outWriter.toString().contains("(μ)=27 (σ)=6 First"));
+        assertTrue(outWriter.toString().contains("(μ)=19 (σ)=7 First"));
     }
 
     @Test
