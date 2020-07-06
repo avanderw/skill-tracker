@@ -117,7 +117,9 @@ public class MatchCliTest {
         Pattern pattern = Pattern.compile("\\(([a-z0-9]*)\\)");
         Matcher matcher = pattern.matcher(outWriter.toString());
         while (matcher.find()) {
-            sessionIdList.add(matcher.group(1));
+            if (!sessionIdList.contains(matcher.group(1))) {
+                sessionIdList.add(matcher.group(1));
+            }
         }
         Logger.trace("sessionIdList={}", sessionIdList);
         return sessionIdList;

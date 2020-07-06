@@ -1,6 +1,6 @@
 x 2020-07-06 2020-07-06 Update 'player ls' to give a heading
 (B) 2020-06-28 Add a script for auto backup of the sqlite.db release:1.0.0
-(D) 2020-07-05 Update 'match add' to view game detail afterwards release:1.0.0
+x 2020-07-06 2020-07-05 Update 'match add' to view game detail afterwards release:1.0.0
 x 2020-07-06 2020-07-05 Update leaderboard to show mu and sigma first release:1.0.0
 2020-06-22 Add clean player
 2020-06-23 Add Afrikaans language

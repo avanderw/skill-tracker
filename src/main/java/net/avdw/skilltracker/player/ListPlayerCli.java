@@ -2,7 +2,6 @@ package net.avdw.skilltracker.player;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import liquibase.util.StringUtils;
 import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.match.MatchService;
 import picocli.CommandLine.Command;

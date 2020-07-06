@@ -7,12 +7,15 @@ import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
 import org.tinylog.Logger;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -86,5 +89,13 @@ class CreateMatchCli implements Runnable {
                             matchTableList.stream().findAny().orElseThrow().getGameTable().getName()), Map.class)));
         });
 
+        CommandLine commandLine = spec.parent().parent().commandLine();
+        PrintWriter original = commandLine.getOut();
+        StringWriter out = new StringWriter();
+        commandLine.setOut(new PrintWriter(out));
+        commandLine.execute("game", "view", game);
+        commandLine.setOut(original);
+        spec.commandLine().getOut().println();
+        spec.commandLine().getOut().println(out.toString());
     }
 }

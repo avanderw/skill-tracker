@@ -11,7 +11,6 @@ import net.avdw.skilltracker.match.PlayerRankingMap;
 import net.avdw.skilltracker.player.PlayerTable;
 import org.tinylog.Logger;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +30,7 @@ public class CalculatorService {
 
     private int[] buildRanks(final List<ITeam> teamList, final List<MatchTable> sessionMatchTableList) {
         Logger.debug("-> build ranks");
-        sessionMatchTableList.forEach(m->Logger.debug("(≻)={} (μ)={} (σ)={} {}", m.getRank(), m.getMean(), m.getStandardDeviation(), m.getPlayerTable().getName()));
+        sessionMatchTableList.forEach(m -> Logger.debug("(≻)={} (μ)={} (σ)={} {}", m.getRank(), m.getMean(), m.getStandardDeviation(), m.getPlayerTable().getName()));
         int[] ranks = new int[teamList.size()];
         List<MatchTable> matchTableList = new ArrayList<>(sessionMatchTableList);
         matchTableList.sort(Comparator.comparingInt(MatchTable::getRank));

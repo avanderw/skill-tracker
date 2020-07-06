@@ -12,7 +12,7 @@ public final class Main {
         try {
             LiquibaseRunner liquibaseRunner = GuiceFactory.getInstance().create(LiquibaseRunner.class);
             liquibaseRunner.update();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Logger.error(e.getMessage());
             Logger.debug(e);
         }
