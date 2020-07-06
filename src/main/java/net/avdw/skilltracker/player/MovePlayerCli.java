@@ -11,7 +11,7 @@ import picocli.CommandLine.Spec;
 
 import java.util.Map;
 
-@Command(name = "mv", description = "Change / combine the name of players", mixinStandardHelpOptions = true)
+@Command(name = "mv", description = "Change name / combine players", mixinStandardHelpOptions = true)
 public class MovePlayerCli implements Runnable {
     private static Gson gson = new Gson();
     @Parameters(description = "Name to change", arity = "1", index = "0")

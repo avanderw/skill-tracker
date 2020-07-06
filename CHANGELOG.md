@@ -13,16 +13,19 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 #### Game
 - Register a game
 - View the details of a game
+- View leaderboard
 - Remove a game
 - List games
 
 #### Match
 - Add a match
 - Remove a match
+- View the details of a match
 - List matches
 - Determine the quality of a match
 - Calculate the quality of a match for every team combination
 
 #### Player
 - View the details of a player
+- Combine player statistics
 - List players

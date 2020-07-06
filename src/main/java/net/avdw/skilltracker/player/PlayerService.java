@@ -3,16 +3,19 @@ package net.avdw.skilltracker.player;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import lombok.SneakyThrows;
+import net.avdw.skilltracker.match.MatchTable;
 import org.tinylog.Logger;
 
 import java.util.List;
 
 public class PlayerService {
     private final Dao<PlayerTable, Integer> playerTableDao;
+    private final Dao<MatchTable, Integer> matchTableDao;
 
     @Inject
-    PlayerService(final Dao<PlayerTable, Integer> playerTableDao) {
+    PlayerService(final Dao<PlayerTable, Integer> playerTableDao, final Dao<MatchTable, Integer> matchTableDao) {
         this.playerTableDao = playerTableDao;
+        this.matchTableDao = matchTableDao;
     }
 
     @SneakyThrows
@@ -34,6 +37,15 @@ public class PlayerService {
     @SneakyThrows
     public void removePlayer(final PlayerTable fromPlayer) {
         playerTableDao.delete(fromPlayer);
+    }
+
+    @SneakyThrows
+    public void removePlayersWithNoMatches() {
+        for (final PlayerTable p : playerTableDao.queryForAll()) {
+            if (matchTableDao.queryForEq(MatchTable.PLAYER_FK, p).isEmpty()) {
+                playerTableDao.delete(p);
+            }
+        }
     }
 
     @SneakyThrows

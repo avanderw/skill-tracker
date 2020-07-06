@@ -63,7 +63,7 @@ public class RetrieveGameCli implements Runnable {
                                 table.getPlayerTable().getName(),
                                 table.getMean().setScale(0, RoundingMode.HALF_UP),
                                 table.getStandardDeviation().setScale(0, RoundingMode.HALF_UP),
-                                i + 1
+                                String.format("%2s", i + 1)
                         ), Map.class)));
             }
 

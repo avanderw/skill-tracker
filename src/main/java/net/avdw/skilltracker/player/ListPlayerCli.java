@@ -12,7 +12,7 @@ import picocli.CommandLine.Spec;
 import java.util.List;
 import java.util.Map;
 
-@Command(name = "ls", description = "List seen players", mixinStandardHelpOptions = true)
+@Command(name = "ls", description = "List all players", mixinStandardHelpOptions = true)
 public class ListPlayerCli implements Runnable {
     private Gson gson = new Gson();
     @Inject

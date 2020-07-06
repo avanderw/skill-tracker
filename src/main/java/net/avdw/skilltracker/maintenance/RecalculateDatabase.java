@@ -106,7 +106,6 @@ public final class RecalculateDatabase implements Runnable {
                         }
                         Logger.warn("player={}, rank={}, mean={} != {}, stdev={} != {}",
                                 matchTable.getPlayerTable().getName(), matchTable.getRank(), mean, recalcMean, stdev, recalcStdev);
-                        throw new UnsupportedOperationException();
                     } else {
                         Logger.trace("{} checks out", player);
                     }

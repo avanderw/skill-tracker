@@ -32,7 +32,7 @@ public class GameService {
 
     @SneakyThrows
     public void deleteGame(final String name) {
-        final GameTable gameTable = gameDao.queryBuilder().where().eq(GameTable.NAME, name).queryForFirst();
+        final GameTable gameTable = gameDao.queryBuilder().where().like(GameTable.NAME, name).queryForFirst();
         if (gameTable == null) {
             Logger.debug("Cannot find game to delete with name {}", name);
             return;
@@ -50,7 +50,7 @@ public class GameService {
 
     @SneakyThrows
     public GameTable retrieveGame(final String name) {
-        return gameDao.queryForFirst(gameDao.queryBuilder().where().like(GameTable.NAME, String.format("%%%s%%", name)).prepare());
+        return gameDao.queryForFirst(gameDao.queryBuilder().where().like(GameTable.NAME, name).prepare());
     }
 
     @SneakyThrows
