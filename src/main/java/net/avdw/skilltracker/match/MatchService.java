@@ -120,6 +120,14 @@ public class MatchService {
         return deleted;
     }
 
+    @SneakyThrows
+    public List<GameTable> gameListForPlayer(final PlayerTable playerTable) {
+        return matchTableDao.queryBuilder().groupBy(MatchTable.GAME_FK)
+                .where().eq(MatchTable.PLAYER_FK, playerTable).query().stream()
+                .map(MatchTable::getGameTable)
+                .collect(Collectors.toList());
+    }
+
     public void recalculate(final PlayerTable player) {
         Logger.trace("=> recalculate {}", player.getName());
         List<MatchTable> matchList = retrieveAllMatchesForPlayer(player);
