@@ -395,7 +395,7 @@ public class MatchCliTest {
     public void test_ViewMatchDetail() {
         assertSuccess(commandLine.execute("game", "add", "UnrealTournament"));
         assertSuccess(commandLine.execute("match", "add", "-g", "UnrealTournament", "-r", "2,1,3", "JK,BOT-Inhuman", "NikRich,BOT-Inhuman", "Andrew"));
-        
+
         String id = getMatchIdList().get(0);
         resetOutput();
         assertSuccess(commandLine.execute("match", "view", id));

@@ -16,6 +16,12 @@ public class PlayerService {
     }
 
     @SneakyThrows
+    public void changeName(final PlayerTable fromPlayer, final String toName) {
+        fromPlayer.setName(toName);
+        playerTableDao.update(fromPlayer);
+    }
+
+    @SneakyThrows
     public PlayerTable createOrRetrievePlayer(final String name) {
         Logger.trace("Create or retrieve player {}", name);
         PlayerTable playerTable = retrievePlayer(name);
@@ -23,6 +29,11 @@ public class PlayerService {
             playerTable = playerTableDao.createIfNotExists(new PlayerTable(name));
         }
         return playerTable;
+    }
+
+    @SneakyThrows
+    public void removePlayer(final PlayerTable fromPlayer) {
+        playerTableDao.delete(fromPlayer);
     }
 
     @SneakyThrows

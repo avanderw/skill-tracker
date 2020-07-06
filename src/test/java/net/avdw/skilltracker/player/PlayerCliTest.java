@@ -124,18 +124,18 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_BadPlayerView_Fail() {
+    public void test_BadPlayerView() {
         assertSuccess(commandLine.execute("player", "view", "BadName"));
     }
 
     @Test
-    public void test_Empty_Fail() {
+    public void test_Empty() {
         assertSuccess(commandLine.execute("player"));
         assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
     }
 
     @Test
-    public void test_ListAll_Pass() {
+    public void test_ListAll() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
@@ -145,7 +145,7 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_ListFilter_Pass() {
+    public void test_ListFilter() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
         resetOutput();
@@ -155,24 +155,37 @@ public class PlayerCliTest {
     }
 
     @Test
-    public void test_ViewPlayerProgression_Pass() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "2,1", "--game", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
+    public void test_MoveCombinePlayer() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("player", "mv", "Andrew", "Jaco"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("player", "view", "Andrew", "-g=Northgard"));
+        assertSuccess(commandLine.execute("game", "view", "Northgard"));
+        assertSuccess(commandLine.execute("player", "ls"));
+        assertEquals(5, countLinesStartingWith(">"));
+        assertTrue(outWriter.toString().contains("Jaco (μ)=26 (σ)=6"));
     }
 
     @Test
-    public void test_ViewPlayer_Fail() {
+    public void test_MovePlayer() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("player", "mv", "Andrew", "John"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("player", "ls"));
+        assertTrue(outWriter.toString().contains("John"));
+    }
+
+    @Test
+    public void test_ViewPlayerBasic() {
         assertSuccess(commandLine.execute("player", "view", "Andrew"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
     }
 
     @Test
-    public void test_ViewPlayer_Pass() {
+    public void test_ViewPlayerDetail() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0.1"));
         assertSuccess(commandLine.execute("game", "add", "AgeOfEmpires", "0.1"));
         assertSuccess(commandLine.execute("match", "add", "Andrew", "Jaco", "Marius", "--ranks", "1,2,3", "--game", "AgeOfEmpires"));
@@ -189,6 +202,17 @@ public class PlayerCliTest {
         assertSuccess(commandLine.execute("player", "view", "Andrew"));
         assertEquals(7, countLinesStartingWith(">"));
         assertFalse(outWriter.toString().contains(resourceBundle.getString(PlayerBundleKey.PLAYER_NOT_EXIST)));
+    }
+
+    @Test
+    public void test_ViewPlayerProgression() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "2,1", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("player", "view", "Andrew", "-g=Northgard"));
     }
 
 }

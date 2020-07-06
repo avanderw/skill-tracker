@@ -1,9 +1,7 @@
-x 2020-07-01 2020-06-27 Add recalculate scores release:1.0.0
-(A) 2020-06-28 Add 'player combine <name> <name>' feature release:1.0.0
-x 2020-07-03 2020-06-27 Add case insensitivity to names release:1.0.0
+(A) 2020-07-06 Update 'player ls' to give a heading
 (B) 2020-06-28 Add a script for auto backup of the sqlite.db release:1.0.0
-x 2020-07-02 2020-06-23 Simplify adding of a FFA match release:1.0.0
-x 2020-07-02 2020-06-21 Add shorthand FFA for adding a match release:1.0.0
+(D) 2020-07-05 Update 'match add' to view game detail afterwards release:1.0.0
+(E) 2020-07-05 Update leaderboard to show mu and sigma first release:1.0.0
 2020-06-22 Add clean player
 2020-06-23 Add Afrikaans language
 2020-06-23 Add a dynamic changelog announcer to discord interface
@@ -25,5 +23,10 @@ x 2020-06-27 2020-06-24 Add 'match ls <id>' to optionally list only a match rele
 x 2020-06-27 2020-06-27 Fix bug in player view
 x 2020-06-28 2020-06-27 Fix bug when wrong game name is used
 x 2020-06-28 2020-06-27 Match list size to player game view
+x 2020-07-01 2020-06-27 Add recalculate scores release:1.0.0
 x 2020-07-01 2020-06-29 Fix removing old match calculation issue release:1.0.0
-(C) 2020-07-03 Add 'player mv <name> <name>' release:1.0.0
+x 2020-07-02 2020-06-21 Add shorthand FFA for adding a match release:1.0.0
+x 2020-07-02 2020-06-23 Simplify adding of a FFA match release:1.0.0
+x 2020-07-03 2020-06-27 Add case insensitivity to names release:1.0.0
+x 2020-07-06 2020-06-28 Add 'player combine <name> <name>' feature release:1.0.0
+x 2020-07-06 2020-07-03 Add 'player mv <name> <name>' release:1.0.0

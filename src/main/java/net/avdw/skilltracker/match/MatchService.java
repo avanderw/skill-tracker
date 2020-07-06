@@ -2,6 +2,7 @@ package net.avdw.skilltracker.match;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import de.gesundkrank.jskills.*;
 import lombok.SneakyThrows;
 import net.avdw.skilltracker.calculator.CalculatorService;
@@ -63,10 +64,17 @@ public class MatchService {
                 matchTable.setStandardDeviation(BigDecimal.valueOf(dateMatchTableList.get(lastPlayed).stream().mapToDouble(m -> m.getStandardDeviation().doubleValue()).average().orElseThrow(UnsupportedOperationException::new)));
             }
         }
-
-        Logger.debug("returning match game={}, player={}, mean={}, stdev={}",
-                matchTable.getGameTable().getName(), matchTable.getPlayerTable().getName(), matchTable.getMean(), matchTable.getStandardDeviation());
         return matchTable;
+    }
+
+    @SneakyThrows
+    public void combinePlayer(final PlayerTable fromPlayer, final PlayerTable toPlayer) {
+        UpdateBuilder<MatchTable, Integer> preparedUpdate = matchTableDao.updateBuilder();
+        preparedUpdate.updateColumnValue(MatchTable.PLAYER_FK, toPlayer.getPk())
+                .where().eq(MatchTable.PLAYER_FK, fromPlayer.getPk());
+        preparedUpdate.update();
+
+        recalculate(toPlayer);
     }
 
     @SneakyThrows
@@ -115,45 +123,50 @@ public class MatchService {
     public void recalculate(final PlayerTable player) {
         Logger.trace("=> recalculate {}", player.getName());
         List<MatchTable> matchList = retrieveAllMatchesForPlayer(player);
-        Map<String, Rating> lastPlayerGameRatingMap = new HashMap<>();
         matchList.stream().map(m -> m.getPlayDate().getTime()).forEach(l -> Logger.debug("session={}", l));
         matchList.stream().sorted(Comparator.comparing(MatchTable::getPlayDate)).forEach(match -> {
-            Logger.debug("=> player={}, session={}", player.getName(), match.getSessionId());
+            Logger.debug("recalculate => player={}, session={}", player.getName(), match.getSessionId());
             List<MatchTable> sessionList = retrieveMatchWithSessionId(match.getSessionId());
             Date playDate = sessionList.stream().findAny().orElseThrow().getPlayDate();
-            Logger.debug("playDate={}", playDate.getTime());
+            Logger.debug("recalculate => playDate={}", playDate.getTime());
             GameTable gameTable = sessionList.stream().findAny().orElseThrow().getGameTable();
 
-            lastPlayerGameRatingMap.putIfAbsent(gameTable.getName(), retrieveRatingBefore(playDate, player, gameTable));
-
+            Logger.debug("recalculate => {}", player.getName());
+            Rating lastRating = retrieveRatingBefore(playDate, player, gameTable);
+            Logger.debug("lastRating => {}", lastRating);
             Map<String, Map<String, Rating>> lastPlayerListGameListRatingMap = new HashMap<>();
-            lastPlayerListGameListRatingMap.put(player.getName(), new HashMap<>());
-            lastPlayerListGameListRatingMap.get(player.getName()).put(gameTable.getName(), lastPlayerGameRatingMap.get(gameTable.getName()));
-
             MatchData matchData = matchDataBuilder.buildFromMatchTable(sessionList);
             matchData.getTeamDataSet().forEach(team -> team.getPlayerTableSet().forEach(p -> {
+                Logger.debug("recalculate => team player {}", p.getName());
                 lastPlayerListGameListRatingMap.putIfAbsent(p.getName(), new HashMap<>());
                 lastPlayerListGameListRatingMap.get(p.getName()).putIfAbsent(gameTable.getName(), retrieveRatingBefore(playDate, p, gameTable));
             }));
 
+            lastPlayerListGameListRatingMap.forEach((k, v) -> Logger.debug("lastPlayerListGameListRatingMap => {}={}", k, v));
             Map<IPlayer, Rating> playerNewRatingMap = calculatorService.calculate(sessionList, lastPlayerListGameListRatingMap);
-            Logger.debug("new ratings:");
-            playerNewRatingMap.forEach((key, value) -> Logger.debug("> {} (μ)={} (σ)={}", key, value.getMean(), value.getStandardDeviation()));
+            Logger.debug("New ratings for {}", gameTable.getName());
+            playerNewRatingMap.forEach((key, value) -> Logger.debug("(μ)={} (σ)={} {}", value.getMean(), value.getStandardDeviation(), key));
 
-            Rating lastRating = lastPlayerGameRatingMap.get(gameTable.getName());
-            Rating newRating = playerNewRatingMap.entrySet().stream()
-                    .filter(e -> ((PlayerTable) e.getKey()).getName().equals(player.getName()))
-                    .findAny().orElseThrow().getValue();
+            List<Rating> newRatingsForPlayer = playerNewRatingMap.entrySet().stream()
+                    .filter(e -> ((PlayerTable) e.getKey()).getName().equals(player.getName())).map(Map.Entry::getValue)
+                    .collect(Collectors.toList());
+            Rating newRating;
+            if (newRatingsForPlayer.size() > 1) {
+                Logger.debug("Multiple new ratings, combining ratings");
+                newRating = calculatorService.combine(newRatingsForPlayer);
+            } else {
+                Logger.debug("No need to combine new rating");
+                newRating = newRatingsForPlayer.get(0);
+            }
             Rating oldRating = new Rating(match.getMean().doubleValue(), match.getStandardDeviation().doubleValue());
-            Logger.debug("{} match={}", player.getName(), match);
-            Logger.debug("mean: last={}, old={}, new={}", lastRating.getMean(), oldRating.getMean(), newRating.getMean());
-            Logger.debug("stdev: last={}, old={}, new={}", lastRating.getStandardDeviation(), oldRating.getStandardDeviation(), newRating.getStandardDeviation());
+            Logger.debug("Ratings for {}", player.getName());
+            Logger.debug("(μ): last={}, old={}, new={}", lastRating.getMean(), oldRating.getMean(), newRating.getMean());
+            Logger.debug("(σ): last={}, old={}, new={}", lastRating.getStandardDeviation(), oldRating.getStandardDeviation(), newRating.getStandardDeviation());
 
             boolean meanMatch = Math.abs(oldRating.getMean() - newRating.getMean()) < 0.00001;
             boolean stdevMatch = Math.abs(oldRating.getStandardDeviation() - newRating.getStandardDeviation()) < 0.00001;
             if (meanMatch && stdevMatch) {
                 Logger.debug("<= Rating for {} are correct", player.getName());
-                lastPlayerGameRatingMap.put(gameTable.getName(), newRating);
             } else {
                 Logger.debug("<= Bad rating for {}, updating database", player.getName());
                 match.setMean(BigDecimal.valueOf(newRating.getMean()));
@@ -163,7 +176,6 @@ public class MatchService {
                 } catch (final SQLException e) {
                     Logger.error(e);
                 }
-                lastPlayerGameRatingMap.put(gameTable.getName(), newRating);
             }
         });
     }
@@ -289,6 +301,7 @@ public class MatchService {
     @SneakyThrows
     public Rating retrieveRatingBefore(final Date playDate, final PlayerTable playerTable, final GameTable gameTable) {
         MatchTable matchTable = retrieveLastPlayerMatchForGameBefore(playDate, gameTable, playerTable);
+        Logger.debug("Last rating (μ)={} (σ)={} {}", matchTable.getMean(), matchTable.getStandardDeviation(), matchTable.getPlayerTable().getName());
         return matchMapper.toRating(matchTable);
     }
 
