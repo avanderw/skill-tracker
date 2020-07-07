@@ -1,4 +1,5 @@
 # Contributor Covenant Code of Conduct
+See [README](README.md) for more project related information.
 
 ## Our Pledge
 
