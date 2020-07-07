@@ -17,4 +17,4 @@ We will review your Pull Request as soon as possible. Thank you for contributing
 ## Commit messages
 
 ## Code of conduct
-Please read the code of conduct [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) examples of what is perceived as acceptable behaviour.
+Please read the code of conduct [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) examples of what is perceived as acceptable behaviour.
