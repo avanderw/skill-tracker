@@ -1,4 +1,4 @@
-<img src="icon.png" width=48 align="right" />
+<img src="icon.png" width="48" align="right" />
 
 # net.avdw.skill-tracker
 ![top-language](https://img.shields.io/github/languages/top/avanderw/skill-tracker)
