@@ -1,12 +1,17 @@
 package net.avdw.skilltracker.discord;
 
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import net.avdw.property.AbstractPropertyModule;
 import net.avdw.skilltracker.GuiceFactory;
 import net.avdw.skilltracker.MainCli;
+import net.avdw.skilltracker.Templator;
 import picocli.CommandLine;
 
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 public class DiscordModule extends AbstractPropertyModule {
     @Override
@@ -23,5 +28,19 @@ public class DiscordModule extends AbstractPropertyModule {
         properties.put(DiscordPropertyKey.API_TOKEN, "default-token");
         properties.put(DiscordPropertyKey.PREFIX, "--");
         return properties;
+    }
+
+    @Provides
+    @Singleton
+    @Discord
+    ResourceBundle resourceBundle() {
+        return ResourceBundle.getBundle("discord", Locale.ENGLISH);
+    }
+
+    @Provides
+    @Singleton
+    @Discord
+    Templator templatePopulator(@Discord final ResourceBundle resourceBundle) {
+        return new Templator(resourceBundle);
     }
 }
