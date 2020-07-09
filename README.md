@@ -29,7 +29,7 @@ Featuring:
 
 > See the [support](#support) section to setup your environment to build the project.
 
-The below snipped will download the source and build it.
+The below snippet will download the source and build it.
 ```shell script
 $ git clone https://github.com/avanderw/skill-tracker.git
 $ cd skill-tracker/
@@ -81,6 +81,11 @@ The bot can now be invited to your discord server. The invite URL will be found 
 ## Usage
 
 ### Register a game
+> A game must be registered to play matches against. This is a design choice as it prevents costly mistakes when adding a match.
+
+The only optional argument is the draw probability of a match in the game. 
+For example in chess it would be high; whereas in tennis it would be low. The default draw probability is 10%.
+Due to complications in the math (divide by zero), a game may not have 0% draw probability.    
 ```shell script
 $ java -jar ./target/skill-tracker.jar game add Naruto
 Successfully added the game
@@ -88,6 +93,10 @@ Successfully added the game
 ```
 
 ### Add a match
+> A player is not required when adding a match. They will automatically be created.
+> Spelling mistakes create new players. Use 'match rm' to remove bad matches and 'player mv' to fix spelling mistakes.
+
+The most common command to follow `match add ...` is `game view ...`. Thus the two commands were chained together.
 ```shell script
 $ java -jar ./target/skill-tracker.jar match add Naruto Sasuke,Orochimaru,Nagato Kabuto,Gaara -r=1,2,3 -g=Naruto
 Successfully created match
@@ -96,6 +105,14 @@ Successfully created match
 ```
 
 ### View game leaderboard
+
+> The leaderboard is ordered by the conservative rating = (μ) - 3(σ). 
+> Thus the leaderboard is 99% certain you are better than your ranking.
+
+Each game keeps track of it's own leaderboard. The data is statically cached in the database.
+The data is recalculated when matches are removed. It caters for duplicate players. This is useful when playing bots of the same type.
+The outcome of all the duplicates in the match are averaged together to form the new (μ) and (σ).
+
 ```shell script
 $ java -jar ./target/skill-tracker.jar game view Naruto
 Top 10 players:
@@ -119,6 +136,15 @@ Showing the last 5 matches:
 ```
 
 ### Suggest team setup
+
+> Higher quality matches will have a more fair game. 
+> The quality will be better represented the lower the (σ) of the players.
+> The (σ) will lower faster the more 1v1 a player plays
+
+The team suggest option will suggest games that are of high quality. The higher the quality the closer the skills are matched.
+It is obvious who the winner will be with a 0% quality and anybodies guess with 100% quality. Any team combination can be used.
+The only rule is that the number of players in all the teams add up to the number of players provided. 
+
 ```shell script
 $ java -jar ./target/skill-tracker.jar match suggest 2v2v1 Naruto,Sasuke,Madara,Nagato,Kakashi -g=Naruto
 Suggest team setups for Naruto
@@ -144,7 +170,6 @@ Quality          Setup
 0%      (Nagato, Kakashi) vs. (Naruto, Madara) vs. (Sasuke)
 0%      (Nagato, Naruto) vs. (Madara, Kakashi) vs. (Sasuke)
 0%      (Kakashi, Naruto) vs. (Nagato, Madara) vs. (Sasuke)
-
 ```
 
 ## Configuration
