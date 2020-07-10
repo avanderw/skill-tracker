@@ -6,6 +6,9 @@ import lombok.SneakyThrows;
 import net.avdw.database.LiquibaseRunner;
 import picocli.CommandLine;
 
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -27,6 +30,11 @@ public final class Main {
         createDatabaseIfNotExists();
 
         CommandLine commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
+        PrintWriter err = new PrintWriter(new OutputStreamWriter(System.err, StandardCharsets.UTF_8), true);
+        commandLine.setOut(out);
+        commandLine.setErr(err);
         commandLine.execute(args);
+        out.flush();
     }
 }
