@@ -100,7 +100,9 @@ Successfully added the game
 
 The most common command to follow `match add ...` is `game view ...`. Thus the two commands were chained together.
 ```shell script
-$ java -jar ./target/skill-tracker.jar match add Naruto Sasuke,Orochimaru,Nagato Kabuto,Gaara -r=1,2,3 -g=Naruto
+$ java -jar ./target/skill-tracker.jar match add \
+  Naruto Sasuke,Orochimaru,Nagato Kabuto,Gaara --ranks 1,2,3 --game Naruto
+
 Successfully created match
 > 2020-07-09 Naruto #1:Naruto vs. #2:Sasuke & Nagato & Orochimaru vs. #3:Gaara & Kabuto (5401c3fd)
 ...
