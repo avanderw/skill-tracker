@@ -24,3 +24,5 @@ x 2020-07-03 2020-06-27 Add case insensitivity to names release:1.0.0
 x 2020-07-06 2020-06-28 Add 'player combine <name> <name>' feature release:1.0.0
 x 2020-07-06 2020-07-03 Add 'player mv <name> <name>' release:1.0.0
 x 2020-07-07 2020-06-28 Add a script for auto backup of the sqlite.db release:1.0.0
+x 2020-07-10 2020-06-22 Add clean player
+x 2020-07-10 2020-06-24 Add backup and restore functionality 

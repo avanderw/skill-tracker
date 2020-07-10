@@ -4,3 +4,5 @@
 (I) 2020-06-24 Fix quality allowing 1v1 release:1.0.0
 x 2020-06-29 2020-06-24 Update getting last score to average out mean and standard deviation if player is in the match more than once release:1.0.0
 2020-06-22 Add remove player
+2020-06-24 Add command to check changelog
+2020-06-24 Add command to check todo

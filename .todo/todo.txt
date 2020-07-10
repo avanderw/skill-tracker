@@ -1,6 +1,2 @@
-2020-06-22 Add clean player
+(A) 2020-07-10 @Fix ANSI bug on unix systems which displays incorrectly in discord
 2020-06-23 Add Afrikaans language
-2020-06-23 Add a dynamic changelog announcer to discord interface
-2020-06-24 Add backup and restore functionality 
-2020-06-24 Add command to check changelog
-2020-06-24 Add command to check todo
