@@ -6,7 +6,7 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 See [README](README.md) for more project related information.
 
-## [Unreleased]
+## [1.0.0] - 2020-07-10
 
 ### Added
 - Discord interface
