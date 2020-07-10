@@ -14,6 +14,8 @@ Featuring:
 
 ## Showcase
 
+![showcase](./showcase.gif)
+
 ## Table of contents
 
 1. [Getting started](#getting-started)
