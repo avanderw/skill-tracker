@@ -269,12 +269,16 @@ public class MatchService {
 
     @SneakyThrows
     public MatchTable retrieveLastPlayerMatchForGame(final GameTable gameTable, final PlayerTable playerTable) {
-        Logger.trace("=> retrieve last player match for game={}, player={}", gameTable.getName(), playerTable.getName());
+        if (gameTable == null) {
+            Logger.debug("Game is not found");
+            return null;
+        }
 
         if (playerTable.getPk() == null) {
             Logger.debug("Player does not exist in database");
             return null;
         }
+        Logger.trace("=> retrieve last player match for game={}, player={}", gameTable.getName(), playerTable.getName());
 
         List<MatchTable> matchTableList = matchTableDao.queryBuilder().orderBy(MatchTable.PLAY_DATE, false)
                 .where().eq(MatchTable.GAME_FK, gameTable)

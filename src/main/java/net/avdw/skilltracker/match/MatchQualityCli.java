@@ -47,6 +47,10 @@ public class MatchQualityCli implements Runnable {
     @Override
     public void run() {
         GameTable gameTable = gameService.retrieveGame(game);
+        if (gameTable == null) {
+            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.NO_GAME_FOUND));
+            return;
+        }
         MatchData matchData = matchDataBuilder.buildFromString(teams);
         List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, matchData);
 

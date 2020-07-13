@@ -1,8 +1,8 @@
 package net.avdw.skilltracker.match;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
+import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.game.GameService;
 import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.player.PlayerService;
@@ -14,8 +14,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -27,6 +25,7 @@ public class SuggestMatchCli implements Runnable {
     private String game;
     @Inject
     private GameService gameService;
+    private Gson gson = new Gson();
     @Inject
     private MatchService matchService;
     @Parameters(description = "Players in the game", split = ",", arity = "1", index = "1")
@@ -35,13 +34,13 @@ public class SuggestMatchCli implements Runnable {
     private PlayerRankingMapBuilder playerRankingMapBuilder;
     @Inject
     private PlayerService playerService;
-    @Inject
-    @Match
-    private ResourceBundle resourceBundle;
     @Spec
     private CommandSpec spec;
     @Parameters(description = "Team setup (e.g. 2v1v4)", split = "v", arity = "1", index = "0")
     private List<Integer> teamSize;
+    @Inject
+    @Match
+    private Templator templator;
 
     private MatchData formMatch(final List<PlayerTable> nameList, final List<Integer> teamSizeList) {
         MatchData match = new MatchData();
@@ -59,19 +58,21 @@ public class SuggestMatchCli implements Runnable {
     @Override
     public void run() {
         if (playerList.size() != teamSize.stream().mapToInt(Integer::intValue).sum()) {
-            spec.commandLine().getOut().println(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH));
+            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH));
             return;
         }
 
         GameTable gameTable = gameService.retrieveGame(game);
+        if (gameTable == null) {
+            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.NO_GAME_FOUND));
+            return;
+        }
         List<PlayerTable> playerTableList = playerList.stream().map(player -> playerService.createOrRetrievePlayer(player)).collect(Collectors.toList());
         Set<MatchData> matchSet = CollectionUtils.permutations(playerTableList).stream().map(permutations -> formMatch(permutations, teamSize)).collect(Collectors.toSet());
         matchSet.forEach(matchData -> matchData.setQuality(matchService.calculateMatchQuality(gameTable, playerRankingMapBuilder.build(gameTable, matchData))));
 
-        Mustache suggestCliTitleTemplate = new DefaultMustacheFactory().compile(new StringReader(resourceBundle.getString(MatchBundleKey.SUGGEST_CLI_TITLE)), MatchBundleKey.SUGGEST_CLI_TITLE);
-        StringWriter suggestCliTitleWriter = new StringWriter();
-        suggestCliTitleTemplate.execute(suggestCliTitleWriter, gameTable);
-        spec.commandLine().getOut().println(suggestCliTitleWriter.toString());
+        spec.commandLine().getOut().println(templator.populate(MatchBundleKey.SUGGEST_CLI_TITLE,
+                gson.fromJson(String.format("{name:'%s'}", gameTable.getName()), Map.class)));
         playerTableList.forEach(playerTable -> {
             MatchTable matchTable = matchService.retrieveLastPlayerMatchForGame(gameTable, playerTable);
             spec.commandLine().getOut().println(String.format("> (μ)=%2s (σ)=%s \t %s",
@@ -82,8 +83,8 @@ public class SuggestMatchCli implements Runnable {
         });
 
         spec.commandLine().getOut().println(String.format("%n%s \t %s",
-                resourceBundle.getString(MatchBundleKey.SUGGEST_TABLE_QUALITY_HEADER),
-                resourceBundle.getString(MatchBundleKey.SUGGEST_TABLE_TEAM_HEADER)
+                templator.populate(MatchBundleKey.SUGGEST_TABLE_QUALITY_HEADER),
+                templator.populate(MatchBundleKey.SUGGEST_TABLE_TEAM_HEADER)
         ));
         matchSet.stream().sorted(Comparator.comparingDouble((MatchData matchData) -> matchData.getQuality().doubleValue()).reversed()).forEach(matchData ->
                 spec.commandLine().getOut().println(String.format("%s%%\t%s",

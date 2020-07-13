@@ -166,6 +166,12 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_BadGameName() {
+        assertSuccess(commandLine.execute("match", "quality", "-g=BadName", "One", "Two"));
+        assertSuccess(commandLine.execute("match", "suggest", "1v1", "-g=BadName", "Andrew,Karl"));
+    }
+
+    @Test
     public void test_CreateExistingPlayer() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
