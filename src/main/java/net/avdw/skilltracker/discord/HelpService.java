@@ -22,7 +22,7 @@ public class HelpService {
         Logger.trace("Processing help event");
         StringWriter out = new StringWriter();
         out.write("```");
-        commandLine.usage(new PrintWriter(out));
+        commandLine.usage(new PrintWriter(out), CommandLine.Help.Ansi.OFF);
         out.write("```");
         MessageChannel channel = event.getChannel();
         channel.sendMessage(out.toString()).queue();

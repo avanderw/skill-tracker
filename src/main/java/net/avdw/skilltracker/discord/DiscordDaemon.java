@@ -16,6 +16,7 @@ public final class DiscordDaemon {
 
     public static void main(final String[] args) {
         try {
+            System.setProperty("picocli.ansi", "false");
             Injector injector = Guice.createInjector(new DiscordModule());
             // Note: It is important to register your ReadyListener before building
             JDA jda = JDABuilder.createDefault(injector.getInstance(Key.get(String.class, Names.named(DiscordPropertyKey.API_TOKEN))))
