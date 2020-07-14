@@ -3,3 +3,5 @@ x 2020-07-13 2020-07-10 @Fix NullPointer when game is not found on 'match qualit
 2020-06-23 Add Afrikaans language
 x 2020-07-14 2020-07-12 @Update team display on 'match quality' command release:1.0.1
 x 2020-07-14 2020-07-13 @Update 'match suggest' formatting release:1.0.1
+2020-07-14 Add to 'match suggest' the ability to select NvM from a larger than N+M pool of players release:1.1.0
+2020-07-14 Clean up 'player ls' formatting release:1.1.0

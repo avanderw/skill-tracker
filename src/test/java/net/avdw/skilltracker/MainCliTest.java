@@ -2,6 +2,7 @@ package net.avdw.skilltracker;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.tinylog.Logger;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
@@ -15,9 +16,15 @@ public class MainCliTest {
     private StringWriter errWriter;
     private StringWriter outWriter;
 
-    private void assertSuccess(int exitCode) {
-        assertEquals("The command must not have error output", "", errWriter.toString());
-        assertNotEquals("The command needs standard output", "", outWriter.toString());
+    private void assertSuccess(final int exitCode) {
+        if (!outWriter.toString().isEmpty()) {
+            Logger.debug("Standard output:\n{}", outWriter.toString());
+        }
+        if (!errWriter.toString().isEmpty()) {
+            Logger.error("Error output:\n{}", errWriter.toString());
+        }
+        assertEquals("MUST NOT HAVE error output", "", errWriter.toString());
+        assertNotEquals("MUST HAVE standard output", "", outWriter.toString());
         assertEquals(0, exitCode);
     }
 
@@ -31,9 +38,15 @@ public class MainCliTest {
     }
 
     @Test
-    public void test_Empty_Fail() {
+    public void testEmpty() {
         assertSuccess(commandLine.execute());
-        assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
+        assertTrue("SHOULD output usage help", outWriter.toString().contains("Usage"));
+    }
+
+    @Test
+    public void testVersion() {
+        assertSuccess(commandLine.execute("--version"));
+        assertNotEquals(2, outWriter.toString().length());
     }
 
 }
