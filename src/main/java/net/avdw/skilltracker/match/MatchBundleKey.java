@@ -12,9 +12,15 @@ public final class MatchBundleKey {
     public static final String MATCH_TEAM_PLAYER_ENTRY = "match.team.player.entry(name)";
     public static final String NO_GAME_FOUND = "no.game.found";
     public static final String NO_MATCH_FOUND = "no.match.found";
-    public static final String QUALITY_ENTRY = "quality.title(game,quality)";
+    public static final String QUALITY_CLI_TITLE = "quality.title(game,quality,summary)";
+    public static final String QUALITY_FFA_MATCH_TITLE = "quality.ffa.match.title";
+    public static final String QUALITY_HI = "quality.hi";
+    public static final String QUALITY_MED = "quality.med";
+    public static final String QUALITY_LOW = "quality.low";
+    public static final String QUALITY_LOW_THRESHOLD = "quality.low.threshold";
+    public static final String QUALITY_MED_THRESHOLD = "quality.med.threshold";
+    public static final String QUALITY_TEAM_TITLE = "quality.team.title(mean,stdev)";
     public static final String QUALITY_TEAM_PLAYER_ENTRY = "quality.team.player.entry(mean,stdev,name)";
-    public static final String QUALITY_TEAM_PLAYER_TEAM = "quality.team.player.team(team)";
     public static final String SUGGEST_CLI_TITLE = "suggest.cli.title";
     public static final String SUGGEST_TABLE_QUALITY_HEADER = "suggest.table.quality.header";
     public static final String SUGGEST_TABLE_TEAM_HEADER = "suggest.table.team.header";

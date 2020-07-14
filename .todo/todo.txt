@@ -1,5 +1,5 @@
 x 2020-07-13 2020-07-10 @Fix ANSI bug on unix systems which displays incorrectly in discord
 x 2020-07-13 2020-07-10 @Fix NullPointer when game is not found on 'match quality'
 2020-06-23 Add Afrikaans language
-2020-07-12 @Update team display on 'match quality' command
-2020-07-13 @Update 'match suggest' formatting
+x 2020-07-14 2020-07-12 @Update team display on 'match quality' command release:1.0.1
+2020-07-13 @Update 'match suggest' formatting release:1.0.1
