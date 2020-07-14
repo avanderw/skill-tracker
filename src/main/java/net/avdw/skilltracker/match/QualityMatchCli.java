@@ -38,23 +38,16 @@ public class QualityMatchCli implements Runnable {
     @Inject
     @Match
     private Templator templator;
+    @Inject
+    private QualityGroupResolver qualityGroupResolver;
 
     private void display(final GameTable gameTable, final MatchData matchData, final BigDecimal qualityMetric) {
         String game = gameTable.getName();
-        int quality = qualityMetric.intValue();
-        int lowThreshold = Integer.parseInt(templator.populate(MatchBundleKey.QUALITY_LOW_THRESHOLD));
-        int medThreshold = Integer.parseInt(templator.populate(MatchBundleKey.QUALITY_MED_THRESHOLD));
-        String summary = templator.populate(MatchBundleKey.QUALITY_HI);
-        if (quality < medThreshold) {
-            summary = templator.populate(MatchBundleKey.QUALITY_MED);
-        }
-        if (quality < lowThreshold) {
-            summary = templator.populate(MatchBundleKey.QUALITY_LOW);
-        }
+        String group = qualityGroupResolver.resolve(qualityMetric.intValue());
         boolean isFreeForAll = teams.size() == 1;
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.QUALITY_CLI_TITLE,
-                gson.fromJson(String.format("{game:'%s',quality:'%s%%',summary:'%s'}",
-                        game, quality, summary), Map.class)));
+                gson.fromJson(String.format("{game:'%s',quality:'%s%%',group:'%s'}",
+                        game, qualityMetric.intValue(), group), Map.class)));
         if (isFreeForAll) {
             displayFreeForAllDetail(gameTable, matchData);
         } else {

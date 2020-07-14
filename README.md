@@ -158,22 +158,26 @@ Suggest team setups for Naruto
 > (μ)=10 (σ)=3   Nagato
 > (μ)=20 (σ)=3   Kakashi
 
-Quality          Setup
-61%     (Naruto, Sasuke) vs. (Madara, Nagato) vs. (Kakashi)
-46%     (Naruto, Nagato) vs. (Sasuke, Madara) vs. (Kakashi)
-35%     (Nagato, Madara) vs. (Sasuke, Kakashi) vs. (Naruto)
-31%     (Naruto, Madara) vs. (Nagato, Sasuke) vs. (Kakashi)
-23%     (Nagato, Kakashi) vs. (Madara, Sasuke) vs. (Naruto)
-14%     (Kakashi, Madara) vs. (Nagato, Sasuke) vs. (Naruto)
-8%      (Naruto, Nagato) vs. (Sasuke, Kakashi) vs. (Madara)
-7%      (Naruto, Sasuke) vs. (Kakashi, Nagato) vs. (Madara)
-3%      (Naruto, Madara) vs. (Kakashi, Sasuke) vs. (Nagato)
-2%      (Naruto, Sasuke) vs. (Madara, Kakashi) vs. (Nagato)
-1%      (Kakashi, Naruto) vs. (Sasuke, Nagato) vs. (Madara)
-1%      (Naruto, Kakashi) vs. (Sasuke, Madara) vs. (Nagato)
-0%      (Nagato, Kakashi) vs. (Naruto, Madara) vs. (Sasuke)
-0%      (Nagato, Naruto) vs. (Madara, Kakashi) vs. (Sasuke)
-0%      (Kakashi, Naruto) vs. (Nagato, Madara) vs. (Sasuke)
+Fair games:
+> 61% (Naruto, Sasuke) vs. (Madara, Nagato) vs. (Kakashi)
+> 46% (Naruto, Nagato) vs. (Sasuke, Madara) vs. (Kakashi)
+
+Poor games:
+> 35% (Nagato, Madara) vs. (Sasuke, Kakashi) vs. (Naruto)
+> 31% (Naruto, Madara) vs. (Nagato, Sasuke) vs. (Kakashi)
+> 23% (Nagato, Kakashi) vs. (Madara, Sasuke) vs. (Naruto)
+
+Unfair / Unknown games:
+> 14% (Kakashi, Madara) vs. (Nagato, Sasuke) vs. (Naruto)
+>  8% (Naruto, Nagato) vs. (Sasuke, Kakashi) vs. (Madara)
+>  7% (Naruto, Sasuke) vs. (Kakashi, Nagato) vs. (Madara)
+>  3% (Naruto, Madara) vs. (Kakashi, Sasuke) vs. (Nagato)
+>  2% (Naruto, Sasuke) vs. (Madara, Kakashi) vs. (Nagato)
+>  1% (Kakashi, Naruto) vs. (Sasuke, Nagato) vs. (Madara)
+>  1% (Naruto, Kakashi) vs. (Sasuke, Madara) vs. (Nagato)
+>  0% (Nagato, Kakashi) vs. (Naruto, Madara) vs. (Sasuke)
+>  0% (Nagato, Naruto) vs. (Madara, Kakashi) vs. (Sasuke)
+>  0% (Kakashi, Naruto) vs. (Nagato, Madara) vs. (Sasuke)
 ```
 
 ## Configuration

@@ -34,6 +34,8 @@ public class SuggestMatchCli implements Runnable {
     private PlayerRankingMapBuilder playerRankingMapBuilder;
     @Inject
     private PlayerService playerService;
+    @Inject
+    private QualityGroupResolver qualityGroupResolver;
     @Spec
     private CommandSpec spec;
     @Parameters(description = "Team setup (e.g. 2v1v4)", split = "v", arity = "1", index = "0")
@@ -41,6 +43,25 @@ public class SuggestMatchCli implements Runnable {
     @Inject
     @Match
     private Templator templator;
+
+    private void displayGroup(final Map<String, List<MatchData>> qualityGroupMap,
+                              final String groupSummaryBundleKey,
+                              final String groupTitleBundleKey) {
+        if (qualityGroupMap.get(templator.populate(groupSummaryBundleKey)) == null) {
+            return;
+        }
+
+        spec.commandLine().getOut().println();
+        spec.commandLine().getOut().println(templator.populate(groupTitleBundleKey));
+        qualityGroupMap.get(templator.populate(groupSummaryBundleKey)).stream()
+                .sorted(Comparator.comparingDouble((MatchData m) -> m.getQuality().doubleValue()).reversed())
+                .forEach(m -> spec.commandLine().getOut().println(templator.populate(MatchBundleKey.SUGGEST_LIST_ENTRY,
+                        gson.fromJson(String.format("{quality:'%2s%%',setup:'%s'}",
+                                m.getQuality().multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).toString(),
+                                m.getTeamDataSet().stream().map(teamData -> String.format("(%s)",
+                                        teamData.getPlayerTableSet().stream().map(PlayerTable::getName).collect(Collectors.joining(", "))))
+                                        .collect(Collectors.joining(" vs. "))), Map.class))));
+    }
 
     private MatchData formMatch(final List<PlayerTable> nameList, final List<Integer> teamSizeList) {
         MatchData match = new MatchData();
@@ -72,7 +93,9 @@ public class SuggestMatchCli implements Runnable {
         matchSet.forEach(matchData -> matchData.setQuality(matchService.calculateMatchQuality(gameTable, playerRankingMapBuilder.build(gameTable, matchData))));
 
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.SUGGEST_CLI_TITLE,
-                gson.fromJson(String.format("{name:'%s'}", gameTable.getName()), Map.class)));
+                gson.fromJson(String.format("{setup:'%s',game:'%s'}",
+                        teamSize.stream().map(Object::toString).collect(Collectors.joining("v")),
+                        gameTable.getName()), Map.class)));
         playerTableList.forEach(playerTable -> {
             MatchTable matchTable = matchService.retrieveLastPlayerMatchForGame(gameTable, playerTable);
             spec.commandLine().getOut().println(String.format("> (μ)=%2s (σ)=%s \t %s",
@@ -82,17 +105,10 @@ public class SuggestMatchCli implements Runnable {
             ));
         });
 
-        spec.commandLine().getOut().println(String.format("%n%s \t %s",
-                templator.populate(MatchBundleKey.SUGGEST_TABLE_QUALITY_HEADER),
-                templator.populate(MatchBundleKey.SUGGEST_TABLE_TEAM_HEADER)
-        ));
-        matchSet.stream().sorted(Comparator.comparingDouble((MatchData matchData) -> matchData.getQuality().doubleValue()).reversed()).forEach(matchData ->
-                spec.commandLine().getOut().println(String.format("%s%%\t%s",
-                        matchData.getQuality().multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).toString(),
-                        matchData.getTeamDataSet().stream().map(teamData -> String.format("(%s)",
-                                teamData.getPlayerTableSet().stream().map(PlayerTable::getName).collect(Collectors.joining(", "))))
-                                .collect(Collectors.joining(" vs. "))
-                        )
-                ));
+        Map<String, List<MatchData>> qualityGroupMap = matchSet.stream().collect(Collectors.groupingBy(m -> qualityGroupResolver.resolve(m.getQuality().multiply(BigDecimal.valueOf(100)).intValue())));
+        displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_HI_SUMMARY, MatchBundleKey.SUGGEST_HI_TITLE);
+        displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_MED_SUMMARY, MatchBundleKey.SUGGEST_MED_TITLE);
+        displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_LOW_SUMMARY, MatchBundleKey.SUGGEST_LOW_TITLE);
+        displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_LOWEST_SUMMARY, MatchBundleKey.SUGGEST_LOWEST_TITLE);
     }
 }
