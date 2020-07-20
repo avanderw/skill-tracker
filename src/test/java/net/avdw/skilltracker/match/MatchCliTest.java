@@ -133,6 +133,11 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_CreateBadGame() {
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+    }
+
+    @Test
     public void test_Create() throws SQLException {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         resetOutput();
