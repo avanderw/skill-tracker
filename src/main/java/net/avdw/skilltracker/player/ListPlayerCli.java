@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.match.MatchService;
+import org.apache.commons.lang3.StringUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +42,22 @@ public class ListPlayerCli implements Runnable {
             spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_NOT_EXIST));
         }
 
+        playerTableList.sort(Comparator.comparingInt((PlayerTable p)->matchService.gameListForPlayer(p).size()).reversed());
+        int maxPlayerLength = playerTableList.stream().mapToInt(p->p.getName().length()).max().orElseThrow();
+        maxPlayerLength++;
+        int columns= 5;
         spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_LIST_TITLE));
-        playerTableList.forEach(playerTable -> spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_TITLE,
-                gson.fromJson(String.format("{gameCount:'%s',name:'%s'}",
-                        matchService.gameListForPlayer(playerTable).size(),
-                        playerTable.getName()), Map.class))));
+        for (int i = 1; i <= playerTableList.size(); i++) {
+            PlayerTable playerTable = playerTableList.get(i-1);
+            String playerString = templator.populate(PlayerBundleKey.PLAYER_TITLE,
+                    gson.fromJson(String.format("{gameCount:'%s',name:'%s'}",
+                            StringUtils.leftPad(""+matchService.gameListForPlayer(playerTable).size(), 2),
+                            StringUtils.rightPad(playerTable.getName(), maxPlayerLength)), Map.class));
+            if (i % columns == 0) {
+                spec.commandLine().getOut().println(playerString);
+            } else {
+                spec.commandLine().getOut().print(playerString);
+            }
+        }
     }
 }

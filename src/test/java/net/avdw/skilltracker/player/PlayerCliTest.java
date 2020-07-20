@@ -77,10 +77,15 @@ public class PlayerCliTest {
     }
 
     private void assertSuccess(final int exitCode) {
+        if (!outWriter.toString().isEmpty()) {
+            Logger.debug(outWriter.toString());
+        }
+        if (!errWriter.toString().isEmpty()) {
+            Logger.error(errWriter.toString());
+        }
         assertEquals("The command must not have error output", "", errWriter.toString());
         assertNotEquals("The command needs standard output", "", outWriter.toString());
         assertEquals(0, exitCode);
-        Logger.debug(outWriter.toString());
     }
 
     @Before
@@ -137,7 +142,9 @@ public class PlayerCliTest {
     @Test
     public void test_ListAll() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("game", "add", "Tooth&Tail"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2", "--game", "Tooth&Tail"));
         resetOutput();
 
         assertSuccess(commandLine.execute("player", "ls"));
