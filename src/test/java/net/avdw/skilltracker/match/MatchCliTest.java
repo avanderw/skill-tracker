@@ -193,7 +193,7 @@ public class MatchCliTest {
     @Test
     public void test_CreateMatchFFS() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "-g=Northgard", "One,Two,Three,Four", "-r=1,2,3,4"));
+        assertSuccess(commandLine.execute("match", "add", "-g=Northgard", "One,Two,Three,Four", "--rank=1,2,3,4"));
     }
 
     @Test

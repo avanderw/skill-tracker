@@ -36,7 +36,7 @@ class CreateMatchCli implements Runnable {
     private MatchDataBuilder matchDataBuilder;
     @Inject
     private MatchService matchService;
-    @Option(names = {"-r", "--ranks"}, split = ",", required = true)
+    @Option(names = {"-r", "--rank", "--ranks"}, split = ",", required = true)
     private int[] ranks;
     @Spec
     private CommandSpec spec;
