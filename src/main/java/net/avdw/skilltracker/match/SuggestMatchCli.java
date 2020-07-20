@@ -28,7 +28,7 @@ public class SuggestMatchCli implements Runnable {
     private Gson gson = new Gson();
     @Inject
     private MatchService matchService;
-    @Parameters(description = "Players in the game", split = ",", arity = "1", index = "1")
+    @Parameters(description = "Players in the game", split = ",", arity = "1")
     private List<String> playerList;
     @Inject
     private PlayerRankingMapBuilder playerRankingMapBuilder;
@@ -38,7 +38,7 @@ public class SuggestMatchCli implements Runnable {
     private QualityGroupResolver qualityGroupResolver;
     @Spec
     private CommandSpec spec;
-    @Parameters(description = "Team setup (e.g. 2v1v4)", split = "v", arity = "1", index = "0")
+    @Option(names = {"-s", "--setup"}, description = "Team setup (e.g. 2v1v4)", split = "v")
     private List<Integer> teamSize;
     @Inject
     @Match

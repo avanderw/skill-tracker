@@ -173,7 +173,12 @@ public class MatchCliTest {
     @Test
     public void test_BadGameName() {
         assertSuccess(commandLine.execute("match", "quality", "-g=BadName", "One", "Two"));
-        assertSuccess(commandLine.execute("match", "suggest", "1v1", "-g=BadName", "Andrew,Karl"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=1v1", "-g=BadName", "Andrew,Karl"));
+    }
+
+    @Test
+    public void test_OrderTeamSize() {
+        assertSuccess(commandLine.execute("match", "suggest", "-g=BadName", "Andrew,Karl", "--setup=1v1"));
     }
 
     @Test
@@ -310,7 +315,7 @@ public class MatchCliTest {
     public void test_MatchSuggest1v1v1() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "1v1v1", "Andrew,Karl,JK", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=1v1v1", "Andrew,Karl,JK", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("20%"));
     }
 
@@ -347,7 +352,7 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,MikeAssassin640", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=2v2", "Andrew,Karl,Marius,MikeAssassin640", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("45%"));
     }
 
@@ -357,7 +362,7 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2v1v1", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=2v1v1", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("12%"));
     }
 
@@ -368,7 +373,7 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "add", "Andrew,Marius", "Karl,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=2v2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("50%"));
     }
 
@@ -378,7 +383,7 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=2v2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains("47%"));
     }
 
@@ -388,10 +393,10 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2v1", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "--setup=2v1", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2v2", "Andrew,Karl,Marius,Raoul,Jaco", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "--setup=2v2", "Andrew,Karl,Marius,Raoul,Jaco", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
     }
 
@@ -400,7 +405,7 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
         assertTrue("Team player mismatch count", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
     }
 
