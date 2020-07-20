@@ -42,16 +42,16 @@ public class ListPlayerCli implements Runnable {
             spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_NOT_EXIST));
         }
 
-        playerTableList.sort(Comparator.comparingInt((PlayerTable p)->matchService.gameListForPlayer(p).size()).reversed());
-        int maxPlayerLength = playerTableList.stream().mapToInt(p->p.getName().length()).max().orElseThrow();
+        playerTableList.sort(Comparator.comparingInt((PlayerTable p) -> matchService.gameListForPlayer(p).size()).reversed());
+        int maxPlayerLength = playerTableList.stream().mapToInt(p -> p.getName().length()).max().orElseThrow();
         maxPlayerLength++;
-        int columns= 5;
+        int columns = 5;
         spec.commandLine().getOut().println(templator.populate(PlayerBundleKey.PLAYER_LIST_TITLE));
         for (int i = 1; i <= playerTableList.size(); i++) {
-            PlayerTable playerTable = playerTableList.get(i-1);
+            PlayerTable playerTable = playerTableList.get(i - 1);
             String playerString = templator.populate(PlayerBundleKey.PLAYER_TITLE,
                     gson.fromJson(String.format("{gameCount:'%s',name:'%s'}",
-                            StringUtils.leftPad(""+matchService.gameListForPlayer(playerTable).size(), 2),
+                            StringUtils.leftPad("" + matchService.gameListForPlayer(playerTable).size(), 2),
                             StringUtils.rightPad(playerTable.getName(), maxPlayerLength)), Map.class));
             if (i % columns == 0) {
                 spec.commandLine().getOut().println(playerString);

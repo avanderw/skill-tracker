@@ -171,6 +171,13 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_createMatchWithWildCard() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "-g=North%", "Andrew", "Karl", "-r=1,2"));
+        assertSuccess(commandLine.execute("match", "add", "-g=%rth%", "Andrew", "Karl", "-r=1,2"));
+    }
+
+    @Test
     public void test_BadGameName() {
         assertSuccess(commandLine.execute("match", "quality", "-g=BadName", "One", "Two"));
         assertSuccess(commandLine.execute("match", "suggest", "-s=1v1", "-g=BadName", "Andrew,Karl"));

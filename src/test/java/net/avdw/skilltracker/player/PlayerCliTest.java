@@ -170,9 +170,9 @@ public class PlayerCliTest {
         resetOutput();
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
         assertSuccess(commandLine.execute("player", "ls"));
-        assertEquals(5, countLinesStartingWith(">"));
+        assertEquals(3, countLinesStartingWith(">"));
         assertTrue(outWriter.toString().contains("(μ)=26 (σ)=6 Jaco"));
-        assertTrue(outWriter.toString().contains("[1] Jaco"));
+        assertTrue(outWriter.toString().contains("[ 1] Jaco"));
     }
 
     @Test
