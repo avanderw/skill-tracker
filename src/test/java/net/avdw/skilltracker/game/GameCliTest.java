@@ -99,6 +99,13 @@ public class GameCliTest {
     }
 
     @Test
+    public void test_QuotedName() {
+        assertSuccess(commandLine.execute("game", "add", "Tooth&Tail"));
+        assertSuccess(commandLine.execute("game", "ls"));
+        assertFalse(outWriter.toString().contains("&amp;"));
+    }
+
+    @Test
     public void test_AddGameWithZeroProbability_Fail() {
         assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
         assertTrue("Should not allow adding games with 0 probability, causes NaN error on ratings for e.g. Andrew,Karl,Jaco 1,2,2",
