@@ -6,8 +6,27 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 See [README](README.md) for more project related information.
 
+## [v1.1.0] (Feature release)
+*Released on 2020-07-21*
+
+### Added
+- Add wildcard to game names to allow shorter commands
+- Add rank option to 'match add' to reduce errors on input
+- Add link between pom version and picocli main version
+
+
+### Changed
+- Update 'match suggest' to select NvM from a pool larger than N+M
+- Update 'player ls' output to use screen space more efficiently
+- Change team setup on 'match suggest' to be an option
+- Update formatting for names to not escape
+- Change name of assembly definition
+
+### Bug fixes
+- Fix NullPointer with 'match add' when no game is found
+
 ## [v1.0.1] (Maintenance release)
-Released on 2020-07-14
+*Released on 2020-07-14*
 
 ### Changed
 - Update 'match suggest' formatting
@@ -19,7 +38,7 @@ Released on 2020-07-14
 - Fix ANSI bug with Discord when running in ANSI capable terminal
 
 ## [v1.0.0] (Major release, Update recommended)
-Released on 2020-07-10
+*Released on 2020-07-10*
 
 ### Added
 - Discord interface
