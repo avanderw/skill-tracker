@@ -4,11 +4,11 @@ import com.google.inject.Inject;
 
 import java.util.ResourceBundle;
 
-public class QualityGroupResolver {
+public class GroupQualityResolver {
     private final ResourceBundle resourceBundle;
 
     @Inject
-    QualityGroupResolver(@Match final ResourceBundle resourceBundle) {
+    GroupQualityResolver(@Match final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 

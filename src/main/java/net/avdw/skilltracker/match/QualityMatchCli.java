@@ -39,7 +39,7 @@ public class QualityMatchCli implements Runnable {
     @Match
     private Templator templator;
     @Inject
-    private QualityGroupResolver qualityGroupResolver;
+    private GroupQualityResolver qualityGroupResolver;
 
     private void display(final GameTable gameTable, final MatchData matchData, final BigDecimal qualityMetric) {
         String game = gameTable.getName();

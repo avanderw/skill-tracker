@@ -292,7 +292,7 @@ public class MatchService {
 
     @SneakyThrows
     public MatchTable retrieveLastPlayerMatchForGameBefore(final Date playDate, final GameTable gameTable, final PlayerTable playerTable) {
-        Logger.debug("=> retrieving last {} game played by {} before {}", gameTable.getName(), playerTable.getName(), playDate.getTime());
+        Logger.trace("=> retrieving last {} game played by {} before {}", gameTable.getName(), playerTable.getName(), playDate.getTime());
         List<MatchTable> matchTableList = matchTableDao.queryBuilder()
                 .orderBy(MatchTable.PLAY_DATE, false)
                 .where().eq(MatchTable.GAME_FK, gameTable)

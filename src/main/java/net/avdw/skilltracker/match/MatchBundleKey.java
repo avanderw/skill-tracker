@@ -29,6 +29,7 @@ public final class MatchBundleKey {
     public static final String SUGGEST_LOWEST_TITLE = "suggest.lowest.title";
     public static final String SUGGEST_LOW_TITLE = "suggest.low.title";
     public static final String SUGGEST_MED_TITLE = "suggest.med.title";
+    public static final String SUGGEST_SINGLE_TEAM_ERROR = "suggest.single.team.error";
     public static final String TEAM_PLAYER_COUNT_MISMATCH = "team.player.count.mismatch";
     public static final String TEAM_RANK_COUNT_MISMATCH = "team.rank.count.mismatch";
     public static final String VIEW_MATCH_DETAIL_PLAYER_ENTRY = "view.match.detail.player.entry(rank,person,mean,stdev)";

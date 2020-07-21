@@ -1,5 +1,5 @@
 2020-06-23 @Add Afrikaans language
-2020-07-14 @Add to 'match suggest' the ability to select NvM from a larger than N+M pool of players release:1.1.0
+x 2020-07-21 2020-07-14 @Add to 'match suggest' the ability to select NvM from a larger than N+M pool of players release:1.1.0
 x 2020-07-20 2020-07-14 Clean up 'player ls' formatting release:1.1.0
 x 2020-07-20 2020-07-16 @Fix NullPointer when entering game that does not exist on match addition release:1.1.0
 x 2020-07-20 2020-07-20 @Add rank option to 'match add' to reduce errors on input release:1.1.0

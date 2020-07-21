@@ -35,7 +35,7 @@ public class SuggestMatchCli implements Runnable {
     @Inject
     private PlayerService playerService;
     @Inject
-    private QualityGroupResolver qualityGroupResolver;
+    private GroupQualityResolver groupQualityResolver;
     @Spec
     private CommandSpec spec;
     @Option(names = {"-s", "--setup"}, description = "Team setup (e.g. 2v1v4)", split = "v")
@@ -44,16 +44,16 @@ public class SuggestMatchCli implements Runnable {
     @Match
     private Templator templator;
 
-    private void displayGroup(final Map<String, List<MatchData>> qualityGroupMap,
+    private void displayGroup(final Map<String, List<MatchData>> groupQualityMap,
                               final String groupSummaryBundleKey,
                               final String groupTitleBundleKey) {
-        if (qualityGroupMap.get(templator.populate(groupSummaryBundleKey)) == null) {
+        if (groupQualityMap.get(templator.populate(groupSummaryBundleKey)) == null) {
             return;
         }
 
         spec.commandLine().getOut().println();
         spec.commandLine().getOut().println(templator.populate(groupTitleBundleKey));
-        qualityGroupMap.get(templator.populate(groupSummaryBundleKey)).stream()
+        groupQualityMap.get(templator.populate(groupSummaryBundleKey)).stream()
                 .sorted(Comparator.comparingDouble((MatchData m) -> m.getQuality().doubleValue()).reversed())
                 .forEach(m -> spec.commandLine().getOut().println(templator.populate(MatchBundleKey.SUGGEST_LIST_ENTRY,
                         gson.fromJson(String.format("{quality:'%2s%%',setup:'%s'}",
@@ -78,8 +78,13 @@ public class SuggestMatchCli implements Runnable {
 
     @Override
     public void run() {
-        if (playerList.size() != teamSize.stream().mapToInt(Integer::intValue).sum()) {
+        if (playerList.size() < teamSize.stream().mapToInt(Integer::intValue).sum()) {
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH));
+            return;
+        }
+
+        if (teamSize.size() == 1) {
+            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.SUGGEST_SINGLE_TEAM_ERROR));
             return;
         }
 
@@ -88,6 +93,7 @@ public class SuggestMatchCli implements Runnable {
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.NO_GAME_FOUND));
             return;
         }
+
         List<PlayerTable> playerTableList = playerList.stream().map(player -> playerService.createOrRetrievePlayer(player)).collect(Collectors.toList());
         Set<MatchData> matchSet = CollectionUtils.permutations(playerTableList).stream().map(permutations -> formMatch(permutations, teamSize)).collect(Collectors.toSet());
         matchSet.forEach(matchData -> matchData.setQuality(matchService.calculateMatchQuality(gameTable, playerRankingMapBuilder.build(gameTable, matchData))));
@@ -105,7 +111,7 @@ public class SuggestMatchCli implements Runnable {
             ));
         });
 
-        Map<String, List<MatchData>> qualityGroupMap = matchSet.stream().collect(Collectors.groupingBy(m -> qualityGroupResolver.resolve(m.getQuality().multiply(BigDecimal.valueOf(100)).intValue())));
+        Map<String, List<MatchData>> qualityGroupMap = matchSet.stream().collect(Collectors.groupingBy(m -> groupQualityResolver.resolve(m.getQuality().multiply(BigDecimal.valueOf(100)).intValue())));
         displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_HI_SUMMARY, MatchBundleKey.SUGGEST_HI_TITLE);
         displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_MED_SUMMARY, MatchBundleKey.SUGGEST_MED_TITLE);
         displayGroup(qualityGroupMap, MatchBundleKey.QUALITY_LOW_SUMMARY, MatchBundleKey.SUGGEST_LOW_TITLE);

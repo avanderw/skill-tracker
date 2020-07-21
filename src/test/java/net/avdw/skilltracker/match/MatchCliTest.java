@@ -133,8 +133,9 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_CreateBadGame() {
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+    public void test_BadGameName() {
+        assertSuccess(commandLine.execute("match", "quality", "-g=BadName", "One", "Two"));
+        assertSuccess(commandLine.execute("match", "suggest", "-s=1v1", "-g=BadName", "Andrew,Karl"));
     }
 
     @Test
@@ -171,21 +172,8 @@ public class MatchCliTest {
     }
 
     @Test
-    public void test_createMatchWithWildCard() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard"));
-        assertSuccess(commandLine.execute("match", "add", "-g=North%", "Andrew", "Karl", "-r=1,2"));
-        assertSuccess(commandLine.execute("match", "add", "-g=%rth%", "Andrew", "Karl", "-r=1,2"));
-    }
-
-    @Test
-    public void test_BadGameName() {
-        assertSuccess(commandLine.execute("match", "quality", "-g=BadName", "One", "Two"));
-        assertSuccess(commandLine.execute("match", "suggest", "-s=1v1", "-g=BadName", "Andrew,Karl"));
-    }
-
-    @Test
-    public void test_OrderTeamSize() {
-        assertSuccess(commandLine.execute("match", "suggest", "-g=BadName", "Andrew,Karl", "--setup=1v1"));
+    public void test_CreateBadGame() {
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
     }
 
     @Test
@@ -348,6 +336,15 @@ public class MatchCliTest {
     }
 
     @Test
+    public void test_NvMFromLargePlayerPool() {
+        assertSuccess(commandLine.execute("game", "add", "Game"));
+        resetOutput();
+        assertSuccess(commandLine.execute("match", "suggest", "-g=Game", "P1,P2,P3,P4", "--setup=1v1"));
+        assertSuccess(commandLine.execute("match", "suggest", "-g=Game", "P1,P2,P3,P4,P5", "-s=2v1v1"));
+        assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
+    }
+
+    @Test
     public void test_TeamCountRankCountMismatch() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
@@ -400,20 +397,20 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Marius,Raoul", "--ranks", "1,2", "--game", "Northgard"));
 
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "--setup=2v1", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "--setup=2v1", "Andrew,Karl", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
         resetOutput();
-        assertSuccess(commandLine.execute("match", "suggest", "--setup=2v2", "Andrew,Karl,Marius,Raoul,Jaco", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "suggest", "--setup=2v2", "Andrew,Karl,Marius", "--game", "Northgard"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
     }
 
     @Test
-    public void test_TeamSuggestSetup() {
+    public void test_TeamSuggestErrorSetup() {
         assertSuccess(commandLine.execute("game", "add", "Northgard"));
 
         resetOutput();
         assertSuccess(commandLine.execute("match", "suggest", "-s=2", "Andrew,Karl,Marius,Raoul", "--game", "Northgard"));
-        assertTrue("Team player mismatch count", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.TEAM_PLAYER_COUNT_MISMATCH)));
+        assertTrue("Team player mismatch count", outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.SUGGEST_SINGLE_TEAM_ERROR)));
     }
 
     @Test
@@ -424,5 +421,12 @@ public class MatchCliTest {
         String id = getMatchIdList().get(0);
         resetOutput();
         assertSuccess(commandLine.execute("match", "view", id));
+    }
+
+    @Test
+    public void test_createMatchWithWildCard() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "-g=North%", "Andrew", "Karl", "-r=1,2"));
+        assertSuccess(commandLine.execute("match", "add", "-g=%rth%", "Andrew", "Karl", "-r=1,2"));
     }
 }
