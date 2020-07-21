@@ -15,7 +15,7 @@
     </fileSets>
     <files>
         <file>
-            <source> ${project.build.directory}/${project.artifactId}.jar</source>
+            <source> ${project.build.directory}/${project.artifactId}-jar-with-dependencies.jar</source>
             <outputDirectory>/</outputDirectory>
         </file>
     </files>
