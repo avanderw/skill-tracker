@@ -38,7 +38,8 @@ public class SuggestMatchCli implements Runnable {
     private GroupQualityResolver groupQualityResolver;
     @Spec
     private CommandSpec spec;
-    @Option(names = {"-s", "--setup"}, description = "Team setup (e.g. 2v1v4)", split = "v")
+    @Option(names = {"-s", "--setup"}, description = "Team setup (e.g. 2v1v4)",
+            required = true, split = "v")
     private List<Integer> teamSize;
     @Inject
     @Match

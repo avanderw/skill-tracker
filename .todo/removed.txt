@@ -6,3 +6,4 @@ x 2020-06-29 2020-06-24 Update getting last score to average out mean and standa
 2020-06-22 Add remove player
 2020-06-24 Add command to check changelog
 2020-06-24 Add command to check todo
+2020-07-23 @Add proguard to reduce file size
