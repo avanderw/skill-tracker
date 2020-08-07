@@ -36,12 +36,18 @@ public class SkillTrackerWrapper {
             Logger.debug("Command has no output: {}", command);
         }
 
-
         String output = out.toString().isEmpty() ? err.toString() : out.toString();
         String response = String.format("```%s```", output);
 
         if (response.length() > 2000) {
-            event.getChannel().sendFile(response.getBytes(StandardCharsets.UTF_8), String.format("output-%s.txt", new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
+            String[] argumentList = command.split(" ");
+            String filename;
+            if (argumentList.length >= 2) {
+                filename = String.format("%s-%s", argumentList[0], argumentList[1]);
+            } else {
+                filename = "skill-tracker";
+            }
+            event.getChannel().sendFile(response.getBytes(StandardCharsets.UTF_8), String.format("%s-%s.txt", filename, new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date()))).queue();
         } else {
             event.getChannel().sendMessage(response).queue();
         }
