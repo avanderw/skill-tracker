@@ -6,6 +6,20 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 See [README](README.md) for more project related information.
 
+## [v1.2.0] (Feature release)
+*Released on 2020-08-13*
+
+### Added
+- Add command to view last entry in the changelog
+- Add a reconnect ability for when the connection is down to discord
+- Add JaCoCo to build
+
+### Changed
+- Change discord filename attachment to refer to the command used
+
+### Fixed
+- Fix NullPointer by making --setup option required
+
 ## [v1.1.0] (Feature release)
 *Released on 2020-07-21*
 

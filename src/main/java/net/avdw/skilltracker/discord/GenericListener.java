@@ -32,7 +32,7 @@ public class GenericListener implements EventListener {
         } else if (genericEvent instanceof MessageReceivedEvent) {
             MessageReceivedEvent event = (MessageReceivedEvent) genericEvent;
             Logger.debug("Raw content: {}", event.getMessage().getContentRaw());
-            DiscordDaemon.reconnectTimeout = 1;
+            DiscordDaemon.resetTimeout();
             messageRouter.route(event);
         } else if (genericEvent instanceof HttpRequestEvent) {
             HttpRequestEvent httpRequestEvent = (HttpRequestEvent) genericEvent;

@@ -12,7 +12,8 @@ import picocli.CommandLine.Spec;
         subcommands = {
                 GameCli.class,
                 MatchCli.class,
-                PlayerCli.class})
+                PlayerCli.class,
+                ChangelogCli.class})
 public class MainCli implements Runnable {
     @Spec
     private CommandSpec spec;

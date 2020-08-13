@@ -24,7 +24,7 @@ public class MainCliTest {
             Logger.error("Error output:\n{}", errWriter.toString());
         }
         assertEquals("MUST NOT HAVE error output", "", errWriter.toString());
-        assertNotEquals("MUST HAVE standard output", "", outWriter.toString());
+        assertNotEquals("MUST HAVE standard output", "", outWriter.toString().trim());
         assertEquals(0, exitCode);
     }
 
@@ -47,6 +47,11 @@ public class MainCliTest {
     public void testVersion() {
         assertSuccess(commandLine.execute("--version"));
         assertNotEquals(2, outWriter.toString().length());
+    }
+
+    @Test
+    public void testChangelog() {
+        assertSuccess(commandLine.execute("changelog"));
     }
 
 }

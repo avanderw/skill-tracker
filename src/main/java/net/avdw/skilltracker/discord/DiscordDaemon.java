@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import org.tinylog.Logger;
 
 public final class DiscordDaemon {
-    static long reconnectTimeout = 1;
+    private static long reconnectTimeout = 1;
 
     private DiscordDaemon() {
 
@@ -49,5 +49,9 @@ public final class DiscordDaemon {
                 }
             }
         }
+    }
+
+    public static void resetTimeout() {
+        reconnectTimeout = 1;
     }
 }
