@@ -1,6 +1,17 @@
 2020-06-23 @Add Afrikaans language
-x 2020-08-07 2020-07-21 @Update discord filename attachment to refer to the command used
-x 2020-08-07 2020-08-07 @Fix nullpointer at SuggestMatchCli.java:81 when not providing --setup option
-x 2020-08-13 2020-08-07 @Add a reconnect ability for when the connection is down on the server
 2020-08-14 @Update connection error to print to stdout
 2020-08-14 @Update 'game <game>' to redirect to 'game view <game>'
+2021-05-11 @Add Nemesis +stat where the Nemisis has beaten the Minion at least 3 times; has at least 50% win ratio; and the percentage is higher than anyone else
+2021-05-11 @Add Minion +stat which is the opposite of the Nemisis, e.g. If you are someone's minion, then they are your Nemisis
+2021-05-11 @Add Champion +stat to the person who has the most wins in a game
+2021-05-11 @Add average players per game +stat
+2021-05-11 @Add H-index +stat which tracks h games were played at least h times
+2021-05-11 @Add days-of-week histogram +stat
+2021-05-11 @Add list of all people played against +stat
+2021-05-11 @Add Rival +stat which lists the person with the closest skill
+2021-05-11 @Add history of growth on mu and sigma +stat
+2021-05-11 @Add longest win streak +stat to a game or player
+2021-05-11 @Add first match +stat for player and game
+2021-05-11 @Remove guice dependency
+2021-05-11 @Remove mustache dependency
+2021-05-11 @Remove maven model dependency
