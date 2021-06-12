@@ -36,7 +36,6 @@ class CreateGameCli implements Runnable {
             if (drawProbability.equals(BigDecimal.ZERO)) {
                 spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_ZERO_DRAW_PROBABILITY));
             } else {
-                gameService.createGame(game, drawProbability);
                 spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.ADD_SUCCESS));
             }
         } else {

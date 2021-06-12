@@ -1,0 +1,221 @@
+package net.avdw.skilltracker;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
+import lombok.SneakyThrows;
+import net.avdw.database.LiquibaseRunner;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
+import net.avdw.test.CliTester;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.tinylog.Logger;
+import picocli.CommandLine;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
+import java.util.Comparator;
+
+import static org.junit.Assert.*;
+
+public class GameCliTest {
+    private static final Path DATABASE_SNAPSHOT;
+
+    static {
+        Path path = null;
+        try {
+            path = new File(PlayerTest.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        DATABASE_SNAPSHOT = path;
+    }
+
+    private static final Path DATABASE_TEST = Paths.get("target/test-resources/game-test.sqlite");
+    private CliTester cliTester;
+    private CommandLine.IFactory instance;
+    private static CommandLine commandLine;
+    private static Dao<PlayEntity, Integer> playDao;
+    private StringWriter errWriter;
+    private StringWriter outWriter;
+
+    @BeforeClass
+    public static void beforeClass() throws IOException, SQLException {
+        Injector injector = Guice.createInjector(new TestModule("target/test-resources/net.avdw.skilltracker.game/skill-tracker.sqlite"));
+        commandLine = new CommandLine(MainCli.class, TestGuiceFactory.getInstance(new TestModule("target/test-resources/net.avdw.skilltracker.game/skill-tracker.sqlite")));
+
+        String jdbcUrl = injector.getInstance(Key.get(String.class, Names.named(PropertyName.JDBC_URL)));
+        String jdbcPathUrl = jdbcUrl.replace("jdbc:sqlite:", "");
+        Path jdbcDirPath = Paths.get(jdbcPathUrl).getParent();
+        if (Files.exists(jdbcDirPath)) {
+            Files.walk(jdbcDirPath)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+        Files.createDirectories(jdbcDirPath);
+        LiquibaseRunner liquibaseRunner = injector.getInstance(LiquibaseRunner.class);
+        liquibaseRunner.update();
+
+        ConnectionSource jdbcConnectionSource = new JdbcConnectionSource(jdbcUrl);
+        playDao = DaoManager.createDao(jdbcConnectionSource, PlayEntity.class);
+
+    }
+
+    @SneakyThrows
+    @After
+    public void afterTest() {
+        playDao.delete(playDao.deleteBuilder().prepare());
+        instance.create(ConnectionSource.class).close();
+    }
+
+    private void assertSuccess(final int exitCode) {
+        assertEquals("The command must not have error output", "", errWriter.toString());
+        assertNotEquals("The command needs standard output", "", outWriter.toString());
+        assertEquals(0, exitCode);
+        Logger.debug(outWriter.toString());
+    }
+
+    @SneakyThrows
+    @Before
+    public void beforeTest() {
+        Files.createDirectories(DATABASE_TEST.getParent());
+        Files.copy(DATABASE_SNAPSHOT, DATABASE_TEST, StandardCopyOption.REPLACE_EXISTING);
+
+        instance = TestGuiceFactory.getInstance(new TestModule(DATABASE_TEST.toString()));
+        CommandLine commandLine = new CommandLine(MainCli.class, instance);
+        cliTester = new CliTester(commandLine);
+
+        GameCliTest.commandLine = new CommandLine(MainCli.class, instance);
+        resetOutput();
+
+        playDao.delete(playDao.deleteBuilder().prepare());
+    }
+
+    private void resetOutput() {
+        errWriter = new StringWriter();
+        outWriter = new StringWriter();
+        commandLine.setOut(new PrintWriter(outWriter));
+        commandLine.setErr(new PrintWriter(errWriter));
+    }
+
+    @Test
+    public void test_QuotedName() {
+        cliTester.execute("game add Tooth&Tail").success();
+        cliTester.execute("game ls").success()
+                .notContains("&amp;");
+    }
+
+    @Test
+    public void testDeleteGameWithMatches() {
+        cliTester.execute("match add A1,B2 C3,D4, E5,F6 --ranks 1,2,2 -g=G1").success()
+                .notContains("No game found:");
+        cliTester.execute("player view B2").success();
+        cliTester.execute("game rm G1").success();
+        cliTester.execute("player view B2").failure();
+    }
+
+    @Test
+    public void test_BadGameView_Fail() {
+        cliTester.execute("game view BadGame").success()
+                .contains("No games found");
+    }
+
+    @Test
+    public void test_Delete_Fail() {
+        assertSuccess(commandLine.execute("game", "rm", "Northgard"));
+    }
+
+    @Test
+    public void test_Delete_Pass() {
+        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
+        resetOutput();
+
+        assertSuccess(commandLine.execute("game", "rm", "Northgard"));
+    }
+
+    @Test
+    public void test_Empty_Fail() {
+        assertSuccess(commandLine.execute("game"));
+        assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
+    }
+
+    @Test
+    public void testGameDetail() {
+        cliTester.execute("match add Andrew,Karl Jaco,Etienne Marius,Raoul --ranks 1,2,2 --game Northgard").success();
+        cliTester.execute("game view Northgard").success();
+        cliTester.execute("game Northgard").success();
+    }
+
+    @Test
+    public void test_GameNotFound_Fail() {
+        assertSuccess(commandLine.execute("game", "random"));
+    }
+
+
+    @Test
+    public void testListAllGames() {
+        cliTester.execute("game ls").success()
+                .notContains("Probability")
+                .distinct("UnrealTournament");
+    }
+
+    @Test
+    public void testListGameFilter() {
+        cliTester.execute("game", "ls", "north").success()
+                .contains("Northgard");
+    }
+
+    @Test
+    public void test_ViewDetailMatchListLimit_Pass() {
+        assertSuccess(commandLine.execute("match", "add", "Andrew,One", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Two", "Jaco,JK", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Three", "Jaco,Marius", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Four", "Jaco,Pieter", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Five", "Jaco,Bot", "--ranks", "1,2", "--game", "Northgard"));
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Six", "Jaco,Bot", "--ranks", "1,2", "--game", "Northgard"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("game", "view", "Northgard"));
+        assertFalse(outWriter.toString().contains("Andrew & One"));
+        assertFalse(outWriter.toString().contains("One & Andrew"));
+    }
+
+    @Test
+    public void test_ViewGameLimit_Pass() {
+        assertSuccess(commandLine.execute("match", "add", "Andrew,One", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
+
+        resetOutput();
+        assertSuccess(commandLine.execute("game", "view", "Northgard", "--top=1", "--last=2"));
+    }
+
+    @Test
+    public void test_ViewGameSummary_Success() {
+        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
+        resetOutput();
+
+        assertSuccess(commandLine.execute("game", "Northgard"));
+    }
+
+    @Test
+    public void testViewGame() {
+        cliTester.execute("game view UnrealTournament").success()
+                .notContains("#0:");
+    }
+
+}

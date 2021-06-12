@@ -30,7 +30,7 @@ public class MainCliTest {
 
     @Before
     public void beforeTest() {
-        commandLine = new CommandLine(MainCli.class, GuiceFactory.getInstance());
+        commandLine = new CommandLine(MainCli.class, TestGuiceFactory.getInstance(new TestModule("target/test-resources/net.avdw.skilltracker.game/skill-tracker.sqlite")));
         errWriter = new StringWriter();
         outWriter = new StringWriter();
         commandLine.setOut(new PrintWriter(outWriter));

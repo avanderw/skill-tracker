@@ -3,8 +3,9 @@ package net.avdw.skilltracker.game;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.avdw.skilltracker.Templator;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import net.avdw.skilltracker.match.MatchService;
-import net.avdw.skilltracker.match.MatchTable;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -40,16 +41,16 @@ public class RetrieveGameCli implements Runnable {
 
     @Override
     public void run() {
-        GameTable gameTable = gameService.retrieveGame(game);
+        OrmLiteGame ormLiteGame = gameService.retrieveGame(game);
 
-        if (gameTable == null) {
+        if (ormLiteGame == null) {
             spec.commandLine().getOut().println(templator.populate(GameBundleKey.NO_GAME_FOUND));
             return;
         }
 
-        List<MatchTable> topPlayerMatchList = matchService.retrieveTopPlayerMatchesForGame(gameTable, playerLimit);
-        Map<String, List<MatchTable>> matchPlayerMap = matchService.retrieveLastFewMatchesForGame(gameTable, matchLimit)
-                .stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
+        List<PlayEntity> topPlayerMatchList = matchService.retrieveTopPlayerMatchesForGame(ormLiteGame, playerLimit);
+        Map<String, List<PlayEntity>> matchPlayerMap = matchService.retrieveLastFewMatchesForGame(ormLiteGame, matchLimit)
+                .stream().collect(Collectors.groupingBy(PlayEntity::getSessionId));
         if (matchPlayerMap.isEmpty()) {
             templator.populate(GameBundleKey.NO_MATCH_FOUND);
         } else {
@@ -57,12 +58,12 @@ public class RetrieveGameCli implements Runnable {
                     gson.fromJson(String.format("{limit:'%s'}", playerLimit), Map.class)));
 
             for (int i = 0; i < topPlayerMatchList.size(); i++) {
-                MatchTable table = topPlayerMatchList.get(i);
+                PlayEntity table = topPlayerMatchList.get(i);
                 spec.commandLine().getOut().println(templator.populate(GameBundleKey.VIEW_GAME_TOP_PLAYER_LIST_ENTRY,
                         gson.fromJson(String.format("{name:'%s',mean:'%s',stdev:'%s',rank:'%s'}",
-                                table.getPlayerTable().getName(),
-                                table.getMean().setScale(0, RoundingMode.HALF_UP),
-                                table.getStandardDeviation().setScale(0, RoundingMode.HALF_UP),
+                                table.getPlayerName(),
+                                table.getPlayerMean().setScale(0, RoundingMode.HALF_UP),
+                                table.getPlayerStdDev().setScale(0, RoundingMode.HALF_UP),
                                 String.format("%2s", i + 1)
                         ), Map.class)));
             }
@@ -71,22 +72,22 @@ public class RetrieveGameCli implements Runnable {
                     gson.fromJson(String.format("{limit:'%s'}", matchLimit), Map.class)));
 
             matchPlayerMap.entrySet().stream()
-                    .sorted(Comparator.comparing((Map.Entry<String, List<MatchTable>> entry) -> entry.getValue().get(0).getPlayDate()).reversed())
+                    .sorted(Comparator.comparing((Map.Entry<String, List<PlayEntity>> entry) -> entry.getValue().get(0).getPlayDate()).reversed())
                     .forEach(entry -> {
                         String key = entry.getKey();
-                        List<MatchTable> matchTableList = entry.getValue();
-                        String teams = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
+                        List<PlayEntity> ormLiteMatchList = entry.getValue();
+                        String teams = ormLiteMatchList.stream().collect(Collectors.groupingBy(PlayEntity::getPlayerTeam)).values().stream()
                                 .map(teamList -> {
                                     String team = teamList.stream().map(matchTable -> templator.populate(GameBundleKey.MATCH_TEAM_PLAYER_ENTRY,
                                             gson.fromJson(String.format("{rank:'%s',name:'%s',mean:'%s'}",
-                                                    matchTable.getRank(),
-                                                    matchTable.getPlayerTable().getName(),
-                                                    matchTable.getMean().setScale(0, RoundingMode.HALF_UP)
+                                                    matchTable.getTeamRank(),
+                                                    matchTable.getPlayerName(),
+                                                    matchTable.getPlayerMean().setScale(0, RoundingMode.HALF_UP)
                                             ), Map.class)))
                                             .collect(Collectors.joining(" & "));
                                     team = templator.populate(GameBundleKey.MATCH_TEAM_ENTRY,
                                             gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                                    teamList.stream().findAny().get().getRank(),
+                                                    teamList.stream().findAny().get().getTeamRank() +1,
                                                     team
                                             ), Map.class));
                                     return team;
@@ -97,7 +98,7 @@ public class RetrieveGameCli implements Runnable {
                                 gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s'}",
                                         key.substring(0, key.indexOf("-")),
                                         teams,
-                                        simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate())
+                                        simpleDateFormat.format(ormLiteMatchList.stream().findAny().get().getPlayDate())
                                 ), Map.class)));
                     });
         }

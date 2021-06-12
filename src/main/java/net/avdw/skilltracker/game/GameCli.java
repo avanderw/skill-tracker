@@ -3,8 +3,9 @@ package net.avdw.skilltracker.game;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.google.inject.Inject;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import net.avdw.skilltracker.match.MatchService;
-import net.avdw.skilltracker.match.MatchTable;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
@@ -37,22 +38,22 @@ public class GameCli implements Runnable {
         if (game == null) {
             spec.commandLine().usage(spec.commandLine().getOut());
         } else {
-            GameTable gameTable = gameService.retrieveGame(game);
-            if (gameTable == null) {
+            OrmLiteGame ormLiteGame = gameService.retrieveGame(game);
+            if (ormLiteGame == null) {
                 spec.commandLine().getOut().println(gameBundle.getString(GameBundleKey.NO_GAME_FOUND));
             } else {
-                Map<String, List<MatchTable>> groupBySession = matchService.retrieveAllMatchesForGame(gameTable).stream()
-                        .collect(Collectors.groupingBy(MatchTable::getSessionId));
+                Map<String, List<PlayEntity>> groupBySession = matchService.retrieveAllMatchesForGame(ormLiteGame).stream()
+                        .collect(Collectors.groupingBy(PlayEntity::getSessionId));
                 if (groupBySession.isEmpty()) {
                     Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(gameBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
                     StringWriter stringWriter = new StringWriter();
-                    mustache.execute(stringWriter, gameTable);
+                    mustache.execute(stringWriter, ormLiteGame);
                     spec.commandLine().getOut().println(stringWriter.toString());
                     spec.commandLine().getOut().println(gameBundle.getString(GameBundleKey.NO_MATCH_FOUND));
                 } else {
                     Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(gameBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
                     StringWriter stringWriter = new StringWriter();
-                    mustache.execute(stringWriter, gameTable);
+                    mustache.execute(stringWriter, ormLiteGame);
                     spec.commandLine().getOut().println(stringWriter.toString());
 
                     groupBySession.forEach((key, matchTableList) -> spec.commandLine().getOut().println(key));

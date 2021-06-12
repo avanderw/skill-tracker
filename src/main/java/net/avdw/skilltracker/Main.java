@@ -2,6 +2,7 @@ package net.avdw.skilltracker;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
+import com.j256.ormlite.support.ConnectionSource;
 import lombok.SneakyThrows;
 import net.avdw.database.LiquibaseRunner;
 import picocli.CommandLine;
@@ -26,6 +27,7 @@ public final class Main {
         }
     }
 
+    @SneakyThrows
     public static void main(final String[] args) {
         createDatabaseIfNotExists();
 
@@ -36,5 +38,8 @@ public final class Main {
         commandLine.setErr(err);
         commandLine.execute(args);
         out.flush();
+        err.flush();
+
+        GuiceFactory.getInstance().create(ConnectionSource.class).close();
     }
 }

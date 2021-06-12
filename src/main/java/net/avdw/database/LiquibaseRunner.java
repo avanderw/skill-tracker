@@ -15,7 +15,7 @@ public class LiquibaseRunner {
     private final Connection connection;
 
     @Inject
-    LiquibaseRunner(@DbConnection final Connection connection) {
+    LiquibaseRunner(final Connection connection) {
         this.connection = connection;
     }
 

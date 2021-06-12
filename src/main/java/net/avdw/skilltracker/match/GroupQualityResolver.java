@@ -8,7 +8,7 @@ public class GroupQualityResolver {
     private final ResourceBundle resourceBundle;
 
     @Inject
-    GroupQualityResolver(@Match final ResourceBundle resourceBundle) {
+    GroupQualityResolver(@MatchScope final ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
     }
 

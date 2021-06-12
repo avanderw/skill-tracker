@@ -2,13 +2,13 @@ package net.avdw.skilltracker.calculator;
 
 import com.google.inject.Inject;
 import de.gesundkrank.jskills.*;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLitePlayer;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import net.avdw.skilltracker.game.GameMapper;
-import net.avdw.skilltracker.game.GameTable;
 import net.avdw.skilltracker.match.MatchData;
 import net.avdw.skilltracker.match.MatchDataBuilder;
-import net.avdw.skilltracker.match.MatchTable;
 import net.avdw.skilltracker.match.PlayerRankingMap;
-import net.avdw.skilltracker.player.PlayerTable;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -28,22 +28,22 @@ public class CalculatorService {
         this.skillCalculator = skillCalculator;
     }
 
-    private int[] buildRanks(final List<ITeam> teamList, final List<MatchTable> sessionMatchTableList) {
+    private int[] buildRanks(final List<ITeam> teamList, final List<PlayEntity> sessionOrmLiteMatchList) {
         Logger.debug("-> build ranks");
-        sessionMatchTableList.forEach(m -> Logger.debug("(≻)={} (μ)={} (σ)={} {}", m.getRank(), m.getMean(), m.getStandardDeviation(), m.getPlayerTable().getName()));
+        sessionOrmLiteMatchList.forEach(m -> Logger.debug("(≻)={} (μ)={} (σ)={} {}", m.getTeamRank(), m.getPlayerMean(), m.getPlayerStdDev(), m.getPlayerName()));
         int[] ranks = new int[teamList.size()];
-        List<MatchTable> matchTableList = new ArrayList<>(sessionMatchTableList);
-        matchTableList.sort(Comparator.comparingInt(MatchTable::getRank));
+        List<PlayEntity> ormLiteMatchList = new ArrayList<>(sessionOrmLiteMatchList);
+        ormLiteMatchList.sort(Comparator.comparingInt(PlayEntity::getTeamRank));
         for (int i = teamList.size(); i > 0; i--) {
             ITeam team = teamList.get(i - 1);
-            String name = ((PlayerTable) team.keySet().stream().findAny().orElseThrow()).getName();
+            String name = ((OrmLitePlayer) team.keySet().stream().findAny().orElseThrow()).getName();
 
-            for (int j = matchTableList.size(); j > 0; j--) {
-                MatchTable m = matchTableList.get(j - 1);
-                if (m.getPlayerTable().getName().equals(name)) {
-                    ranks[i - 1] = m.getRank();
-                    matchTableList.remove(m);
-                    matchTableList.forEach(Logger::debug);
+            for (int j = ormLiteMatchList.size(); j > 0; j--) {
+                PlayEntity m = ormLiteMatchList.get(j - 1);
+                if (m.getPlayerName().equals(name)) {
+                    ranks[i - 1] = m.getTeamRank();
+                    ormLiteMatchList.remove(m);
+                    ormLiteMatchList.forEach(Logger::debug);
                     break;
                 }
             }
@@ -52,22 +52,22 @@ public class CalculatorService {
         return ranks;
     }
 
-    public Map<IPlayer, Rating> calculate(final List<MatchTable> sessionList, final Map<String, Map<String, Rating>> lastPlayerRating) {
+    public Map<IPlayer, Rating> calculate(final List<PlayEntity> sessionList, final Map<String, Map<String, Rating>> lastPlayerRating) {
         Logger.trace("=> calculate");
-        sessionList.forEach(session -> Logger.debug("(μ)={} (σ)={} (≻)={} {}", session.getMean(), session.getStandardDeviation(), session.getRank(), session.getPlayerTable().getName()));
+        sessionList.forEach(session -> Logger.debug("(μ)={} (σ)={} (≻)={} {}", session.getPlayerMean(), session.getPlayerStdDev(), session.getTeamRank(), session.getPlayerName()));
         lastPlayerRating.entrySet().forEach(Logger::debug);
-        GameTable gameTable = sessionList.stream().findAny().orElseThrow().getGameTable();
-        GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
+        OrmLiteGame ormLiteGame = new OrmLiteGame(sessionList.stream().findAny().orElseThrow().getGameName());
+        GameInfo gameInfo = gameMapper.toGameInfo(ormLiteGame);
         MatchData matchData = matchDataBuilder.buildFromMatchTable(sessionList);
 
         List<ITeam> teamList = matchData.getTeamDataSet().stream().map(teamData -> {
             PlayerRankingMap playerRankingMap = new PlayerRankingMap();
-            teamData.getPlayerTableSet().forEach(playerTable ->
-                    playerRankingMap.put(playerTable, lastPlayerRating.get(playerTable.getName()).get(gameTable.getName())));
+            teamData.getOrmLitePlayerSet().forEach(playerTable ->
+                    playerRankingMap.put(playerTable, lastPlayerRating.get(playerTable.getName()).get(ormLiteGame.getName())));
             return playerRankingMap;
         }).collect(Collectors.toList());
         int[] ranks = buildRanks(teamList, sessionList);
-        Logger.debug("Old ratings for {}", gameTable.getName());
+        Logger.debug("Old ratings for {}", ormLiteGame.getName());
         for (int i = 0; i < teamList.size(); i++) {
             Logger.debug("(≻)={} T={}", ranks[i], teamList.get(i));
         }

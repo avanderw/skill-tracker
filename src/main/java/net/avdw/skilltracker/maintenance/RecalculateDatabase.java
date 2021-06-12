@@ -4,10 +4,14 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import de.gesundkrank.jskills.*;
 import net.avdw.skilltracker.MainModule;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLitePlayer;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import net.avdw.skilltracker.game.GameMapper;
-import net.avdw.skilltracker.game.GameTable;
-import net.avdw.skilltracker.match.*;
-import net.avdw.skilltracker.player.PlayerTable;
+import net.avdw.skilltracker.match.MatchData;
+import net.avdw.skilltracker.match.MatchDataBuilder;
+import net.avdw.skilltracker.match.MatchService;
+import net.avdw.skilltracker.match.PlayerRankingMap;
 import org.tinylog.Logger;
 
 import java.math.BigDecimal;
@@ -37,14 +41,14 @@ public final class RecalculateDatabase implements Runnable {
         Guice.createInjector(new MainModule()).getInstance(RecalculateDatabase.class).run();
     }
 
-    private int[] buildRanks(final List<ITeam> teamList, final List<MatchTable> sessionMatchTableList) {
+    private int[] buildRanks(final List<ITeam> teamList, final List<PlayEntity> sessionOrmLiteMatchList) {
         int[] ranks = new int[teamList.size()];
         for (int i = 0; i < teamList.size(); i++) {
             ITeam team = teamList.get(i);
-            String name = ((PlayerTable) team.keySet().stream().findAny().orElseThrow()).getName();
-            ranks[i] = sessionMatchTableList.stream()
-                    .filter(m -> m.getPlayerTable().getName().equals(name))
-                    .findAny().orElseThrow().getRank();
+            String name = ((OrmLitePlayer) team.keySet().stream().findAny().orElseThrow()).getName();
+            ranks[i] = sessionOrmLiteMatchList.stream()
+                    .filter(m -> m.getPlayerName().equals(name))
+                    .findAny().orElseThrow().getTeamRank();
         }
         return ranks;
     }
@@ -52,76 +56,74 @@ public final class RecalculateDatabase implements Runnable {
     @Override
     public void run() {
         List<String> sessionIdList = new ArrayList<>();
-        List<MatchTable> matchTableList = matchService.retrieveAllMatches();
-        Map<String, List<MatchTable>> groupBySessionMap = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
+        List<PlayEntity> ormLiteMatchList = matchService.retrieveAllMatches();
+        Map<String, List<PlayEntity>> groupBySessionMap = ormLiteMatchList.stream().collect(Collectors.groupingBy(PlayEntity::getSessionId));
         Map<String, Map<String, Rating>> lastPlayerRating = new HashMap<>();
         groupBySessionMap.entrySet().stream().sorted(Comparator.comparing(e -> e.getValue().get(0).getPlayDate())).forEach(e -> {
             String sessionId = e.getKey();
             sessionIdList.add(sessionId);
 
-            List<MatchTable> sessionMatchTableList = e.getValue();
-            GameTable gameTable = sessionMatchTableList.stream().findAny().orElseThrow().getGameTable();
-            GameInfo gameInfo = gameMapper.toGameInfo(gameTable);
+            List<PlayEntity> sessionOrmLiteMatchList = e.getValue();
+            OrmLiteGame ormLiteGame = new OrmLiteGame(sessionOrmLiteMatchList.stream().findAny().orElseThrow().getGameName());
+            GameInfo gameInfo = gameMapper.toGameInfo(ormLiteGame);
 
-            MatchData matchData = matchDataBuilder.buildFromMatchTable(sessionMatchTableList);
+            MatchData matchData = matchDataBuilder.buildFromMatchTable(sessionOrmLiteMatchList);
             matchData.getTeamDataSet().forEach(team -> {
-                team.getPlayerTableSet().forEach(player -> {
+                team.getOrmLitePlayerSet().forEach(player -> {
                     lastPlayerRating.putIfAbsent(player.getName(), new HashMap<>());
-                    lastPlayerRating.get(player.getName()).putIfAbsent(gameTable.getName(), gameInfo.getDefaultRating());
+                    lastPlayerRating.get(player.getName()).putIfAbsent(ormLiteGame.getName(), gameInfo.getDefaultRating());
                 });
             });
 
             List<ITeam> teamList = matchData.getTeamDataSet().stream().map(teamData -> {
                 PlayerRankingMap playerRankingMap = new PlayerRankingMap();
-                teamData.getPlayerTableSet().forEach(playerTable ->
-                        playerRankingMap.put(playerTable, lastPlayerRating.get(playerTable.getName()).get(gameTable.getName())));
+                teamData.getOrmLitePlayerSet().forEach(playerTable ->
+                        playerRankingMap.put(playerTable, lastPlayerRating.get(playerTable.getName()).get(ormLiteGame.getName())));
                 return playerRankingMap;
             }).collect(Collectors.toList());
-            int[] ranks = buildRanks(teamList, sessionMatchTableList);
+            int[] ranks = buildRanks(teamList, sessionOrmLiteMatchList);
             Map<IPlayer, Rating> newRanking = skillCalculator.calculateNewRatings(gameInfo, teamList, Arrays.copyOf(ranks, ranks.length));
 
             Logger.debug("Processed: {} sessions", sessionIdList.size());
             newRanking.forEach((key, rating) -> {
-                PlayerTable player = (PlayerTable) key;
+                OrmLitePlayer player = (OrmLitePlayer) key;
                 Logger.trace("New ranking for {} {}", player, rating);
-                lastPlayerRating.get(player.getName()).put(gameTable.getName(), rating);
+                lastPlayerRating.get(player.getName()).put(ormLiteGame.getName(), rating);
                 BigDecimal recalcMean = BigDecimal.valueOf(rating.getMean()).setScale(5, RoundingMode.HALF_UP);
                 BigDecimal recalcStdev = BigDecimal.valueOf(rating.getStandardDeviation()).setScale(5, RoundingMode.HALF_UP);
 
-                List<MatchTable> matchingMatchTables = sessionMatchTableList.stream()
-                        .filter(m -> m.getPlayerTable().getName().equals(player.getName()))
+                List<PlayEntity> matchingOrmLiteMatches = sessionOrmLiteMatchList.stream()
+                        .filter(m -> m.getPlayerName().equals(player.getName()))
                         .collect(Collectors.toList());
 
-                if (matchingMatchTables.isEmpty()) {
+                if (matchingOrmLiteMatches.isEmpty()) {
                     throw new UnsupportedOperationException();
-                } else if (matchingMatchTables.size() == 1) {
-                    MatchTable matchTable = matchingMatchTables.get(0);
-                    BigDecimal mean = matchTable.getMean().setScale(5, RoundingMode.HALF_UP);
-                    BigDecimal stdev = matchTable.getStandardDeviation().setScale(5, RoundingMode.HALF_UP);
+                } else if (matchingOrmLiteMatches.size() == 1) {
+                    PlayEntity ormLiteMatch = matchingOrmLiteMatches.get(0);
+                    BigDecimal mean = ormLiteMatch.getPlayerMean().setScale(5, RoundingMode.HALF_UP);
+                    BigDecimal stdev = ormLiteMatch.getPlayerStdDev().setScale(5, RoundingMode.HALF_UP);
                     if (!mean.equals(recalcMean) || !stdev.equals(recalcStdev)) {
-                        sessionMatchTableList.forEach(m -> Logger.debug("> session={}, pk={}, fk={}, player={}, team={}, rank={}, game={}, mean={}, stdev={}",
-                                m.getSessionId(), m.getPk(), m.getPlayerTable().getPk(), m.getPlayerTable().getName(), m.getTeam(), m.getRank(), m.getGameTable().getName(), m.getMean(), m.getStandardDeviation()));
+                        sessionOrmLiteMatchList.forEach(m -> Logger.debug("> %s", m));
                         for (int i = 0; i < teamList.size(); i++) {
                             Logger.debug("> rank={}, team={}", ranks[i], teamList.get(i));
                         }
                         Logger.warn("player={}, rank={}, mean={} != {}, stdev={} != {}",
-                                matchTable.getPlayerTable().getName(), matchTable.getRank(), mean, recalcMean, stdev, recalcStdev);
+                                ormLiteMatch.getPlayerName(), ormLiteMatch.getTeamRank(), mean, recalcMean, stdev, recalcStdev);
                     } else {
                         Logger.trace("{} checks out", player);
                     }
                 } else {
                     Logger.debug("Found duplicate player {} ({})", player.getName(), sessionId);
                     AtomicBoolean foundMatch = new AtomicBoolean(false);
-                    matchingMatchTables.forEach(matchTable -> {
-                        BigDecimal mean = matchTable.getMean().setScale(5, RoundingMode.HALF_UP);
-                        BigDecimal stdev = matchTable.getStandardDeviation().setScale(5, RoundingMode.HALF_UP);
-                        sessionMatchTableList.forEach(m -> Logger.trace("> session={}, pk={}, fk={}, player={}, team={}, rank={}, game={}, mean={}, stdev={}",
-                                m.getSessionId(), m.getPk(), m.getPlayerTable().getPk(), m.getPlayerTable().getName(), m.getTeam(), m.getRank(), m.getGameTable().getName(), m.getMean(), m.getStandardDeviation()));
+                    matchingOrmLiteMatches.forEach(matchTable -> {
+                        BigDecimal mean = matchTable.getPlayerMean().setScale(5, RoundingMode.HALF_UP);
+                        BigDecimal stdev = matchTable.getPlayerStdDev().setScale(5, RoundingMode.HALF_UP);
+                        sessionOrmLiteMatchList.forEach(m -> Logger.trace("> %s", m));
                         for (int i = 0; i < teamList.size(); i++) {
                             Logger.trace("> rank={}, team={}", ranks[i], teamList.get(i));
                         }
                         Logger.trace("player={}, rank={}, mean={} != {}, stdev={} != {}",
-                                matchTable.getPlayerTable().getName(), matchTable.getRank(), mean, recalcMean, stdev, recalcStdev);
+                                matchTable.getPlayerName(), matchTable.getTeamRank(), mean, recalcMean, stdev, recalcStdev);
 
                         if (!mean.equals(recalcMean) || !stdev.equals(recalcStdev)) {
                             throw new UnsupportedOperationException();

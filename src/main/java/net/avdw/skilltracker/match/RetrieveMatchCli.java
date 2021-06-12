@@ -3,6 +3,7 @@ package net.avdw.skilltracker.match;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.avdw.skilltracker.Templator;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
@@ -25,30 +26,30 @@ public class RetrieveMatchCli implements Runnable {
     @Spec
     private CommandSpec spec;
     @Inject
-    @Match
+    @MatchScope
     private Templator templator;
 
     @Override
     public void run() {
-        List<MatchTable> matchTableList = matchService.retrieveMatchWithSessionId(id);
+        List<PlayEntity> ormLiteMatchList = matchService.retrieveMatchWithSessionId(id);
 
-        if (matchTableList.isEmpty()) {
+        if (ormLiteMatchList.isEmpty()) {
             templator.populate(MatchBundleKey.NO_MATCH_FOUND);
             return;
         }
 
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.VIEW_MATCH_DETAIL_TITLE,
                 gson.fromJson(String.format("{id:'%s',date:'%s',game:'%s'}", id,
-                        simpleDateFormat.format(matchTableList.stream().findAny().get().getPlayDate()),
-                        matchTableList.stream().findAny().get().getGameTable().getName()),
+                        simpleDateFormat.format(ormLiteMatchList.stream().findAny().get().getPlayDate()),
+                        ormLiteMatchList.stream().findAny().get().getGameName()),
                         Map.class)));
 
-        matchTableList.stream().sorted(Comparator.comparingInt(MatchTable::getRank)).forEach(m ->
+        ormLiteMatchList.stream().sorted(Comparator.comparingInt(PlayEntity::getTeamRank)).forEach(m ->
                 spec.commandLine().getOut().println(templator.populate(MatchBundleKey.VIEW_MATCH_DETAIL_PLAYER_ENTRY,
                         gson.fromJson(String.format("{rank:'%s',person:'%s',mean:'%s',stdev:'%s'}",
-                                m.getRank(), m.getPlayerTable().getName(),
-                                m.getMean().setScale(0, RoundingMode.HALF_UP),
-                                m.getStandardDeviation().setScale(0, RoundingMode.HALF_UP)),
+                                m.getTeamRank()+1, m.getPlayerName(),
+                                m.getPlayerMean().setScale(0, RoundingMode.HALF_UP),
+                                m.getPlayerStdDev().setScale(0, RoundingMode.HALF_UP)),
                                 Map.class))));
     }
 }

@@ -4,18 +4,15 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import de.gesundkrank.jskills.ITeam;
 import net.avdw.skilltracker.Templator;
-import net.avdw.skilltracker.game.GameService;
-import net.avdw.skilltracker.game.GameTable;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import org.tinylog.Logger;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +28,6 @@ class CreateMatchCli implements Runnable {
     @Inject
     private PlayerRankingMapBuilder gameMatchTeamBuilder;
     @Inject
-    private GameService gameService;
-    @Inject
     private MatchDataBuilder matchDataBuilder;
     @Inject
     private MatchService matchService;
@@ -43,7 +38,7 @@ class CreateMatchCli implements Runnable {
     @Parameters(description = "Teams in the match; team=<player1,player2> (no spaces)", arity = "1..*")
     private List<String> teams;
     @Inject
-    @Match
+    @MatchScope
     private Templator templator;
 
     @Override
@@ -52,7 +47,7 @@ class CreateMatchCli implements Runnable {
             throw new UnsupportedOperationException();
         }
 
-        Logger.trace("Creating match");
+        Logger.debug("Creating match");
         if (teams.size() == 1) {
             teams = Arrays.asList(teams.get(0).split(","));
         }
@@ -60,26 +55,24 @@ class CreateMatchCli implements Runnable {
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.TEAM_RANK_COUNT_MISMATCH));
         }
 
-        GameTable gameTable = gameService.retrieveGame(game);
-        if (gameTable == null) {
-            spec.commandLine().getOut().println(templator.populate(MatchBundleKey.NO_GAME_FOUND));
-            return;
-        }
+        OrmLiteGame ormLiteGame = new OrmLiteGame(game);
         MatchData matchData = matchDataBuilder.buildFromString(teams);
-        List<ITeam> teamList = gameMatchTeamBuilder.build(gameTable, matchData);
-        List<MatchTable> matchTableList = matchService.createMatchForGame(gameTable, teamList, ranks);
+        List<ITeam> teamList = gameMatchTeamBuilder.build(ormLiteGame, matchData);
+        List<PlayEntity> ormLiteMatchList = matchService.createMatchForGame(ormLiteGame, teamList, ranks);
 
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.CREATE_SUCCESS));
-        matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getSessionId)).forEach((key, matchTables) -> {
-            String teams = matchTables.stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
+        ormLiteMatchList.stream().collect(Collectors.groupingBy(PlayEntity::getSessionId)).forEach((key, matchTables) -> {
+
+            String teams = matchTables.stream().collect(Collectors.groupingBy(PlayEntity::getPlayerTeam)).values().stream()
                     .map(t -> {
                         String team = t.stream().map(matchTable -> templator.populate(MatchBundleKey.MATCH_TEAM_PLAYER_ENTRY,
                                 gson.fromJson(String.format("{name:'%s'}",
-                                        matchTable.getPlayerTable().getName()), Map.class)))
+                                        matchTable.getPlayerName()), Map.class)))
+                                .sorted()
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                        t.stream().findAny().orElseThrow().getRank(),
+                                        t.stream().findAny().orElseThrow().getTeamRank(),
                                         team), Map.class));
                         return team;
                     })
@@ -89,17 +82,8 @@ class CreateMatchCli implements Runnable {
                     gson.fromJson(String.format("{session:'%s',teams:'%s',date:'%s',game:'%s'}",
                             key.substring(0, key.indexOf("-")),
                             teams,
-                            simpleDateFormat.format(matchTableList.stream().findAny().orElseThrow().getPlayDate()),
-                            matchTableList.stream().findAny().orElseThrow().getGameTable().getName()), Map.class)));
+                            simpleDateFormat.format(ormLiteMatchList.stream().findAny().orElseThrow().getPlayDate()),
+                            ormLiteMatchList.stream().findAny().orElseThrow().getGameName()), Map.class)));
         });
-
-        CommandLine commandLine = spec.parent().parent().commandLine();
-        PrintWriter original = commandLine.getOut();
-        StringWriter out = new StringWriter();
-        commandLine.setOut(new PrintWriter(out));
-        commandLine.execute("game", "view", game);
-        commandLine.setOut(original);
-        spec.commandLine().getOut().println();
-        spec.commandLine().getOut().println(out.toString());
     }
 }

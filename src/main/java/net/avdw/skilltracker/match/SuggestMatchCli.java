@@ -3,10 +3,10 @@ package net.avdw.skilltracker.match;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.avdw.skilltracker.Templator;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLitePlayer;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import net.avdw.skilltracker.game.GameService;
-import net.avdw.skilltracker.game.GameTable;
-import net.avdw.skilltracker.player.PlayerService;
-import net.avdw.skilltracker.player.PlayerTable;
 import org.apache.commons.collections4.CollectionUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -33,8 +33,6 @@ public class SuggestMatchCli implements Runnable {
     @Inject
     private PlayerRankingMapBuilder playerRankingMapBuilder;
     @Inject
-    private PlayerService playerService;
-    @Inject
     private GroupQualityResolver groupQualityResolver;
     @Spec
     private CommandSpec spec;
@@ -42,7 +40,7 @@ public class SuggestMatchCli implements Runnable {
             required = true, split = "v")
     private List<Integer> teamSize;
     @Inject
-    @Match
+    @MatchScope
     private Templator templator;
 
     private void displayGroup(final Map<String, List<MatchData>> groupQualityMap,
@@ -60,13 +58,13 @@ public class SuggestMatchCli implements Runnable {
                         gson.fromJson(String.format("{quality:'%2s%%',setup:'%s'}",
                                 m.getQuality().multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).toString(),
                                 m.getTeamDataSet().stream().map(teamData -> String.format("(%s)",
-                                        teamData.getPlayerTableSet().stream().map(PlayerTable::getName).collect(Collectors.joining(", "))))
+                                        teamData.getOrmLitePlayerSet().stream().map(OrmLitePlayer::getName).collect(Collectors.joining(", "))))
                                         .collect(Collectors.joining(" vs. "))), Map.class))));
     }
 
-    private MatchData formMatch(final List<PlayerTable> nameList, final List<Integer> teamSizeList) {
+    private MatchData formMatch(final List<OrmLitePlayer> nameList, final List<Integer> teamSizeList) {
         MatchData match = new MatchData();
-        List<PlayerTable> nameListCopy = new ArrayList<>(nameList);
+        List<OrmLitePlayer> nameListCopy = new ArrayList<>(nameList);
         teamSizeList.forEach(count -> {
             TeamData team = new TeamData();
             for (int i = 0; i < count; i++) {
@@ -89,25 +87,25 @@ public class SuggestMatchCli implements Runnable {
             return;
         }
 
-        GameTable gameTable = gameService.retrieveGame(game);
-        if (gameTable == null) {
+        OrmLiteGame ormLiteGame = gameService.retrieveGame(game);
+        if (ormLiteGame == null) {
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.NO_GAME_FOUND));
             return;
         }
 
-        List<PlayerTable> playerTableList = playerList.stream().map(player -> playerService.createOrRetrievePlayer(player)).collect(Collectors.toList());
-        Set<MatchData> matchSet = CollectionUtils.permutations(playerTableList).stream().map(permutations -> formMatch(permutations, teamSize)).collect(Collectors.toSet());
-        matchSet.forEach(matchData -> matchData.setQuality(matchService.calculateMatchQuality(gameTable, playerRankingMapBuilder.build(gameTable, matchData))));
+        List<OrmLitePlayer> ormLitePlayerList = playerList.stream().map(OrmLitePlayer::new).collect(Collectors.toList());
+        Set<MatchData> matchSet = CollectionUtils.permutations(ormLitePlayerList).stream().map(permutations -> formMatch(permutations, teamSize)).collect(Collectors.toSet());
+        matchSet.forEach(matchData -> matchData.setQuality(matchService.calculateMatchQuality(ormLiteGame, playerRankingMapBuilder.build(ormLiteGame, matchData))));
 
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.SUGGEST_CLI_TITLE,
                 gson.fromJson(String.format("{setup:'%s',game:'%s'}",
                         teamSize.stream().map(Object::toString).collect(Collectors.joining("v")),
-                        gameTable.getName()), Map.class)));
-        playerTableList.forEach(playerTable -> {
-            MatchTable matchTable = matchService.retrieveLastPlayerMatchForGame(gameTable, playerTable);
+                        ormLiteGame.getName()), Map.class)));
+        ormLitePlayerList.forEach(playerTable -> {
+            PlayEntity ormLiteMatch = matchService.retrieveLastPlayerMatchForGame(ormLiteGame, playerTable);
             spec.commandLine().getOut().println(String.format("> (μ)=%2s (σ)=%s \t %s",
-                    matchTable.getMean().setScale(0, RoundingMode.HALF_UP),
-                    matchTable.getStandardDeviation().setScale(0, RoundingMode.HALF_UP),
+                    ormLiteMatch.getPlayerMean().setScale(0, RoundingMode.HALF_UP),
+                    ormLiteMatch.getPlayerStdDev().setScale(0, RoundingMode.HALF_UP),
                     playerTable.getName()
             ));
         });

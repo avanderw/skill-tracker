@@ -16,7 +16,7 @@ public class TableQuery<T> {
     private TableBuilder<T> tableBuilder;
 
     @Inject
-    TableQuery(@DbConnection final Connection connection, final TableBuilder<T> tableBuilder) {
+    TableQuery(final Connection connection, final TableBuilder<T> tableBuilder) {
         this.connection = connection;
         this.tableBuilder = tableBuilder;
     }

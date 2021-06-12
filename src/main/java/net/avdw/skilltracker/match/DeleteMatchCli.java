@@ -22,7 +22,7 @@ class DeleteMatchCli implements Runnable {
     @Spec
     private CommandSpec spec;
     @Inject
-    @Match
+    @MatchScope
     private Templator templator;
     private final Gson gson = new Gson();
 

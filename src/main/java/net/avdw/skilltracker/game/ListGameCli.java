@@ -1,17 +1,13 @@
 package net.avdw.skilltracker.game;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
 import com.google.inject.Inject;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.OrmLiteGame;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.List;
-import java.util.ResourceBundle;
 
 @Command(name = "ls", description = "List registered games", mixinStandardHelpOptions = true)
 public class ListGameCli implements Runnable {
@@ -21,30 +17,26 @@ public class ListGameCli implements Runnable {
 
     @Inject
     private GameService gameService;
-    @Inject
-    @Game
-    private ResourceBundle resourceBundle;
     @Spec
     private CommandSpec spec;
 
     @Override
     public void run() {
-        List<GameTable> gameTableList;
+        List<OrmLiteGame> ormLiteGameList;
         if (game == null) {
-            gameTableList = gameService.retrieveAllGames();
+            ormLiteGameList = gameService.retrieveAllGames();
         } else {
-            gameTableList = gameService.retrieveGamesLikeName(game);
+            ormLiteGameList = gameService.retrieveGamesLikeName(game);
         }
 
-        if (gameTableList.isEmpty()) {
-            spec.commandLine().getOut().println(resourceBundle.getString(GameBundleKey.NO_GAME_FOUND));
+        if (ormLiteGameList.isEmpty()) {
+            spec.commandLine().getOut().println("No games found\n" +
+                    "  (use `game add --help` to add a game)\n" +
+                    "  (use `game ls` to list all games)");
         }
 
-        gameTableList.forEach(game -> {
-            Mustache mustache = new DefaultMustacheFactory().compile(new StringReader(resourceBundle.getString(GameBundleKey.GAME_TITLE)), GameBundleKey.GAME_TITLE);
-            StringWriter stringWriter = new StringWriter();
-            mustache.execute(stringWriter, game);
-            spec.commandLine().getOut().println(stringWriter.toString());
+        ormLiteGameList.forEach(game -> {
+            spec.commandLine().getOut().println(game.getName());
         });
     }
 }

@@ -3,6 +3,7 @@ package net.avdw.skilltracker.match;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.avdw.skilltracker.Templator;
+import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -25,13 +26,13 @@ public class ListMatchCli implements Runnable {
     @Spec
     private CommandSpec spec;
     @Inject
-    @Match
+    @MatchScope
     private Templator templator;
 
     @Override
     public void run() {
-        List<MatchTable> matchTableList = matchService.retrieveLastFewMatches(limit);
-        if (matchTableList.isEmpty()) {
+        List<PlayEntity> ormLiteMatchList = matchService.retrieveLastFewMatches(limit);
+        if (ormLiteMatchList.isEmpty()) {
             spec.commandLine().getOut().println(templator.populate(MatchBundleKey.NO_MATCH_FOUND));
             return;
         }
@@ -39,20 +40,20 @@ public class ListMatchCli implements Runnable {
         spec.commandLine().getOut().println(templator.populate(MatchBundleKey.LAST_MATCH_LIST_TITLE,
                 gson.fromJson(String.format("{limit:'%s'}", limit), Map.class)));
 
-        Map<String, List<MatchTable>> sessionMatchTableMap = matchTableList.stream().collect(Collectors.groupingBy(MatchTable::getSessionId));
-        List<Map.Entry<String, List<MatchTable>>> sortedEntryList = sessionMatchTableMap.entrySet().stream()
-                .sorted(Comparator.comparing((Map.Entry<String, List<MatchTable>> entry) -> entry.getValue().get(0).getPlayDate()).reversed())
+        Map<String, List<PlayEntity>> sessionMatchTableMap = ormLiteMatchList.stream().collect(Collectors.groupingBy(PlayEntity::getSessionId));
+        List<Map.Entry<String, List<PlayEntity>>> sortedEntryList = sessionMatchTableMap.entrySet().stream()
+                .sorted(Comparator.comparing((Map.Entry<String, List<PlayEntity>> entry) -> entry.getValue().get(0).getPlayDate()).reversed())
                 .collect(Collectors.toList());
         sortedEntryList.forEach(entry -> {
-            String teams = entry.getValue().stream().collect(Collectors.groupingBy(MatchTable::getTeam)).values().stream()
+            String teams = entry.getValue().stream().collect(Collectors.groupingBy(PlayEntity::getPlayerTeam)).values().stream()
                     .map(teamList -> {
                         String team = teamList.stream().map(matchTable -> templator.populate(MatchBundleKey.MATCH_TEAM_PLAYER_ENTRY,
                                 gson.fromJson(String.format("{name:'%s'}",
-                                        matchTable.getPlayerTable().getName()), Map.class)))
+                                        matchTable.getPlayerName()), Map.class)))
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                        teamList.stream().findAny().get().getRank(),
+                                        teamList.stream().findAny().get().getTeamRank(),
                                         team), Map.class));
                         return team;
                     })
@@ -63,7 +64,7 @@ public class ListMatchCli implements Runnable {
                             entry.getKey().substring(0, entry.getKey().indexOf("-")),
                             teams,
                             simpleDateFormat.format(entry.getValue().stream().findAny().get().getPlayDate()),
-                            entry.getValue().stream().findAny().get().getGameTable().getName()), Map.class)));
+                            entry.getValue().stream().findAny().get().getGameName()), Map.class)));
         });
     }
 }

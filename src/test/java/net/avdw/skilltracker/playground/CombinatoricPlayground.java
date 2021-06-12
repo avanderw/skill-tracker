@@ -1,7 +1,6 @@
 package net.avdw.skilltracker.playground;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.math3.util.Combinations;
 
