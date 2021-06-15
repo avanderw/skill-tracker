@@ -30,6 +30,7 @@ public class ContestantService implements ContestantQuery {
         return Contestant.builder()
                 .game(game)
                 .player(player)
+                .playCount(contestantRepo.playCount(game, player))
                 .winCount(contestantRepo.winCount(game, player))
                 .skill(skillQuery.findLatest(game, player))
                 .build();

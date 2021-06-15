@@ -15,4 +15,5 @@ public class Contestant {
     @NonNull Player player;
     @NonNull Skill skill;
     @NonNull Long winCount;
+    @NonNull Long playCount;
 }

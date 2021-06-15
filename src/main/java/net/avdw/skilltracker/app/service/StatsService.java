@@ -50,8 +50,15 @@ public class StatsService implements StatsQuery {
 
     @Override
     public List<Stat> findBy(Player player) {
-        Logger.warn("No stats configured for player games.");
-        return new ArrayList<>();
+        List<Stat> stats = new ArrayList<>();
+
+        Contestant mostPlayed = contestantRepo.mostPlayed(player);
+        stats.add(Stat.builder()
+                .name("Most played")
+                .value(String.format("%s (%s)", mostPlayed.getGame().getName(), mostPlayed.getPlayCount()))
+                .build());
+
+        return stats;
     }
 
     @Override

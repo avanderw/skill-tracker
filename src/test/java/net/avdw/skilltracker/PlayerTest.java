@@ -178,12 +178,12 @@ public class PlayerTest {
     @Test
     public void testPlayerDetailView() {
         cliTester.execute("player view Andrew").success()
-                .notContains("AshesOfSingularity")
                 .contains("7 games")
                 .contains("44 matches")
                 .contains("Last played: GalaxyTrucker")
                 .contains("Top 3 skilled")
-                .contains("Top 3 ranked");
+                .contains("Top 3 ranked")
+                .contains("Most played: UnrealTournament (24)");
     }
 
     @Test

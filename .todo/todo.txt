@@ -15,7 +15,7 @@ x 2021-06-15 2021-05-11 @Add Champion +stat to the person who has the most wins 
 2020-08-14 @Update connection error to print to stdout
 2020-08-14 @Update 'game <game>' to redirect to 'game view <game>'
 2020-06-23 @Add Afrikaans language
-2021-06-12 @Add most played +stat the player view
+x 2021-06-15 2021-06-12 @Add most played +stat the player view
 2021-06-12 @Add Ally +stat to a game for a person who has played on the same team the most
 2021-06-12 @Add Powerful Ally +stat for most wins with Ally
 2021-06-12 @Add +stat for ally with the most losses

@@ -70,4 +70,10 @@ public class StatTest {
         cliTester.execute("game view AgeOfEmpires2").success()
                 .contains("Most wins: JK (31)");
     }
+
+    @Test
+    public void testMostPlayed() {
+        cliTester.execute("player view JK").success()
+                .contains("Most played: AgeOfEmpires2");
+    }
 }

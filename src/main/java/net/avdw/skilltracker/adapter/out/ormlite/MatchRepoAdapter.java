@@ -94,6 +94,7 @@ public class MatchRepoAdapter implements MatchRepo {
                                             .stdDev(p.getPlayerStdDev())
                                             .build())
                                     .winCount(contestantRepo.winCount(game, player))
+                                    .playCount(contestantRepo.playCount(game, player))
                                     .build();
                         }).collect(Collectors.toList()))
                         .build()

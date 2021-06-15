@@ -31,18 +31,19 @@ public class ContestantRepoAdapter implements ContestantRepo {
     public Contestant mostWinsForGame(Game game) {
         Logger.debug(playDao.queryBuilder().where().eq(PlayEntity.GAME_NAME, game.getName()).query());
         return playDao.queryRaw(String.format("SELECT count(PlayerName), PlayerName FROM Play\n" +
-                "WHERE GameName = '%s'\n" +
-                "AND TeamRank = 0\n" +
-                "GROUP BY PlayerName\n" +
-                "ORDER BY count(PlayerName) DESC, PlayerName ASC\n" +
-                "LIMIT 1", game.getName()), databaseResults ->{
-            Player player = Player.builder().name(databaseResults.getString(1)).build();
-            return Contestant.builder()
-                    .player(player)
-                    .game(game)
-                    .winCount(databaseResults.getLong(0))
-                    .skill(skillQuery.findLatest(game, player))
-                    .build();
+                        "WHERE GameName = '%s'\n" +
+                        "AND TeamRank = 0\n" +
+                        "GROUP BY PlayerName\n" +
+                        "ORDER BY count(PlayerName) DESC, PlayerName ASC\n" +
+                        "LIMIT 1", game.getName()), databaseResults -> {
+                    Player player = Player.builder().name(databaseResults.getString(1)).build();
+                    return Contestant.builder()
+                            .player(player)
+                            .game(game)
+                            .playCount(playCount(game, player))
+                            .winCount(databaseResults.getLong(0))
+                            .skill(skillQuery.findLatest(game, player))
+                            .build();
                 }
         ).getResults().stream().findAny().orElseThrow();
     }
@@ -64,7 +65,7 @@ public class ContestantRepoAdapter implements ContestantRepo {
                 )
         ).getResults().stream()
                 .map(t -> {
-                    Player player= Player.builder().name(t.getPlayerName()).build();
+                    Player player = Player.builder().name(t.getPlayerName()).build();
                     return Contestant.builder()
                             .game(game)
                             .player(player)
@@ -74,9 +75,18 @@ public class ContestantRepoAdapter implements ContestantRepo {
                                     .stdDev(t.getPlayerStdDev())
                                     .build())
                             .winCount(winCount(game, player))
+                            .playCount(playCount(game, player))
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @SneakyThrows
+    public Long playCount(Game game, Player player) {
+        return playDao.queryRawValue(String.format("SELECT count(GameName) FROM Play\n" +
+                "WHERE PlayerName = '%s'\n" +
+                "AND GameName = '%s'", player.getName(), game.getName()));
     }
 
     @Override
@@ -86,5 +96,25 @@ public class ContestantRepoAdapter implements ContestantRepo {
                 "WHERE GameName = '%s'\n" +
                 "AND PlayerName = '%s'\n" +
                 "AND TeamRank = 0", game.getName(), player.getName()));
+    }
+
+    @SneakyThrows
+    @Override
+    public Contestant mostPlayed(Player player) {
+        return playDao.queryRaw(String.format("SELECT count(GameName), GameName FROM Play\n" +
+                        "WHERE PlayerName = '%s'\n" +
+                        "GROUP BY GameName\n" +
+                        "ORDER BY count(GameName) DESC\n" +
+                        "LIMIT 1", player.getName()), databaseResults -> {
+                    Game game = Game.builder().name(databaseResults.getString(1)).build();
+                    return Contestant.builder()
+                            .player(player)
+                            .game(game)
+                            .playCount(databaseResults.getLong(0))
+                            .winCount(winCount(game, player))
+                            .skill(skillQuery.findLatest(game, player))
+                            .build();
+                }
+        ).getResults().stream().findAny().orElseThrow();
     }
 }
