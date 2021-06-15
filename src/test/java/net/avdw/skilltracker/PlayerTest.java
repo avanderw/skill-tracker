@@ -146,9 +146,12 @@ public class PlayerTest {
     @Test
     public void testCombinePlayer() {
         cliTester.execute("match add CombineA CombineB CombineC --ranks 1,2,2 --game CombineTest").success();
+        cliTester.execute("game view CombineTest").success()
+                .contains("Most wins: CombineA (1)");
         cliTester.execute("player mv CombineA CombineB").success();
         cliTester.execute("game view CombineTest").success()
-                .contains("(μ)=26 (σ)=6 CombineB");
+                .contains("(μ)=26,3 (σ)=6,4 CombineB")
+                .contains("Most wins: CombineB (1)");
         cliTester.execute("player ls").success()
                 .notContains("CombineA");
     }

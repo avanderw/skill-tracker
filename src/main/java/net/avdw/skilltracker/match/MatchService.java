@@ -106,7 +106,7 @@ public class MatchService {
             }
 
             ormLiteMatch.setPlayerTeam(teamIdx);
-            ormLiteMatch.setTeamRank(ranks[teamIdx]);
+            ormLiteMatch.setTeamRank(ranks[teamIdx] -1);
             Logger.debug("Saving {}", ormLiteMatch);
             ormLiteMatchList.add(ormLiteMatch);
         });

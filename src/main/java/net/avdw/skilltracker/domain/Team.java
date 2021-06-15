@@ -4,27 +4,15 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 
+import java.util.List;
 import java.util.Set;
 
+/**
+ * A Team is a collection of Contestants on the same side in a game.
+ * @see Contestant
+ */
 @Value @Builder
 public class Team {
     @NonNull Integer rank;
-    @NonNull Set<Contestant> contestants;
-
-    public boolean hasPlayer(Player player) {
-        return contestants.stream()
-                .map(Contestant::getPlayer)
-                .anyMatch(p->p.equals(player));
-    }
-
-    public boolean isWinner() {
-        return rank == 1;
-    }
-
-    public Contestant getContestant(Player player) {
-        return contestants.stream()
-                .filter(c->c.getPlayer().equals(player))
-                .findFirst()
-                .orElseThrow();
-    }
+    @NonNull List<Contestant> contestants;
 }

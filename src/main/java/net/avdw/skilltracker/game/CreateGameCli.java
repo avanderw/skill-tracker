@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ResourceBundle;
 
 @Command(name = "add", description = "Register a game to play", mixinStandardHelpOptions = true)
+public
 class CreateGameCli implements Runnable {
     private static GameInfo defaultGameInfo = GameInfo.getDefaultGameInfo();
 

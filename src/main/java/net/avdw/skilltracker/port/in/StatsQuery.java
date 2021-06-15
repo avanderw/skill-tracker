@@ -9,4 +9,5 @@ import java.util.List;
 public interface StatsQuery {
     List<Stat> allGameStatsForPlayer(Game game, Player player);
     List<Stat> findBy(Player player);
+    List<Stat> findBy(Game game);
 }

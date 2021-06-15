@@ -1,10 +1,13 @@
 package net.avdw.skilltracker.app.service;
 
+import net.avdw.skilltracker.cli.game.model.GamePlayerModel;
+import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.PlayerQuery;
 import net.avdw.skilltracker.port.out.PlayerRepo;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,4 +28,5 @@ public class PlayerService implements PlayerQuery {
     public Set<Player> findAll() {
         return playerRepo.findAll();
     }
+
 }

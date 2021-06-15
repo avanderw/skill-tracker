@@ -6,14 +6,20 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
+/**
+ * A Skill is the descriptive statistic for a Contestant.
+ * @see Contestant
+ */
 @Value @Builder
 public class Skill {
     @NonNull BigDecimal mean;
-    @NonNull BigDecimal standardDeviation;
+    @NonNull BigDecimal stdDev;
     @NonNull LocalDate date;
 
     public BigDecimal getLow() {
-        return mean.subtract(standardDeviation.multiply(BigDecimal.valueOf(3)));
+        return mean.subtract(stdDev.multiply(BigDecimal.valueOf(3)));
     }
 }

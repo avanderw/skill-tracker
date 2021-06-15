@@ -120,4 +120,27 @@ public class CliTester {
         assertEquals(String.format("Output MUST contain only 1 instance of '%s'", regex), 1, count);
         return this;
     }
+
+    public CliTester inOrder(String ... orderedItems) {
+        long[] idxs = new long[orderedItems.length];
+        for (int i = 0; i < orderedItems.length; i++) {
+            idxs[i] = all.indexOf(orderedItems[i]);
+        }
+
+        boolean isInOrder = true;
+        long last = -1;
+        for (long idx: idxs) {
+            if (idx > last) {
+                last = idx;
+            } else {
+                isInOrder =false;
+                break;
+            }
+        }
+
+        assertTrue(String.format("Items %s must be found in order, but were found at %s",
+                Arrays.toString(orderedItems),
+                Arrays.toString(idxs)), isInOrder);
+        return this;
+    }
 }

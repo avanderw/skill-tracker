@@ -1,6 +1,6 @@
 x 2021-06-12 2021-05-11 @Add Nemesis +stat where the Nemisis has beaten the Minion at least 3 times; has at least 50% win ratio; and the percentage is higher than anyone else
 x 2021-06-12 2021-05-11 @Add Minion +stat which is the opposite of the Nemisis, e.g. If you are someone's minion, then they are your Nemisis
-(C) 2021-05-11 @Add Champion +stat to the person who has the most wins in a game
+x 2021-06-15 2021-05-11 @Add Champion +stat to the person who has the most wins in a game
 2021-05-11 @Remove mustache dependency
 2021-05-11 @Remove maven model dependency
 2021-05-11 @Remove guice dependency

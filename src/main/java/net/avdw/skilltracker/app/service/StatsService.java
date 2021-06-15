@@ -1,11 +1,14 @@
 package net.avdw.skilltracker.app.service;
 
+import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.Stat;
-import net.avdw.skilltracker.port.in.MinionQuery;
-import net.avdw.skilltracker.port.in.NemesisQuery;
+import net.avdw.skilltracker.port.in.stat.MinionQuery;
+import net.avdw.skilltracker.port.in.stat.NemesisQuery;
 import net.avdw.skilltracker.port.in.StatsQuery;
+import net.avdw.skilltracker.port.out.ContestantRepo;
+import net.avdw.skilltracker.port.out.GameRepo;
 import org.tinylog.Logger;
 
 import javax.inject.Inject;
@@ -17,11 +20,13 @@ import java.util.stream.Collectors;
 public class StatsService implements StatsQuery {
     private final MinionQuery minionQuery;
     private final NemesisQuery nemesisQuery;
+    private final ContestantRepo contestantRepo;
 
     @Inject
-    public StatsService(MinionQuery minionQuery, NemesisQuery nemesisQuery) {
+    public StatsService(MinionQuery minionQuery, NemesisQuery nemesisQuery, ContestantRepo contestantRepo) {
         this.minionQuery = minionQuery;
         this.nemesisQuery = nemesisQuery;
+        this.contestantRepo = contestantRepo;
     }
 
     @Override
@@ -29,7 +34,7 @@ public class StatsService implements StatsQuery {
         List<Stat> stats = new ArrayList<>();
 
         nemesisQuery.find(game, player)
-                .map(nemesis->Stat.builder().name("Nemesis").value(nemesis.getName()).build())
+                .map(nemesis -> Stat.builder().name("Nemesis").value(nemesis.getName()).build())
                 .ifPresent(stats::add);
 
         Set<Player> minions = minionQuery.findAll(game, player);
@@ -47,5 +52,17 @@ public class StatsService implements StatsQuery {
     public List<Stat> findBy(Player player) {
         Logger.warn("No stats configured for player games.");
         return new ArrayList<>();
+    }
+
+    @Override
+    public List<Stat> findBy(Game game) {
+        List<Stat> stats = new ArrayList<>();
+
+        Contestant mostWins = contestantRepo.mostWinsForGame(game);
+        stats.add(Stat.builder()
+                .name("Most wins")
+                .value(String.format("%s (%d)", mostWins.getPlayer().getName(), mostWins.getWinCount()))
+                .build());
+        return stats;
     }
 }

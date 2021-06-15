@@ -131,12 +131,6 @@ public class GameCliTest {
     }
 
     @Test
-    public void test_BadGameView_Fail() {
-        cliTester.execute("game view BadGame").success()
-                .contains("No games found");
-    }
-
-    @Test
     public void test_Delete_Fail() {
         assertSuccess(commandLine.execute("game", "rm", "Northgard"));
     }
@@ -150,21 +144,16 @@ public class GameCliTest {
     }
 
     @Test
-    public void test_Empty_Fail() {
-        assertSuccess(commandLine.execute("game"));
-        assertTrue("Should output usage help", outWriter.toString().contains("Usage"));
+    public void testGameEmpty() {
+        cliTester.execute("game").success()
+                .contains("Usage");
     }
 
-    @Test
-    public void testGameDetail() {
-        cliTester.execute("match add Andrew,Karl Jaco,Etienne Marius,Raoul --ranks 1,2,2 --game Northgard").success();
-        cliTester.execute("game view Northgard").success();
-        cliTester.execute("game Northgard").success();
-    }
 
     @Test
-    public void test_GameNotFound_Fail() {
-        assertSuccess(commandLine.execute("game", "random"));
+    public void testGameNotFound() {
+        cliTester.execute("game view random").failure()
+                .contains("GameNotFoundException");
     }
 
 
@@ -198,24 +187,23 @@ public class GameCliTest {
 
     @Test
     public void test_ViewGameLimit_Pass() {
-        assertSuccess(commandLine.execute("match", "add", "Andrew,One", "Jaco,Etienne", "--ranks", "1,2", "--game", "Northgard"));
-
-        resetOutput();
-        assertSuccess(commandLine.execute("game", "view", "Northgard", "--top=1", "--last=2"));
+        cliTester.execute("game view Northgard").success();
     }
 
     @Test
-    public void test_ViewGameSummary_Success() {
-        assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,2", "--game", "Northgard"));
-        resetOutput();
-
-        assertSuccess(commandLine.execute("game", "Northgard"));
+    public void testViewGameShortcut() {
+        cliTester.execute("game AgeOfEmpires2").success();
     }
 
     @Test
     public void testViewGame() {
         cliTester.execute("game view UnrealTournament").success()
-                .notContains("#0:");
+                .distinct("deba86f7")
+                .notContains("#0:")
+                .notContains("33.7001678126")
+                .notContains("deba86f7-3490-4867-831d-2c9134757def")
+                .inOrder("JK", "Zeo", "Andrew", "Karl", "Wicus")
+                .inOrder("deba86f7", "caf082b9", "5063f995");
     }
 
 }

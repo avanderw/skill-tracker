@@ -35,7 +35,7 @@ public class RankRepoAdapter implements RankRepo {
                         .priority(Skill.builder()
                                 .date(dbResult.getTimestamp(0).toLocalDateTime().toLocalDate())
                                 .mean(dbResult.getBigDecimal(2))
-                                .standardDeviation(dbResult.getBigDecimal(3))
+                                .stdDev(dbResult.getBigDecimal(3))
                                 .build().getLow())
                         .build(),
                 game.getName()).getResults().stream()

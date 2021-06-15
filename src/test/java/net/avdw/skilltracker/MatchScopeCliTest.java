@@ -38,7 +38,7 @@ public class MatchScopeCliTest {
     static {
         Path path = null;
         try {
-            path = new File(NemesisTest.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
+            path = new File(MatchScopeCliTest.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -153,8 +153,8 @@ public class MatchScopeCliTest {
         assertNotNull(jacoSession);
         assertEquals(andrewSession.getPlayerTeam(), karlSession.getPlayerTeam());
         assertNotEquals(andrewSession.getPlayerTeam(), jacoSession.getPlayerTeam());
-        assertEquals(Integer.valueOf(1), andrewSession.getTeamRank());
-        assertEquals(Integer.valueOf(2), jacoSession.getTeamRank());
+        assertEquals(Integer.valueOf(0), andrewSession.getTeamRank());
+        assertEquals(Integer.valueOf(1), jacoSession.getTeamRank());
 
         assertNotEquals(25.00, andrewSession.getPlayerMean().doubleValue(), 0.01);
         assertNotEquals(25.00, jacoSession.getPlayerMean().doubleValue(), 0.01);
@@ -202,8 +202,10 @@ public class MatchScopeCliTest {
         assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
     }
 
+    @SneakyThrows
     @Test
     public void test_DeleteFirstMatch() {
+        playDao.deleteBuilder().delete();
         assertSuccess(commandLine.execute("match", "add", "P1,P2", "P3,P4", "P5,P6", "--ranks", "1,2,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "P1,P2", "P3,P4", "P5,P6", "--ranks", "1,2,2", "--game", "Northgard"));
         assertSuccess(commandLine.execute("match", "add", "P1,P2", "P3,P4", "P5,P6", "--ranks", "1,2,2", "--game", "Northgard"));
@@ -214,8 +216,9 @@ public class MatchScopeCliTest {
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(0)));
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(1)));
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
-        assertTrue(outWriter.toString().contains("(μ)=31 (σ)=7 P2"));
-        assertTrue(outWriter.toString().contains("(μ)=29 (σ)=8 P2"));
+        assertTrue(outWriter.toString().contains("Mean: 31,2μ"));
+        assertTrue(outWriter.toString().contains("Stddev:  6,8σ"));
+        assertTrue(outWriter.toString().contains("(μ)=28,6 (σ)=7,6 P2"));
     }
 
     @Test
@@ -229,8 +232,10 @@ public class MatchScopeCliTest {
         assertFalse(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.DELETE_COMMAND_FAILURE)));
     }
 
+    @SneakyThrows
     @Test
     public void test_DeleteMiddleMatch() {
+        playDao.deleteBuilder().delete();
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,Etienne", "Marius,Raoul", "--ranks", "1,2,3", "--game", "N"));
         assertSuccess(commandLine.execute("match", "add", "First", "Etienne", "Only,Raoul", "--ranks", "1,2,3", "--game", "N"));
         assertSuccess(commandLine.execute("match", "add", "Andrew,Karl", "Jaco,First", "Marius,Raoul", "--ranks", "1,3,2", "--game", "N"));
@@ -241,8 +246,10 @@ public class MatchScopeCliTest {
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(1)));
         assertSuccess(commandLine.execute("player", "view", "First", "-g=N"));
         assertSuccess(commandLine.execute("game", "view", "N"));
-        assertTrue(outWriter.toString().contains("(μ)=27 (σ)=6 First"));
-        assertTrue(outWriter.toString().contains("(μ)=19 (σ)=7 First"));
+        assertTrue(outWriter.toString().contains("Mean: 27,1μ"));
+        assertTrue(outWriter.toString().contains("Stddev:  6,0σ"));
+        assertTrue(outWriter.toString().contains("Mean: 19,5μ"));
+        assertTrue(outWriter.toString().contains("Stddev:  7,5σ"));
     }
 
     @Test
@@ -312,23 +319,19 @@ public class MatchScopeCliTest {
 
     @Test
     public void test_NameSensitivityFailure() {
-        assertSuccess(commandLine.execute("match", "add", "-g=N", "One,one,ONE,onetwo", "-r=1,2,3,4"));
-        resetOutput();
-        assertSuccess(commandLine.execute("game", "view", "N"));
-        int count = countLinesStartingWith(">");
-        assertEquals(5, count);
+        cliTester.execute("match add -g=N One,one,ONE,onetwo -r=1,2,3,4").success();
+        cliTester.execute("game view N").success()
+                .inOrder("One", "one", "ONE", "onetwo");
     }
 
     @SneakyThrows
     @Test
     public void test_NameSensitivitySuccess() {
         playDao.deleteBuilder().delete();
-        assertSuccess(commandLine.execute("match", "add", "-g=Northgard", "One,Two", "-r=1,2"));
-        assertSuccess(commandLine.execute("match", "add", "-g=Northgard", "onE,tWo", "-r=1,2"));
-        resetOutput();
-        assertSuccess(commandLine.execute("game", "view", "Northgard"));
-        int count = countLinesStartingWith(">");
-        assertEquals(6, count);
+        cliTester.execute("match add -g Northgard One,Two -r 1,2").success();
+        cliTester.execute("match add -g Northgard onE,tWo -r 1,2").success();
+        cliTester.execute("game view Northgard").success()
+                .inOrder("onE", "One", "tWo", "Two");
     }
 
     @Test

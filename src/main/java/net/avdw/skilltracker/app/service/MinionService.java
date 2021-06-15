@@ -2,9 +2,9 @@ package net.avdw.skilltracker.app.service;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.MinionQuery;
-import net.avdw.skilltracker.port.in.NemesisQuery;
 import net.avdw.skilltracker.port.in.OpponentQuery;
+import net.avdw.skilltracker.port.in.stat.MinionQuery;
+import net.avdw.skilltracker.port.in.stat.NemesisQuery;
 
 import javax.inject.Inject;
 import java.util.Set;

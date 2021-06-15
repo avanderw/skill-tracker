@@ -2,12 +2,15 @@ package net.avdw.skilltracker.adapter.out.ormlite.entity;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor @NoArgsConstructor
 @DatabaseTable(tableName = "Play")
 public class PlayEntity {
     public static final String GAME_NAME = "GameName";
