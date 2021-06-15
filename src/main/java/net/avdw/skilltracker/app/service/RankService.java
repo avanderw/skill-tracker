@@ -2,7 +2,7 @@ package net.avdw.skilltracker.app.service;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.RankQuery;
+import net.avdw.skilltracker.port.in.query.RankQuery;
 import net.avdw.skilltracker.port.out.RankRepo;
 
 import javax.inject.Inject;

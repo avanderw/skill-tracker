@@ -3,9 +3,9 @@ package net.avdw.skilltracker.app.service;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Matchup;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.MatchupQuery;
-import net.avdw.skilltracker.port.in.OpponentQuery;
-import net.avdw.skilltracker.port.in.stat.NemesisQuery;
+import net.avdw.skilltracker.port.in.query.MatchupQuery;
+import net.avdw.skilltracker.port.in.query.OpponentQuery;
+import net.avdw.skilltracker.port.in.query.stat.NemesisQuery;
 
 import javax.inject.Inject;
 import java.util.*;

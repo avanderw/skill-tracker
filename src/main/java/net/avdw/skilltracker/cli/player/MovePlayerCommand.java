@@ -4,8 +4,8 @@ import net.avdw.skilltracker.cli.converter.PlayerTypeConverter;
 import net.avdw.skilltracker.cli.player.model.MovePlayerModel;
 import net.avdw.skilltracker.cli.player.view.MovePlayerView;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.PlayerQuery;
-import net.avdw.skilltracker.port.in.RenamePlayer;
+import net.avdw.skilltracker.port.in.RenamePlayerCmd;
+import net.avdw.skilltracker.port.in.query.PlayerQuery;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
@@ -23,7 +23,7 @@ public class MovePlayerCommand implements Runnable {
     private String to;
 
     @Inject private PlayerQuery playerQuery;
-    @Inject private RenamePlayer renamePlayer;
+    @Inject private RenamePlayerCmd renamePlayerCmd;
     @Inject private MovePlayerView movePlayerView;
 
     @Override
@@ -31,7 +31,7 @@ public class MovePlayerCommand implements Runnable {
         boolean isMerge = playerQuery.findByName(to).isPresent();
         boolean isSame = from.getName().equals(to);
 
-        renamePlayer.rename(from, to);
+        renamePlayerCmd.rename(from, to);
         spec.commandLine().getOut().println(movePlayerView.render(MovePlayerModel.builder()
                 .from(from.getName())
                 .to(to)

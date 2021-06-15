@@ -3,8 +3,8 @@ package net.avdw.skilltracker.app;
 import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.ContestantQuery;
-import net.avdw.skilltracker.port.in.SkillQuery;
+import net.avdw.skilltracker.port.in.query.ContestantQuery;
+import net.avdw.skilltracker.port.in.query.SkillQuery;
 import net.avdw.skilltracker.port.out.ContestantRepo;
 
 import javax.inject.Inject;

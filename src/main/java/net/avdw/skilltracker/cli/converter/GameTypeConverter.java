@@ -2,7 +2,7 @@ package net.avdw.skilltracker.cli.converter;
 
 import net.avdw.skilltracker.app.exception.GameNotFoundException;
 import net.avdw.skilltracker.domain.Game;
-import net.avdw.skilltracker.port.in.GameQuery;
+import net.avdw.skilltracker.port.in.query.GameQuery;
 import picocli.CommandLine;
 
 import javax.inject.Inject;

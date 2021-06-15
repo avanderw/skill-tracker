@@ -4,7 +4,7 @@ import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.Skill;
-import net.avdw.skilltracker.port.in.SkillQuery;
+import net.avdw.skilltracker.port.in.query.SkillQuery;
 import net.avdw.skilltracker.port.out.SkillRepo;
 
 import javax.inject.Inject;

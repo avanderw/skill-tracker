@@ -2,6 +2,6 @@ package net.avdw.skilltracker.port.in;
 
 import net.avdw.skilltracker.domain.Player;
 
-public interface RenamePlayer {
+public interface RenamePlayerCmd {
     void rename(Player from, String to);
 }

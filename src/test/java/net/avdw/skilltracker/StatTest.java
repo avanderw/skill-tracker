@@ -68,12 +68,43 @@ public class StatTest {
     @Test
     public void testMostWins() {
         cliTester.execute("game view AgeOfEmpires2").success()
+                .contains("Dominator: JK (31)")
                 .contains("Most wins: JK (31)");
     }
 
     @Test
     public void testMostPlayed() {
         cliTester.execute("player view JK").success()
+                .contains("Obsessor: JK")
                 .contains("Most played: AgeOfEmpires2");
+    }
+
+    @Test
+    public void testComrade() {
+        cliTester.execute("player view Andrew").success()
+                .contains("Comrade: JK");
+        cliTester.execute("player view JK").success()
+                .inOrder("Andrew", "BOT-Hard")
+                .contains("Camaraderie: Andrew");
+    }
+
+    @Test
+    public void testComradeForGame() {
+        cliTester.execute("player view Andrew -g=AgeOfEmpires2").success()
+                .contains("Comrade: JK");
+        cliTester.execute("player view JK -g=AgeOfEmpires2").success()
+                .contains("Camaraderie: Andrew");
+    }
+
+    @Test
+    public void testGuardian() {
+        cliTester.execute("player view Andrew").success()
+                .contains("Guardian:");
+        cliTester.execute().success()
+                .contains("Wards: Andrew");
+        cliTester.execute("player view Andrew -g=AgeOfEmpires2").success()
+                .contains("Guardian:");
+        cliTester.execute().success()
+                .contains("Wards: Andrew");
     }
 }

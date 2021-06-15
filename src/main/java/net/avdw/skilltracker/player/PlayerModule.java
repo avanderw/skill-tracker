@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.adapter.out.ormlite.PlayerRepoAdapter;
 import net.avdw.skilltracker.app.service.PlayerService;
-import net.avdw.skilltracker.port.in.PlayerQuery;
+import net.avdw.skilltracker.port.in.query.PlayerQuery;
 import net.avdw.skilltracker.port.out.PlayerRepo;
 
 import java.util.Locale;

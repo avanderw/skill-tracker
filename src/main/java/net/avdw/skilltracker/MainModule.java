@@ -9,17 +9,10 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import net.avdw.property.AbstractPropertyModule;
-import net.avdw.skilltracker.adapter.out.ormlite.*;
 import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
-import net.avdw.skilltracker.app.ContestantService;
-import net.avdw.skilltracker.app.service.*;
 import net.avdw.skilltracker.game.GameModule;
 import net.avdw.skilltracker.match.MatchModule;
 import net.avdw.skilltracker.player.PlayerModule;
-import net.avdw.skilltracker.port.in.*;
-import net.avdw.skilltracker.port.in.stat.MinionQuery;
-import net.avdw.skilltracker.port.in.stat.NemesisQuery;
-import net.avdw.skilltracker.port.out.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,21 +28,8 @@ public class MainModule extends AbstractPropertyModule {
         install(new GameModule());
         install(new PlayerModule());
         install(new MatchModule());
+        install(new HexagonalModule());
 
-        bind(StatsQuery.class).to(StatsService.class);
-        bind(NemesisQuery.class).to(NemesisService.class);
-        bind(MinionQuery.class).to(MinionService.class);
-        bind(MatchupQuery.class).to(MatchupService.class);
-        bind(OpponentQuery.class).to(OpponentService.class);
-        bind(OpponentRepo.class).to(OpponentRepoAdapter.class);
-        bind(SkillQuery.class).to(SkillService.class);
-        bind(SkillRepo.class).to(SkillRepoAdapter.class);
-        bind(RankQuery.class).to(RankService.class);
-        bind(RankRepo.class).to(RankRepoAdapter.class);
-        bind(MatchQuery.class).to(MatchService.class);
-        bind(MatchRepo.class).to(MatchRepoAdapter.class);
-        bind(ContestantRepo.class).to(ContestantRepoAdapter.class);
-        bind(ContestantQuery.class).to(ContestantService.class);
     }
 
     @Provides

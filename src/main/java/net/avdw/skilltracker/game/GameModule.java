@@ -7,7 +7,7 @@ import de.gesundkrank.jskills.GameInfo;
 import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.adapter.out.ormlite.GameRepoAdapter;
 import net.avdw.skilltracker.app.service.GameService;
-import net.avdw.skilltracker.port.in.GameQuery;
+import net.avdw.skilltracker.port.in.query.GameQuery;
 import net.avdw.skilltracker.port.out.GameRepo;
 
 import java.util.Locale;

@@ -8,6 +8,7 @@ import net.avdw.skilltracker.cli.game.view.GameDetailView;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Team;
 import net.avdw.skilltracker.port.in.*;
+import net.avdw.skilltracker.port.in.query.*;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
@@ -42,7 +43,7 @@ public class ViewGameCommand implements Runnable {
                                 .stdDev(c.getSkill().getStdDev())
                                 .build())
                         .collect(Collectors.toList()))
-                .gameStats(statsQuery.findBy(game))
+                .gameStats(statsQuery.gameStats(game))
                 .matches(matchQuery.findLastBy(game, 3L).stream()
                         .map(m -> GameMatchModel.builder()
                                 .date(m.getDate())

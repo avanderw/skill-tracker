@@ -3,7 +3,7 @@ package net.avdw.skilltracker.app.service;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Match;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.MatchQuery;
+import net.avdw.skilltracker.port.in.query.MatchQuery;
 import net.avdw.skilltracker.port.out.MatchRepo;
 
 import javax.inject.Inject;

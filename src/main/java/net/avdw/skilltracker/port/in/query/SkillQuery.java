@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.port.in;
+package net.avdw.skilltracker.port.in.query;
 
 import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;

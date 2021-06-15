@@ -6,11 +6,10 @@ import net.avdw.skilltracker.cli.player.model.ContestantModel;
 import net.avdw.skilltracker.cli.player.model.PlayerDetailModel;
 import net.avdw.skilltracker.cli.player.view.ContestantView;
 import net.avdw.skilltracker.cli.player.view.PlayerDetailView;
-import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.PriorityObject;
-import net.avdw.skilltracker.port.in.*;
+import net.avdw.skilltracker.port.in.query.*;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -71,7 +70,7 @@ public class ViewPlayerCommand implements Runnable {
                             .sorted(Comparator.comparing((PriorityObject<Game> g) -> g.getPriority().doubleValue()).reversed())
                             .limit(3)
                             .collect(Collectors.toList()))
-                    .allStats(statsQuery.findBy(player))
+                    .allStats(statsQuery.playerStats(player))
                     .build();
             spec.commandLine().getOut().println(playerDetailView.render(playerDetailModel));
         } else {
@@ -79,7 +78,7 @@ public class ViewPlayerCommand implements Runnable {
                     .contestant(contestantQuery.findContestant(game, player))
                     .contestantRank(rankQuery.findBy(game, player))
                     .totalMatches(matchQuery.totalMatches(game, player))
-                    .stats(statsQuery.allGameStatsForPlayer(game, player))
+                    .stats(statsQuery.gameStatsForPlayer(game, player))
                     .build();
             spec.commandLine().getOut().println(contestantView.render(contestantModel));
         }
