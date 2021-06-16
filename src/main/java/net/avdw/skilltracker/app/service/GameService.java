@@ -20,12 +20,12 @@ public class GameService implements GameQuery {
 
     @Override
     public Optional<Game> findAll(String name) {
-        return gameRepo.findBy(name);
+        return gameRepo.findGamesFor(name);
     }
 
     @Override
     public Set<Game> findAll(Player player) {
-        return gameRepo.findBy(player);
+        return gameRepo.findGamesFor(player);
     }
 
     @Override

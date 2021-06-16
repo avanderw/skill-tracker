@@ -5,10 +5,7 @@ import net.avdw.skilltracker.adapter.out.ormlite.*;
 import net.avdw.skilltracker.app.ContestantService;
 import net.avdw.skilltracker.app.service.*;
 import net.avdw.skilltracker.port.in.query.*;
-import net.avdw.skilltracker.port.in.query.stat.CamaraderieQuery;
-import net.avdw.skilltracker.port.in.query.stat.ComradeQuery;
-import net.avdw.skilltracker.port.in.query.stat.MinionQuery;
-import net.avdw.skilltracker.port.in.query.stat.NemesisQuery;
+import net.avdw.skilltracker.port.in.query.stat.*;
 import net.avdw.skilltracker.port.out.*;
 
 public class HexagonalModule extends AbstractModule {
@@ -16,7 +13,7 @@ public class HexagonalModule extends AbstractModule {
     protected void configure() {
         bind(StatsQuery.class).to(StatsService.class);
         bind(NemesisQuery.class).to(NemesisService.class);
-        bind(MinionQuery.class).to(MinionService.class);
+        bind(MinionQuery.class).to(NemesisService.class);
         bind(MatchupQuery.class).to(MatchupService.class);
         bind(OpponentQuery.class).to(OpponentService.class);
         bind(OpponentRepo.class).to(OpponentRepoAdapter.class);
@@ -31,5 +28,7 @@ public class HexagonalModule extends AbstractModule {
         bind(ComradeQuery.class).to(ComradeService.class);
         bind(CamaraderieQuery.class).to(CamaraderieService.class);
         bind(AllyRepo.class).to(AllyRepoAdapter.class);
+        bind(EnthusiastQuery.class).to(EnthusiastService.class);
+        bind(ObsessionQuery.class).to(EnthusiastService.class);
     }
 }

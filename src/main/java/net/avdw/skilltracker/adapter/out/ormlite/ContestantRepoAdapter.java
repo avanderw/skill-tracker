@@ -117,4 +117,23 @@ public class ContestantRepoAdapter implements ContestantRepo {
                 }
         ).getResults().stream().findAny().orElseThrow();
     }
+
+    @SneakyThrows
+    @Override
+    public List<Contestant> contestantsFor(Game game) {
+        return playDao.queryBuilder()
+                .distinct().selectColumns(PlayEntity.PLAYER_NAME)
+                .where().eq(PlayEntity.GAME_NAME, game.getName())
+                .query().stream().map(p->{
+                    Player player = Player.builder().name(p.getPlayerName()).build();
+                    return Contestant.builder()
+                            .game(game)
+                            .player(player)
+                            .playCount(playCount(game, player))
+                            .winCount(winCount(game, player))
+                            .skill(skillQuery.findLatest(game, player))
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
 }

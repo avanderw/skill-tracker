@@ -24,7 +24,7 @@ public class GameRepoAdapter implements GameRepo {
 
     @SneakyThrows
     @Override
-    public Set<Game> findBy(Player player) {
+    public Set<Game> findGamesFor(Player player) {
         return playDao.queryBuilder()
                 .distinct()
                 .selectColumns(PlayEntity.GAME_NAME)
@@ -39,7 +39,7 @@ public class GameRepoAdapter implements GameRepo {
 
     @SneakyThrows
     @Override
-    public Optional<Game> findBy(String name) {
+    public Optional<Game> findGamesFor(String name) {
         return playDao.queryBuilder()
                 .distinct()
                 .selectColumns(PlayEntity.GAME_NAME)

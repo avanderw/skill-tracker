@@ -4,10 +4,7 @@ import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.Stat;
-import net.avdw.skilltracker.port.in.query.stat.CamaraderieQuery;
-import net.avdw.skilltracker.port.in.query.stat.ComradeQuery;
-import net.avdw.skilltracker.port.in.query.stat.MinionQuery;
-import net.avdw.skilltracker.port.in.query.stat.NemesisQuery;
+import net.avdw.skilltracker.port.in.query.stat.*;
 import net.avdw.skilltracker.port.in.query.StatsQuery;
 import net.avdw.skilltracker.port.out.ContestantRepo;
 
@@ -23,25 +20,35 @@ public class StatsService implements StatsQuery {
     private final ComradeQuery comradeQuery;
     private final CamaraderieQuery camaraderieQuery;
     private final ContestantRepo contestantRepo;
+    private final EnthusiastQuery enthusiastQuery;
+    private final ObsessionQuery obsessionQuery;
 
     @Inject
-    public StatsService(MinionQuery minionQuery, NemesisQuery nemesisQuery, ComradeQuery comradeQuery, CamaraderieQuery camaraderieQuery, ContestantRepo contestantRepo) {
+    public StatsService(MinionQuery minionQuery,
+                        NemesisQuery nemesisQuery,
+                        ComradeQuery comradeQuery,
+                        CamaraderieQuery camaraderieQuery,
+                        ContestantRepo contestantRepo,
+                        EnthusiastQuery enthusiastQuery,
+                        ObsessionQuery obsessionQuery) {
         this.minionQuery = minionQuery;
         this.nemesisQuery = nemesisQuery;
         this.comradeQuery = comradeQuery;
         this.camaraderieQuery = camaraderieQuery;
         this.contestantRepo = contestantRepo;
+        this.enthusiastQuery = enthusiastQuery;
+        this.obsessionQuery = obsessionQuery;
     }
 
     @Override
     public List<Stat> gameStatsForPlayer(Game game, Player player) {
         List<Stat> stats = new ArrayList<>();
 
-        nemesisQuery.find(game, player)
+        nemesisQuery.findNemesis(game, player)
                 .map(nemesis -> Stat.builder().name("Nemesis").value(nemesis.getName()).build())
                 .ifPresent(stats::add);
 
-        Set<Player> minions = minionQuery.findAll(game, player);
+        Set<Player> minions = minionQuery.findAllMinions(game, player);
         if (!minions.isEmpty()) {
             stats.add(Stat.builder().name("Minions").value(minions.stream()
                     .map(Player::getName)
@@ -97,6 +104,16 @@ public class StatsService implements StatsQuery {
                     .build());
         }
 
+        String obsession = obsessionQuery.findObsession(player).stream()
+                .map(Game::getName)
+                .collect(Collectors.joining(", "));
+        if (!obsession.isBlank()) {
+            stats.add(Stat.builder()
+                    .name("Obsession")
+                    .value(obsession)
+                    .build());
+        }
+
         return stats;
     }
 
@@ -109,6 +126,14 @@ public class StatsService implements StatsQuery {
                 .name("Most wins")
                 .value(String.format("%s (%d)", mostWins.getPlayer().getName(), mostWins.getWinCount()))
                 .build());
+
+         enthusiastQuery.findEnthusiast(game)
+                 .map(p->Stat.builder()
+                         .name("Enthusiast")
+                         .value(p.getName())
+                         .build())
+                 .ifPresent(stats::add);
+
         return stats;
     }
 }

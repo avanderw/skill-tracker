@@ -75,8 +75,15 @@ public class StatTest {
     @Test
     public void testMostPlayed() {
         cliTester.execute("player view JK").success()
-                .contains("Obsessor: JK")
                 .contains("Most played: AgeOfEmpires2");
+    }
+
+    @Test
+    public void testEnthusiast() {
+        cliTester.execute("game view TableTennisVR").success()
+                .contains("Enthusiast: Etienne");
+        cliTester.execute("player view Etienne").success()
+                .contains("Obsession: TableTennisVR");
     }
 
     @Test

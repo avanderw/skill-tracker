@@ -11,9 +11,10 @@ public interface ContestantRepo {
     Contestant mostWinsForGame(Game game);
     List<Contestant> topContestantsBySkill(Game game, Long limit);
 
-    @SneakyThrows
     Long playCount(Game game, Player player);
-
     Long winCount(Game game, Player player);
+
     Contestant mostPlayed(Player player);
+
+    List<Contestant> contestantsFor(Game game);
 }

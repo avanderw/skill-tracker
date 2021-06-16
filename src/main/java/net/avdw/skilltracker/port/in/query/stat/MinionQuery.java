@@ -9,5 +9,5 @@ import java.util.Set;
  * The Players that have this Player as a Nemesis.
  */
 public interface MinionQuery {
-    Set<Player> findAll(Game game, Player player);
+    Set<Player> findAllMinions(Game game, Player player);
 }

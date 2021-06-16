@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface GameRepo {
-    Set<Game> findBy(Player player);
-    Optional<Game> findBy(String name);
+    Set<Game> findGamesFor(Player player);
+    Optional<Game> findGamesFor(String name);
     Integer totalGames(Player player);
     Game lastPlayed(Player player);
 }

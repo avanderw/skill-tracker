@@ -12,5 +12,5 @@ import java.util.Optional;
  * - Has the highest win ratio
  */
 public interface NemesisQuery {
-    Optional<Player> find(Game game, Player player);
+    Optional<Player> findNemesis(Game game, Player player);
 }

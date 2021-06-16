@@ -5,13 +5,14 @@ import net.avdw.skilltracker.domain.Matchup;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.query.MatchupQuery;
 import net.avdw.skilltracker.port.in.query.OpponentQuery;
+import net.avdw.skilltracker.port.in.query.stat.MinionQuery;
 import net.avdw.skilltracker.port.in.query.stat.NemesisQuery;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class NemesisService implements NemesisQuery {
+public class NemesisService implements NemesisQuery, MinionQuery {
     private final MatchupQuery matchupQuery;
     private final OpponentQuery opponentQuery;
 
@@ -22,7 +23,7 @@ public class NemesisService implements NemesisQuery {
     }
 
     @Override
-    public Optional<Player> find(Game game, Player player) {
+    public Optional<Player> findNemesis(Game game, Player player) {
         final Set<Player> opponents = opponentQuery.findBy(game, player);
         final Set<Matchup> matchups = opponents.stream()
                 .map(opponent-> matchupQuery.findBy(player, opponent, game))
@@ -34,5 +35,12 @@ public class NemesisService implements NemesisQuery {
                 .collect(Collectors.toSet()));
 
         return nemesisQueue.isEmpty() ? Optional.empty() : Optional.of(nemesisQueue.poll().getOpponent());
+    }
+
+    @Override
+    public Set<Player> findAllMinions(Game game, Player player) {
+        return opponentQuery.findBy(game, player).stream()
+                .filter(opponent -> findNemesis(game, opponent).stream().anyMatch(player::equals))
+                .collect(Collectors.toSet());
     }
 }
