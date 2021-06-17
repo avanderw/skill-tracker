@@ -28,7 +28,7 @@ public class CamaraderieService implements CamaraderieQuery {
     public List<Player> findAll(Player player) {
         return allyRepo.findAll(player).stream()
                 .map(Ally::getAlly)
-                .filter(ally -> comradeQuery.find(ally).stream().anyMatch(player::equals))
+                .filter(ally -> comradeQuery.findComrade(ally).stream().anyMatch(player::equals))
                 .sorted(Comparator.comparing(Player::getName))
                 .collect(Collectors.toList());
 
@@ -38,7 +38,7 @@ public class CamaraderieService implements CamaraderieQuery {
     public List<Player> findAll(Game game, Player player) {
         return allyRepo.findAll(game, player).stream()
                 .map(Ally::getAlly)
-                .filter(ally -> comradeQuery.find(game, ally).stream().anyMatch(player::equals))
+                .filter(ally -> comradeQuery.findComrade(game, ally).stream().anyMatch(player::equals))
                 .sorted(Comparator.comparing(Player::getName))
                 .collect(Collectors.toList());
     }

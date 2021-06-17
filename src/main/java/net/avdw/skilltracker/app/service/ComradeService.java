@@ -19,7 +19,7 @@ public class ComradeService implements ComradeQuery {
     }
 
     @Override
-    public Optional<Player> find(Player player) {
+    public Optional<Player> findComrade(Player player) {
         return allyRepo.findAll(player).stream()
                 .filter(a->a.getPlayCount() >= 3)
                 .max(Comparator.comparing(Ally::getPlayCount))
@@ -27,7 +27,7 @@ public class ComradeService implements ComradeQuery {
     }
 
     @Override
-    public Optional<Player> find(Game game, Player player) {
+    public Optional<Player> findComrade(Game game, Player player) {
         return allyRepo.findAll(game, player).stream()
                 .filter(a->a.getPlayCount() >= 3)
                 .max(Comparator.comparing(Ally::getPlayCount))

@@ -106,12 +106,24 @@ public class StatTest {
     @Test
     public void testGuardian() {
         cliTester.execute("player view Andrew").success()
-                .contains("Guardian:");
-        cliTester.execute().success()
+                .contains("Guardian: JK");
+        cliTester.execute("player view JK").success()
                 .contains("Wards: Andrew");
-        cliTester.execute("player view Andrew -g=AgeOfEmpires2").success()
-                .contains("Guardian:");
-        cliTester.execute().success()
-                .contains("Wards: Andrew");
+    }
+
+    @Test
+    public void testGuardianForGame() {
+        cliTester.execute("player view JK -g=AgeOfEmpires2").success()
+                .contains("Guardian: JDK");
+        cliTester.execute("player view JDK -g=AgeOfEmpires2").success()
+                .contains("Wards: JK");
+    }
+
+    @Test
+    public void testDominator() {
+        cliTester.execute("game view AgeOfEmpires2").success()
+                .contains("Dominator: JK");
+        cliTester.execute("player view JK").success()
+                .contains("Dominating: AgeOfEmpires2");
     }
 }

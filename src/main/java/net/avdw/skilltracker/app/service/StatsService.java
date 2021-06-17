@@ -22,6 +22,7 @@ public class StatsService implements StatsQuery {
     private final ContestantRepo contestantRepo;
     private final EnthusiastQuery enthusiastQuery;
     private final ObsessionQuery obsessionQuery;
+    private final GuardianQuery guardianQuery;
 
     @Inject
     public StatsService(MinionQuery minionQuery,
@@ -30,7 +31,7 @@ public class StatsService implements StatsQuery {
                         CamaraderieQuery camaraderieQuery,
                         ContestantRepo contestantRepo,
                         EnthusiastQuery enthusiastQuery,
-                        ObsessionQuery obsessionQuery) {
+                        ObsessionQuery obsessionQuery, GuardianQuery guardianQuery) {
         this.minionQuery = minionQuery;
         this.nemesisQuery = nemesisQuery;
         this.comradeQuery = comradeQuery;
@@ -38,6 +39,7 @@ public class StatsService implements StatsQuery {
         this.contestantRepo = contestantRepo;
         this.enthusiastQuery = enthusiastQuery;
         this.obsessionQuery = obsessionQuery;
+        this.guardianQuery = guardianQuery;
     }
 
     @Override
@@ -57,8 +59,8 @@ public class StatsService implements StatsQuery {
                     .build());
         }
 
-        comradeQuery.find(game, player)
-                .map(p->Stat.builder()
+        comradeQuery.findComrade(game, player)
+                .map(p -> Stat.builder()
                         .name("Comrade")
                         .value(p.getName())
                         .build())
@@ -66,11 +68,29 @@ public class StatsService implements StatsQuery {
 
         String camaraderie = camaraderieQuery.findAll(game, player).stream()
                 .map(Player::getName)
+                .sorted()
                 .collect(Collectors.joining(", "));
         if (!camaraderie.isBlank()) {
             stats.add(Stat.builder()
                     .name("Camaraderie")
                     .value(camaraderie)
+                    .build());
+        }
+
+        guardianQuery.findGuardian(game, player)
+                .map(g -> Stat.builder()
+                        .name("Guardian")
+                        .value(g.getName())
+                        .build())
+                .ifPresent(stats::add);
+        String wards = guardianQuery.findWards(game, player).stream()
+                .map(Player::getName)
+                .sorted()
+                .collect(Collectors.joining(", "));
+        if (!wards.isBlank()) {
+            stats.add(Stat.builder()
+                    .name("Wards")
+                    .value(wards)
                     .build());
         }
 
@@ -87,8 +107,8 @@ public class StatsService implements StatsQuery {
                 .value(String.format("%s (%s)", mostPlayed.getGame().getName(), mostPlayed.getPlayCount()))
                 .build());
 
-        comradeQuery.find(player)
-                .map(p->Stat.builder()
+        comradeQuery.findComrade(player)
+                .map(p -> Stat.builder()
                         .name("Comrade")
                         .value(p.getName())
                         .build())
@@ -96,6 +116,7 @@ public class StatsService implements StatsQuery {
 
         String camaraderie = camaraderieQuery.findAll(player).stream()
                 .map(Player::getName)
+                .sorted()
                 .collect(Collectors.joining(", "));
         if (!camaraderie.isBlank()) {
             stats.add(Stat.builder()
@@ -114,6 +135,23 @@ public class StatsService implements StatsQuery {
                     .build());
         }
 
+        guardianQuery.findGuardian(player)
+                .map(g -> Stat.builder()
+                        .name("Guardian")
+                        .value(g.getName())
+                        .build())
+                .ifPresent(stats::add);
+        String wards = guardianQuery.findWards(player).stream()
+                .map(Player::getName)
+                .sorted()
+                .collect(Collectors.joining(", "));
+        if (!wards.isBlank()) {
+            stats.add(Stat.builder()
+                    .name("Wards")
+                    .value(wards)
+                    .build());
+        }
+
         return stats;
     }
 
@@ -127,12 +165,12 @@ public class StatsService implements StatsQuery {
                 .value(String.format("%s (%d)", mostWins.getPlayer().getName(), mostWins.getWinCount()))
                 .build());
 
-         enthusiastQuery.findEnthusiast(game)
-                 .map(p->Stat.builder()
-                         .name("Enthusiast")
-                         .value(p.getName())
-                         .build())
-                 .ifPresent(stats::add);
+        enthusiastQuery.findEnthusiast(game)
+                .map(p -> Stat.builder()
+                        .name("Enthusiast")
+                        .value(p.getName())
+                        .build())
+                .ifPresent(stats::add);
 
         return stats;
     }

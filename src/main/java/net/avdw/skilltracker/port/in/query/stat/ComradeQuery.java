@@ -11,7 +11,7 @@ import java.util.Optional;
  * - Has the highest play count together
  */
 public interface ComradeQuery {
-    Optional<Player> find(Player player);
+    Optional<Player> findComrade(Player player);
 
-    Optional<Player> find(Game game, Player player);
+    Optional<Player> findComrade(Game game, Player player);
 }

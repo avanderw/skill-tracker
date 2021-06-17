@@ -1,5 +1,12 @@
 package net.avdw.skilltracker.port.in.query.stat;
 
+import net.avdw.skilltracker.domain.Game;
+import net.avdw.skilltracker.domain.Player;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 /**
  * A Guardian is an Ally that:
  * - Has won together at least 3 times
@@ -7,4 +14,8 @@ package net.avdw.skilltracker.port.in.query.stat;
  * - Has the highest win ratio
  */
 public interface GuardianQuery {
+    Optional<Player> findGuardian(Player player);
+    Optional<Player> findGuardian(Game game, Player player);
+    List<Player> findWards(Player player);
+    List<Player> findWards(Game game, Player player);
 }

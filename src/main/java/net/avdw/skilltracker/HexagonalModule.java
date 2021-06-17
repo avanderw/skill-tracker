@@ -30,5 +30,6 @@ public class HexagonalModule extends AbstractModule {
         bind(AllyRepo.class).to(AllyRepoAdapter.class);
         bind(EnthusiastQuery.class).to(EnthusiastService.class);
         bind(ObsessionQuery.class).to(EnthusiastService.class);
+        bind(GuardianQuery.class).to(GuardianService.class);
     }
 }
