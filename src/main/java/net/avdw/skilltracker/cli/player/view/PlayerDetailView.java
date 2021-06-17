@@ -40,8 +40,12 @@ public class PlayerDetailView {
 
         if (!model.getAllStats().isEmpty()) {
             render.append(String.format(STATISTIC_HR));
+            long width = model.getAllStats().stream()
+                    .map(Stat::getName)
+                    .mapToLong(String::length)
+                    .max().orElseThrow();
             for (Stat stat : model.getAllStats()) {
-                render.append(String.format(STATISTIC_LI, stat.getName(), stat.getValue()));
+                render.append(String.format(STATISTIC_LI, String.format("%" + width + "s", stat.getName()), stat.getValue()));
             }
         }
 

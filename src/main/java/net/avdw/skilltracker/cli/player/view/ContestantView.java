@@ -28,8 +28,12 @@ public class ContestantView {
 
         if (!model.getStats().isEmpty()) {
             render.append(String.format(STAT_HEADER));
+            long width = model.getStats().stream()
+                    .map(Stat::getName)
+                    .mapToLong(String::length)
+                    .max().orElseThrow();
             for (Stat stat : model.getStats()) {
-                render.append(String.format(STAT, stat.getName(), stat.getValue()));
+                render.append(String.format(STAT, String.format("%" + width + "s", stat.getName()), stat.getValue()));
             }
         }
 

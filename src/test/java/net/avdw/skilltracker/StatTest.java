@@ -89,17 +89,12 @@ public class StatTest {
     public void testComrade() {
         cliTester.execute("player view Andrew").success()
                 .contains("Comrade: JK");
-        cliTester.execute("player view JK").success()
-                .inOrder("Andrew", "BOT-Hard")
-                .contains("Camaraderie: Andrew");
     }
 
     @Test
     public void testComradeForGame() {
         cliTester.execute("player view Andrew -g=AgeOfEmpires2").success()
                 .contains("Comrade: JK");
-        cliTester.execute("player view JK -g=AgeOfEmpires2").success()
-                .contains("Camaraderie: Andrew");
     }
 
     @Test

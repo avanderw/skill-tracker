@@ -16,19 +16,23 @@ public class GameDetailView {
     public String render(GameDetailModel model) {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(TOP_PLAYERS_HR, model.getTopPlayers().size()));
-        for (GamePlayerModel player: model.getTopPlayers()) {
+        for (GamePlayerModel player : model.getTopPlayers()) {
             sb.append(String.format(TOP_PLAYERS_LI, player.getPosition(), player.getMean(), player.getStdDev(), player.getName()));
         }
 
         if (model.getGameStats().size() > 0) {
             sb.append(STAT_HR);
+            long width = model.getGameStats().stream()
+                    .map(Stat::getName)
+                    .mapToLong(String::length)
+                    .max().orElseThrow();
             for (Stat stat : model.getGameStats()) {
-                sb.append(String.format(STAT_LI, stat.getName(), stat.getValue()));
+                sb.append(String.format(STAT_LI, String.format("%" + width + "s", stat.getName()), stat.getValue()));
             }
         }
 
         sb.append(String.format(LAST_MATCHES_HR, model.getMatches().size()));
-        for (GameMatchModel match: model.getMatches()) {
+        for (GameMatchModel match : model.getMatches()) {
             sb.append(String.format(LAST_MATCHES_LI, match.getDate(), match.getSessionId(), match.getTitle()));
         }
         return sb.toString();
