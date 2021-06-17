@@ -1,6 +1,5 @@
 package net.avdw.skilltracker.port.in.query;
 
-import net.avdw.skilltracker.cli.game.model.GameMatchModel;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Match;
 import net.avdw.skilltracker.domain.Player;

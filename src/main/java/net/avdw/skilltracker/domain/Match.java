@@ -6,7 +6,6 @@ import lombok.Value;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A Match is an event where Teams compete against each other.

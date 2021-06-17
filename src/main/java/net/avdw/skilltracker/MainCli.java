@@ -1,7 +1,7 @@
 package net.avdw.skilltracker;
 
-import net.avdw.skilltracker.cli.player.PlayerCli;
 import net.avdw.skilltracker.cli.game.GameCli;
+import net.avdw.skilltracker.cli.player.PlayerCli;
 import net.avdw.skilltracker.match.MatchCli;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;

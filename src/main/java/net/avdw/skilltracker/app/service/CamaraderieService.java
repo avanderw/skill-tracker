@@ -8,10 +8,8 @@ import net.avdw.skilltracker.port.in.query.stat.ComradeQuery;
 import net.avdw.skilltracker.port.out.AllyRepo;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CamaraderieService implements CamaraderieQuery {

@@ -1,24 +1,24 @@
  
-**$ skilltracker --version** 
+**$ --version** 
 ``` 
 1.2.0
 ``` 
-**$ skilltracker --help** 
+**$ --help** 
 ``` 
 Usage: skill-tracker [-hV] [COMMAND]
 Player skill tracker for competitive games
   -h, --help      Show this help message and exit.
   -V, --version   Print version information and exit.
 Commands:
-  game       Manage game information
+  game       Query game statistics
   match      Manage matches and outcomes
   player     Player feature
   changelog  Show last changelog
 ``` 
-**$ skilltracker game** 
+**$ game** 
 ``` 
 Usage: skill-tracker game [-hV] [<game>] [COMMAND]
-Manage game information
+Query game statistics
       [<game>]
   -h, --help      Show this help message and exit.
   -V, --version   Print version information and exit.
@@ -28,60 +28,56 @@ Commands:
   view  View the details of a game
   rm    Remove a registered game
 ``` 
-**$ skilltracker game ls** 
+**$ game ls** 
 ``` 
-UnrealTournament (Draw Probability: )
-AgeOfEmpires2 (Draw Probability: )
-Northgard (Draw Probability: )
-OrderOfTheGildedCompass (Draw Probability: )
-TableTennisVR (Draw Probability: )
-ToothAndTail (Draw Probability: )
-AshesOfSingularity (Draw Probability: )
-GalaxyTrucker (Draw Probability: )
+UnrealTournament
+AgeOfEmpires2
+Northgard
+OrderOfTheGildedCompass
+TableTennisVR
+ToothAndTail
+AshesOfSingularity
+GalaxyTrucker
 ``` 
-**$ skilltracker game view AgeOfEmpires2** 
+**$ game view AgeOfEmpires2** 
 ``` 
-Top 10 players:
->  1: (μ)=33 (σ)=2 JK
->  2: (μ)=39 (σ)=4 BOT-Hardest
->  3: (μ)=29 (σ)=2 JDK
->  4: (μ)=27 (σ)=2 BOT-Hard
->  5: (μ)=27 (σ)=2 Wicus
->  6: (μ)=26 (σ)=4 Andrew
->  7: (μ)=27 (σ)=4 Stephan
->  8: (μ)=17 (σ)=4 Pieter
->  9: (μ)=27 (σ)=8 Charlemagne
-> 10: (μ)=18 (σ)=6 Tim
+Top 5 players:
+>  1: (μ)=33,1 (σ)=2,2 JK
+>  2: (μ)=39,1 (σ)=4,2 BOT-Hardest
+>  3: (μ)=29,3 (σ)=2,1 JDK
+>  4: (μ)=27,4 (σ)=2,1 BOT-Hard
+>  5: (μ)=27,2 (σ)=2,5 Wicus
 
-Showing the last 5 matches:
-> 2021-04-20 (9cacfb0b) #0:JK & JDK & Wicus vs. #1:BOT-Hard & BOT-Hard & BOT-Hard
-> 2021-04-05 (2e740fea) #0:JDK & JK vs. #1:BOT-Hard & BOT-Hard
-> 2021-02-08 (2d5df6cb) #0:JK & JDK & Wicus vs. #1:BOT-Hard & BOT-Hard
-> 2021-02-04 (811b8edf) #1:BOT-Hardest vs. #0:JDK
-> 2021-02-04 (4e162173) #0:JK & JDK vs. #1:BOT-Hardest
-``` 
-**$ skilltracker game view UnrealTournament** 
-``` 
-Top 10 players:
->  1: (μ)=34 (σ)=2 JK
->  2: (μ)=34 (σ)=2 Zeo
->  3: (μ)=32 (σ)=1 Andrew
->  4: (μ)=26 (σ)=2 Karl
->  5: (μ)=21 (σ)=2 Wicus
->  6: (μ)=27 (σ)=4 Vikus
->  7: (μ)=16 (σ)=2 GingerNinja
->  8: (μ)=25 (σ)=5 NikRich
->  9: (μ)=26 (σ)=5 BOT-Adept
-> 10: (μ)=15 (σ)=3 BOT-Skilled
+Statistics:
+> Most wins: JK (31)
+> Dominator: Wicus
 
-Showing the last 5 matches:
-> 2020-07-09 (deba86f7) #0:JK vs. #1:Zeo vs. #2:Andrew vs. #3:Karl vs. #4:Wicus vs. #5:GingerNinja
-> 2020-07-09 (caf082b9) #0:Zeo vs. #1:Andrew vs. #2:JK vs. #3:Vikus vs. #4:Karl vs. #5:GingerNinja vs. #6:JDK
-> 2020-07-05 (5063f995) #0:JK vs. #1:GingerNinja vs. #2:BOT-Skilled vs. #3:BOT-Skilled vs. #4:BOT-Skilled
-> 2020-07-04 (3be77054) #0:BOT-Masterful & BOT-Masterful & BOT-Masterful & BOT-Masterful & BOT-Masterful vs. #1:Andrew & Zeo & BOT-Masterful & Wicus & JK
-> 2020-07-04 (31d749dc) #0:Zeo & Andrew & JK & Wicus & GingerNinja vs. #1:BOT-Adept & BOT-Adept & BOT-Adept & BOT-Adept & BOT-Adept
+Last 3 matches:
+> 2021-04-20 (9cacfb0b) 1:JK & JDK & Wicus vs. 2:BOT-Hard & BOT-Hard & BOT-Hard
+> 2021-04-05 (2e740fea) 1:JDK & JK vs. 2:BOT-Hard & BOT-Hard
+> 2021-02-08 (2d5df6cb) 1:JK & JDK & Wicus vs. 2:BOT-Hard & BOT-Hard
+
 ``` 
-**$ skilltracker match** 
+**$ game view UnrealTournament** 
+``` 
+Top 5 players:
+>  1: (μ)=33,7 (σ)=1,6 JK
+>  2: (μ)=33,9 (σ)=1,7 Zeo
+>  3: (μ)=31,5 (σ)=1,5 Andrew
+>  4: (μ)=26,3 (σ)=2,0 Karl
+>  5: (μ)=21,0 (σ)=1,5 Wicus
+
+Statistics:
+> Most wins: JK (20)
+> Dominator: BOT-Masterful
+
+Last 3 matches:
+> 2020-07-09 (deba86f7) 1:JK vs. 2:Zeo vs. 3:Andrew vs. 4:Karl vs. 5:Wicus vs. 6:GingerNinja
+> 2020-07-09 (caf082b9) 1:Zeo vs. 2:Andrew vs. 3:JK vs. 4:Vikus vs. 5:Karl vs. 6:GingerNinja vs. 7:JDK
+> 2020-07-05 (5063f995) 1:JK vs. 2:GingerNinja vs. 3:BOT-Skilled vs. 4:BOT-Skilled vs. 5:BOT-Skilled
+
+``` 
+**$ match** 
 ``` 
 Usage: skill-tracker match [-hV] [COMMAND]
 Manage matches and outcomes
@@ -95,7 +91,7 @@ Commands:
   quality  Determine the quality of a match
   suggest  Calculate quality for every team setup
 ``` 
-**$ skilltracker match ls** 
+**$ match ls** 
 ``` 
 Showing the last 10 matches:
 > 2021-05-25 GalaxyTrucker #0:Andrew vs. #1:Marius vs. #2:Karl (8b59f711)
@@ -109,17 +105,17 @@ Showing the last 10 matches:
 > 2021-02-04 AgeOfEmpires2 #0:JK & JDK vs. #1:BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate (dd82f42b)
 > 2021-02-04 AgeOfEmpires2 #0:Wicus & JDK & JK vs. #1:BOT-Hard & BOT-Hard & BOT-Hard (805f86b7)
 ``` 
-**$ skilltracker match view 9cacfb0b** 
+**$ match view 9cacfb0b** 
 ``` 
 2021-04-20 AgeOfEmpires2 (9cacfb0b)
-> #0: (μ)=33 (σ)=2 JK
-> #0: (μ)=29 (σ)=2 JDK
-> #0: (μ)=27 (σ)=2 Wicus
-> #1: (μ)=27 (σ)=2 BOT-Hard
-> #1: (μ)=27 (σ)=2 BOT-Hard
-> #1: (μ)=27 (σ)=2 BOT-Hard
+> #1: (μ)=33 (σ)=2 JK
+> #1: (μ)=29 (σ)=2 JDK
+> #1: (μ)=27 (σ)=2 Wicus
+> #2: (μ)=27 (σ)=2 BOT-Hard
+> #2: (μ)=27 (σ)=2 BOT-Hard
+> #2: (μ)=27 (σ)=2 BOT-Hard
 ``` 
-**$ skilltracker match suggest --help** 
+**$ match suggest --help** 
 ``` 
 Usage: skill-tracker match suggest [-hV] -g=<game> -s=<teamSize>
                                    [v<teamSize>...] [-s=<teamSize>
@@ -134,7 +130,7 @@ Calculate quality for every team setup
                       Team setup (e.g. 2v1v4)
   -V, --version       Print version information and exit.
 ``` 
-**$ skilltracker match suggest Andrew,JK,JDK,Wicus -g=AgeOfEmpires2 -s=2v2** 
+**$ match suggest Andrew,JK,JDK,Wicus -g=AgeOfEmpires2 -s=2v2** 
 ``` 
 2v2 AgeOfEmpires2 setups:
 > (μ)=26 (σ)=4 	 Andrew
@@ -149,7 +145,28 @@ Well-balanced games:
 Fair games:
 > 56% (Andrew, Wicus) vs. (JK, JDK)
 ``` 
-**$ skilltracker player** 
+**$ match quality --help** 
+``` 
+Usage: skill-tracker match quality [-hV] -g=<game> <teams>...
+Determine the quality of a match
+      <teams>...
+  -g, --game=<game>   Game to calculate for
+  -h, --help          Show this help message and exit.
+  -V, --version       Print version information and exit.
+``` 
+**$ match quality Andrew,JK Wicus,JDK -g UnrealTournament** 
+``` 
+UnrealTournament match quality: 1% (unfair/unknown)
+Team (μ)=33 (σ)=2:
+> (μ)=32 (σ)=1 Andrew
+> (μ)=34 (σ)=2 JK
+
+Team (μ)=18 (σ)=4:
+> (μ)=21 (σ)=2 Wicus
+> (μ)=14 (σ)=6 JDK
+
+``` 
+**$ player** 
 ``` 
 Usage: skill-tracker player [-hV] [COMMAND]
 Player feature
@@ -160,7 +177,7 @@ Commands:
   ls    List all players
   mv    Change name / combine players
 ``` 
-**$ skilltracker player ls** 
+**$ player ls** 
 ``` 
 Andrew          BOT-Adept       BOT-Average     BOT-Experienced BOT-Hard        
 BOT-Hardest     BOT-Inhuman     BOT-Masterful   BOT-Medium      BOT-Moderate    
@@ -171,7 +188,7 @@ NikRich         Pieter          Pyroet          Rymert          Shifty
 Stephan         Tim             Vikus           Wicus           Zeo             
 
 ``` 
-**$ skilltracker player view JK** 
+**$ player view JK** 
 ``` 
 JK has played a total of 3 games over 71 matches
 Last played: AgeOfEmpires2, 2021-04-20 (2 months ago)
@@ -186,8 +203,15 @@ Top 3 ranked games:
 > #1 in ToothAndTail
 > #1 in AgeOfEmpires2
 
+Statistics
+> Most played: AgeOfEmpires2 (40)
+> Comrade: Wicus
+> Camaraderie: Andrew, BOT-Hard, GingerNinja, JDK, Stephan, Wicus
+> Guardian: JDK
+> Wards: Andrew, GingerNinja, JDK, Stephan
+
 ``` 
-**$ skilltracker player view Andrew** 
+**$ player view Andrew** 
 ``` 
 Andrew has played a total of 7 games over 44 matches
 Last played: GalaxyTrucker, 2021-05-25 (3 weeks ago)
@@ -202,8 +226,84 @@ Top 3 ranked games:
 > #1 in GalaxyTrucker
 > #2 in ToothAndTail
 
+Statistics
+> Most played: UnrealTournament (24)
+> Comrade: JK
+> Guardian: JK
+> Dominating: TableTennisVR
+
 ``` 
-**$ skilltracker changelog** 
+**$ player view Wicus** 
+``` 
+Wicus has played a total of 2 games over 53 matches
+Last played: AgeOfEmpires2, 2021-04-20 (2 months ago)
+
+Top 2 skilled games:
+> AgeOfEmpires2 at 19,7
+> UnrealTournament at 16,4
+
+Top 2 ranked games:
+> #5 in UnrealTournament
+> #5 in AgeOfEmpires2
+
+Statistics
+> Most played: AgeOfEmpires2 (28)
+> Comrade: JK
+> Camaraderie: JK, Zeo
+> Guardian: JDK
+> Dominating: AgeOfEmpires2
+
+``` 
+**$ player view Wicus -g=AgeOfEmpires2** 
+``` 
+Wicus is #5 in AgeOfEmpires2 with 28 matches
+Last played: 2021-04-20 (2 months ago)
+      Skill: 19,7
+       Mean: 27,2μ
+     Stddev:  2,5σ
+
+Statistics
+> Nemesis: Andrew
+> Minions: JDK
+> Comrade: JDK
+> Guardian: JK
+
+``` 
+**$ player view JK -g=UnrealTournament** 
+``` 
+JK is #1 in UnrealTournament with 29 matches
+Last played: 2020-07-09 (11 months ago)
+      Skill: 29,0
+       Mean: 33,7μ
+     Stddev:  1,6σ
+
+Statistics
+> Nemesis: BOT-Masterful
+> Minions: GingerNinja, Karl
+> Comrade: Wicus
+> Camaraderie: GingerNinja, Wicus
+> Guardian: GingerNinja
+> Wards: GingerNinja
+
+``` 
+**$ player view JK -g=AgeOfEmpires2** 
+``` 
+JK is #1 in AgeOfEmpires2 with 40 matches
+Last played: 2021-04-20 (2 months ago)
+      Skill: 26,5
+       Mean: 33,1μ
+     Stddev:  2,2σ
+
+Statistics
+> Nemesis: JDK
+> Minions: BOT-Moderate
+> Comrade: JDK
+> Camaraderie: Andrew, BOT-Hard, JDK, Stephan
+> Guardian: JDK
+> Wards: JDK, Stephan, Wicus
+
+``` 
+**$ changelog** 
 ``` 
 ## [v1.2.0] (Feature release)
 *Released on 2020-08-13*

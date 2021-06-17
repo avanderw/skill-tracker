@@ -7,8 +7,10 @@ import net.avdw.skilltracker.cli.game.model.GamePlayerModel;
 import net.avdw.skilltracker.cli.game.view.GameDetailView;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Team;
-import net.avdw.skilltracker.port.in.*;
-import net.avdw.skilltracker.port.in.query.*;
+import net.avdw.skilltracker.port.in.query.ContestantQuery;
+import net.avdw.skilltracker.port.in.query.MatchQuery;
+import net.avdw.skilltracker.port.in.query.RankQuery;
+import net.avdw.skilltracker.port.in.query.StatsQuery;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
@@ -27,7 +29,6 @@ public class ViewGameCommand implements Runnable {
 
     @Inject private GameDetailView gameDetailView;
     @Inject private StatsQuery statsQuery;
-    @Inject private SkillQuery skillQuery;
     @Inject private RankQuery rankQuery;
     @Inject private MatchQuery matchQuery;
     @Inject private ContestantQuery contestantQuery;

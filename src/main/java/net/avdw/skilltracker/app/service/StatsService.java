@@ -4,8 +4,8 @@ import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.Stat;
-import net.avdw.skilltracker.port.in.query.stat.*;
 import net.avdw.skilltracker.port.in.query.StatsQuery;
+import net.avdw.skilltracker.port.in.query.stat.*;
 import net.avdw.skilltracker.port.out.ContestantRepo;
 
 import javax.inject.Inject;
@@ -134,23 +134,6 @@ public class StatsService implements StatsQuery {
             stats.add(Stat.builder()
                     .name("Obsession")
                     .value(obsession)
-                    .build());
-        }
-
-        guardianQuery.findGuardian(player)
-                .map(g -> Stat.builder()
-                        .name("Guardian")
-                        .value(g.getName())
-                        .build())
-                .ifPresent(stats::add);
-        String wards = guardianQuery.findWards(player).stream()
-                .map(Player::getName)
-                .sorted()
-                .collect(Collectors.joining(", "));
-        if (!wards.isBlank()) {
-            stats.add(Stat.builder()
-                    .name("Wards")
-                    .value(wards)
                     .build());
         }
 

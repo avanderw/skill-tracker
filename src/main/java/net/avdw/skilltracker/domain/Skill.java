@@ -6,8 +6,6 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 /**
  * A Skill is the descriptive statistic for a Contestant.

@@ -40,3 +40,10 @@ x 2020-07-21 2020-07-14 @Add to 'match suggest' the ability to select NvM from a
 x 2020-08-07 2020-07-21 @Update discord filename attachment to refer to the command used
 x 2020-08-07 2020-08-07 @Fix nullpointer at SuggestMatchCli.java:81 when not providing --setup option
 x 2020-08-13 2020-08-07 @Add a reconnect ability for when the connection is down on the server
+x 2021-06-12 2021-05-11 @Add Nemesis +stat where the Nemisis has beaten the Minion at least 3 times; has at least 50% win ratio; and the percentage is higher than anyone else
+x 2021-06-12 2021-05-11 @Add Minion +stat which is the opposite of the Nemisis, e.g. If you are someone's minion, then they are your Nemisis
+x 2021-06-15 2021-05-11 @Add Champion +stat to the person who has the most wins in a game
+x 2021-06-15 2021-06-12 @Add most played +stat the player view
+x 2021-06-17 2021-06-12 @Add Ally +stat to a game for a person who has played on the same team the most
+x 2021-06-17 2021-06-12 @Add Powerful Ally +stat for most wins with Ally
+x 2021-06-17 2021-06-12 @Add +stat for ally with the most losses

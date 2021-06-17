@@ -3,7 +3,6 @@ package net.avdw.skilltracker.adapter.out.ormlite;
 import com.j256.ormlite.dao.Dao;
 import lombok.SneakyThrows;
 import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
-import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.Skill;
@@ -14,7 +13,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SkillRepoAdapter implements SkillRepo {
 

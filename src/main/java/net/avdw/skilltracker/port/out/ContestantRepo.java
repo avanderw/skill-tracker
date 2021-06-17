@@ -1,6 +1,5 @@
 package net.avdw.skilltracker.port.out;
 
-import lombok.SneakyThrows;
 import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;

@@ -7,7 +7,6 @@ import net.avdw.skilltracker.domain.Ally;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.out.AllyRepo;
-import org.tinylog.Logger;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
