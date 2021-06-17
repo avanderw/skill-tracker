@@ -147,11 +147,13 @@ public class PlayerTest {
     public void testCombinePlayer() {
         cliTester.execute("match add CombineA CombineB CombineC --ranks 1,2,2 --game CombineTest").success();
         cliTester.execute("game view CombineTest").success()
-                .contains("Most wins: CombineA (1)");
+                .notContains("#0")
+                .contains("#1")
+                .contains("Most wins: CombineA");
         cliTester.execute("player mv CombineA CombineB").success();
         cliTester.execute("game view CombineTest").success()
                 .contains("(μ)=26,3 (σ)=6,4 CombineB")
-                .contains("Most wins: CombineB (1)");
+                .contains("Most wins: CombineB");
         cliTester.execute("player ls").success()
                 .notContains("CombineA");
     }
@@ -183,7 +185,7 @@ public class PlayerTest {
                 .contains("Last played: GalaxyTrucker")
                 .contains("Top 3 skilled")
                 .contains("Top 3 ranked")
-                .contains("Most played: UnrealTournament (24)");
+                .contains("Most played: UnrealTournament");
     }
 
     @Test
@@ -194,6 +196,6 @@ public class PlayerTest {
                 .contains("Last played: 2020-07-09")
                 .contains("Skill: 27,2")
                 .contains("Nemesis: BOT-Masterful")
-                .contains("Minions: BOT-Adept, BOT-Skilled, Pyroet");
+                .contains("Minions: BOT-Adept, BOT-Skilled");
     }
 }

@@ -72,7 +72,7 @@ class CreateMatchCli implements Runnable {
                                 .collect(Collectors.joining(" & "));
                         team = templator.populate(MatchBundleKey.MATCH_TEAM_ENTRY,
                                 gson.fromJson(String.format("{rank:'%s',team:'%s'}",
-                                        t.stream().findAny().orElseThrow().getTeamRank() +1,
+                                        t.stream().findAny().orElseThrow().getTeamRank(),
                                         team), Map.class));
                         return team;
                     })

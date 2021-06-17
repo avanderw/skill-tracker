@@ -75,10 +75,10 @@ public class MatchRepoAdapter implements MatchRepo {
         return playDao.queryBuilder()
                 .where().eq(PlayEntity.SESSION_ID, sessionId)
                 .query().stream()
-                .collect(Collectors.groupingBy(PlayEntity::getPlayerTeam)).entrySet().stream()
-                .map(e -> Team.builder()
-                        .rank(e.getKey())
-                        .contestants(e.getValue().stream().map(p -> {
+                .collect(Collectors.groupingBy(PlayEntity::getPlayerTeam)).values().stream()
+                .map(playEntities -> Team.builder()
+                        .rank(playEntities.get(0).getTeamRank())
+                        .contestants(playEntities.stream().map(p -> {
                             Game game = Game.builder()
                                     .name(p.getGameName())
                                     .build();

@@ -51,7 +51,7 @@ public class ViewGameCommand implements Runnable {
                                 .sessionId(m.getSessionId())
                                 .title(m.getTeams().stream()
                                         .sorted(Comparator.comparing(Team::getRank))
-                                        .map(t -> String.format("%s:%s", t.getRank(), t.getContestants().stream()
+                                        .map(t -> String.format("#%s:%s", t.getRank(), t.getContestants().stream()
                                                 .map(c -> c.getPlayer().getName())
                                                 .collect(Collectors.joining(" & "))))
                                         .collect(Collectors.joining(" vs. ")))

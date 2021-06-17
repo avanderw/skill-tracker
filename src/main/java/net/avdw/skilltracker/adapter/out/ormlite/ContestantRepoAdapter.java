@@ -29,10 +29,9 @@ public class ContestantRepoAdapter implements ContestantRepo {
     @SneakyThrows
     @Override
     public Contestant mostWinsForGame(Game game) {
-        Logger.debug(playDao.queryBuilder().where().eq(PlayEntity.GAME_NAME, game.getName()).query());
         return playDao.queryRaw(String.format("SELECT count(PlayerName), PlayerName FROM Play\n" +
                         "WHERE GameName = '%s'\n" +
-                        "AND TeamRank = 0\n" +
+                        "AND TeamRank = 1\n" +
                         "GROUP BY PlayerName\n" +
                         "ORDER BY count(PlayerName) DESC, PlayerName ASC\n" +
                         "LIMIT 1", game.getName()), databaseResults -> {
@@ -95,7 +94,7 @@ public class ContestantRepoAdapter implements ContestantRepo {
         return playDao.queryRawValue(String.format("SELECT count(PlayerName) FROM Play\n" +
                 "WHERE GameName = '%s'\n" +
                 "AND PlayerName = '%s'\n" +
-                "AND TeamRank = 0", game.getName(), player.getName()));
+                "AND TeamRank = 1", game.getName(), player.getName()));
     }
 
     @SneakyThrows

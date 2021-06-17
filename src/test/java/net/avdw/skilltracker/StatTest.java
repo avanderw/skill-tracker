@@ -68,7 +68,7 @@ public class StatTest {
     @Test
     public void testMostWins() {
         cliTester.execute("game view AgeOfEmpires2").success()
-                .contains("Most wins: JK (31)");
+                .contains("Most wins: JK");
     }
 
     @Test
@@ -107,14 +107,14 @@ public class StatTest {
         cliTester.execute("player view JDK -g=AgeOfEmpires2").success()
                 .contains("Guardian: JK");
         cliTester.execute("player view JK -g=AgeOfEmpires2").success()
-                .contains("Wards: JDK");
+                .contains("Wards: BOT-Hard, JDK");
     }
 
     @Test
     public void testDominator() {
         cliTester.execute("game view AgeOfEmpires2").success()
-                .contains("Dominator: Wicus");
-        cliTester.execute("player view Wicus").success()
+                .contains("Dominator: JK");
+        cliTester.execute("player view JK").success()
                 .contains("Dominating: AgeOfEmpires2");
         cliTester.execute("player view Andrew").success()
                 .notContains("Dominating: TableTennisVR");

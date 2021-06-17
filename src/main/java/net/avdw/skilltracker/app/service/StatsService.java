@@ -106,7 +106,7 @@ public class StatsService implements StatsQuery {
         Contestant mostPlayed = contestantRepo.mostPlayed(player);
         stats.add(Stat.builder()
                 .name("Most played")
-                .value(String.format("%s (%s)", mostPlayed.getGame().getName(), mostPlayed.getPlayCount()))
+                .value(String.format("%s", mostPlayed.getGame().getName()))
                 .build());
 
         comradeQuery.findComrade(player)
@@ -158,7 +158,7 @@ public class StatsService implements StatsQuery {
         Contestant mostWins = contestantRepo.mostWinsForGame(game);
         stats.add(Stat.builder()
                 .name("Most wins")
-                .value(String.format("%s (%d)", mostWins.getPlayer().getName(), mostWins.getWinCount()))
+                .value(String.format("%s", mostWins.getPlayer().getName()))
                 .build());
 
         enthusiastQuery.findEnthusiast(game)

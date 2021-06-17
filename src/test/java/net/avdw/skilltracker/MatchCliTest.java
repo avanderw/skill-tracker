@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class MatchScopeCliTest {
+public class MatchCliTest {
 
 
     private static final Path DATABASE_SNAPSHOT;
@@ -38,7 +38,7 @@ public class MatchScopeCliTest {
     static {
         Path path = null;
         try {
-            path = new File(MatchScopeCliTest.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
+            path = new File(MatchCliTest.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -138,29 +138,32 @@ public class MatchScopeCliTest {
         assertSuccess(commandLine.execute("match", "add", "MatchCreate1,MatchCreate2", "MatchCreate3,MatchCreate4", "MatchCreate5,MatchCreate6", "--ranks", "1,2,2", "--game", "MatchCreateGame1"));
         assertTrue(outWriter.toString().contains(resourceBundle.getString(MatchBundleKey.CREATE_SUCCESS)));
 
-        PlayEntity andrew = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate1").prepare());
-        PlayEntity karl = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate2").prepare());
-        PlayEntity jaco = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate3").prepare());
-        assertNotNull(andrew);
-        assertNotNull(karl);
-        assertNotNull(jaco);
+        PlayEntity mcreate1 = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate1").prepare());
+        PlayEntity mcreate2 = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate2").prepare());
+        PlayEntity mcreate3 = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate3").prepare());
+        PlayEntity mcreate5 = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, "MatchCreate5").prepare());
+        assertNotNull(mcreate1);
+        assertNotNull(mcreate2);
+        assertNotNull(mcreate3);
 
-        PlayEntity andrewSession = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, andrew.getPlayerName()).prepare());
-        PlayEntity karlSession = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, karl.getPlayerName()).prepare());
-        PlayEntity jacoSession = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, jaco.getPlayerName()).prepare());
-        assertNotNull(andrewSession);
-        assertNotNull(karlSession);
-        assertNotNull(jacoSession);
-        assertEquals(andrewSession.getPlayerTeam(), karlSession.getPlayerTeam());
-        assertNotEquals(andrewSession.getPlayerTeam(), jacoSession.getPlayerTeam());
-        assertEquals(Integer.valueOf(0), andrewSession.getTeamRank());
-        assertEquals(Integer.valueOf(1), jacoSession.getTeamRank());
+        PlayEntity mcreate1Session = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, mcreate1.getPlayerName()).prepare());
+        PlayEntity mcreate2Session = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, mcreate2.getPlayerName()).prepare());
+        PlayEntity mcreate3Session = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, mcreate3.getPlayerName()).prepare());
+        PlayEntity mcreate5Session = playDao.queryForFirst(playDao.queryBuilder().where().eq(PlayEntity.PLAYER_NAME, mcreate5.getPlayerName()).prepare());
+        assertNotNull(mcreate1Session);
+        assertNotNull(mcreate2Session);
+        assertNotNull(mcreate3Session);
+        assertEquals(mcreate1Session.getPlayerTeam(), mcreate2Session.getPlayerTeam());
+        assertNotEquals(mcreate1Session.getPlayerTeam(), mcreate3Session.getPlayerTeam());
+        assertEquals(Integer.valueOf(1), mcreate1Session.getTeamRank());
+        assertEquals(Integer.valueOf(2), mcreate3Session.getTeamRank());
+        assertEquals(Integer.valueOf(2), mcreate5Session.getTeamRank());
 
-        assertNotEquals(25.00, andrewSession.getPlayerMean().doubleValue(), 0.01);
-        assertNotEquals(25.00, jacoSession.getPlayerMean().doubleValue(), 0.01);
-        assertEquals(28.56, andrewSession.getPlayerMean().doubleValue(), 0.01);
-        assertEquals(23.21, jacoSession.getPlayerMean().doubleValue(), 0.01);
-        assertEquals(andrewSession.getSessionId(), karlSession.getSessionId());
+        assertNotEquals(25.00, mcreate1Session.getPlayerMean().doubleValue(), 0.01);
+        assertNotEquals(25.00, mcreate3Session.getPlayerMean().doubleValue(), 0.01);
+        assertEquals(28.56, mcreate1Session.getPlayerMean().doubleValue(), 0.01);
+        assertEquals(23.21, mcreate3Session.getPlayerMean().doubleValue(), 0.01);
+        assertEquals(mcreate1Session.getSessionId(), mcreate2Session.getSessionId());
     }
 
     @Test

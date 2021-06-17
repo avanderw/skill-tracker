@@ -68,7 +68,7 @@ public class AllyRepoAdapter implements AllyRepo {
                     "WHERE p1.PlayerName = '%s'\n" +
                     "AND p2.PlayerName = '%s'\n" +
                     "AND p1.PlayerTeam = p2.PlayerTeam\n" +
-                    "AND p1.TeamRank = 0\n" +
+                    "AND p1.TeamRank = 1\n" +
                     "GROUP BY p2.PlayerName\n" +
                     "ORDER BY count(p2.PlayerName) DESC", player.getName(), ally.getName()));
         } catch (SQLException e) {
@@ -84,7 +84,7 @@ public class AllyRepoAdapter implements AllyRepo {
                     "WHERE p1.PlayerName = '%s'\n" +
                     "AND p2.PlayerName = '%s'\n" +
                     "AND p1.PlayerTeam = p2.PlayerTeam\n" +
-                    "AND p1.TeamRank = 0\n" +
+                    "AND p1.TeamRank = 1\n" +
                     "AND p1.GameName = '%s'\n" +
                     "GROUP BY p2.PlayerName\n" +
                     "ORDER BY count(p2.PlayerName) DESC", player.getName(), ally.getName(), game.getName()));
