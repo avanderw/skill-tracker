@@ -28,7 +28,7 @@ public class DominatorService implements DominatorQuery {
         return contestantRepo.contestantsFor(game).stream()
                 .filter(c->c.getWinCount() >= 3)
                 .filter(c->c.getWinCount().doubleValue() / c.getPlayCount() >= 0.5)
-                .sorted(Comparator.comparing((Contestant c) -> c.getWinCount().doubleValue() / c.getPlayCount()).reversed())
+                .sorted(Comparator.comparing((Contestant c) -> c.getSkill().getLow()).reversed())
                 .map(Contestant::getPlayer)
                 .findFirst();
     }

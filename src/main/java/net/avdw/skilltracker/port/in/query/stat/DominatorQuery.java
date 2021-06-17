@@ -10,7 +10,7 @@ import java.util.Optional;
  * A Dominator is a Competitor that:
  * - Has at least 3 wins
  * - Has at least 50% win ratio
- * - Has the highest win ratio
+ * - Has the highest skill
  */
 public interface DominatorQuery {
     Optional<Player> findDominator(Game game);
