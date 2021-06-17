@@ -23,6 +23,7 @@ public class StatsService implements StatsQuery {
     private final EnthusiastQuery enthusiastQuery;
     private final ObsessionQuery obsessionQuery;
     private final GuardianQuery guardianQuery;
+    private final DominatorQuery dominatorQuery;
 
     @Inject
     public StatsService(MinionQuery minionQuery,
@@ -31,7 +32,7 @@ public class StatsService implements StatsQuery {
                         CamaraderieQuery camaraderieQuery,
                         ContestantRepo contestantRepo,
                         EnthusiastQuery enthusiastQuery,
-                        ObsessionQuery obsessionQuery, GuardianQuery guardianQuery) {
+                        ObsessionQuery obsessionQuery, GuardianQuery guardianQuery, DominatorQuery dominatorQuery) {
         this.minionQuery = minionQuery;
         this.nemesisQuery = nemesisQuery;
         this.comradeQuery = comradeQuery;
@@ -40,6 +41,7 @@ public class StatsService implements StatsQuery {
         this.enthusiastQuery = enthusiastQuery;
         this.obsessionQuery = obsessionQuery;
         this.guardianQuery = guardianQuery;
+        this.dominatorQuery = dominatorQuery;
     }
 
     @Override
@@ -152,6 +154,17 @@ public class StatsService implements StatsQuery {
                     .build());
         }
 
+        String dominating = dominatorQuery.findDominating(player).stream()
+                .map(Game::getName)
+                .sorted()
+                .collect(Collectors.joining(", "));
+        if (!dominating.isBlank()) {
+            stats.add(Stat.builder()
+                    .name("Dominating")
+                    .value(dominating)
+                    .build());
+        }
+
         return stats;
     }
 
@@ -168,6 +181,13 @@ public class StatsService implements StatsQuery {
         enthusiastQuery.findEnthusiast(game)
                 .map(p -> Stat.builder()
                         .name("Enthusiast")
+                        .value(p.getName())
+                        .build())
+                .ifPresent(stats::add);
+
+        dominatorQuery.findDominator(game)
+                .map(p -> Stat.builder()
+                        .name("Dominator")
                         .value(p.getName())
                         .build())
                 .ifPresent(stats::add);

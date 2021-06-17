@@ -31,5 +31,6 @@ public class HexagonalModule extends AbstractModule {
         bind(EnthusiastQuery.class).to(EnthusiastService.class);
         bind(ObsessionQuery.class).to(EnthusiastService.class);
         bind(GuardianQuery.class).to(GuardianService.class);
+        bind(DominatorQuery.class).to(DominatorService.class);
     }
 }

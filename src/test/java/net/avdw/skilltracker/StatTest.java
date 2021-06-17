@@ -68,7 +68,6 @@ public class StatTest {
     @Test
     public void testMostWins() {
         cliTester.execute("game view AgeOfEmpires2").success()
-                .contains("Dominator: JK (31)")
                 .contains("Most wins: JK (31)");
     }
 
@@ -122,8 +121,8 @@ public class StatTest {
     @Test
     public void testDominator() {
         cliTester.execute("game view AgeOfEmpires2").success()
-                .contains("Dominator: JK");
-        cliTester.execute("player view JK").success()
+                .contains("Dominator: Wicus");
+        cliTester.execute("player view Wicus").success()
                 .contains("Dominating: AgeOfEmpires2");
     }
 }
