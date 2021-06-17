@@ -9,7 +9,6 @@ import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.Skill;
 import net.avdw.skilltracker.port.in.query.SkillQuery;
 import net.avdw.skilltracker.port.out.ContestantRepo;
-import org.tinylog.Logger;
 
 import javax.inject.Inject;
 import java.time.ZoneId;

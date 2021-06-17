@@ -49,13 +49,13 @@ Top 5 players:
 >  5: (μ)=27,2 (σ)=2,5 Wicus
 
 Statistics:
-> Most wins: JK (31)
-> Dominator: Wicus
+> Most wins: JK
+> Dominator: JK
 
 Last 3 matches:
-> 2021-04-20 (9cacfb0b) 1:JK & JDK & Wicus vs. 2:BOT-Hard & BOT-Hard & BOT-Hard
-> 2021-04-05 (2e740fea) 1:JDK & JK vs. 2:BOT-Hard & BOT-Hard
-> 2021-02-08 (2d5df6cb) 1:JK & JDK & Wicus vs. 2:BOT-Hard & BOT-Hard
+> 2021-04-20 (9cacfb0b) #1:JK & JDK & Wicus vs. #2:BOT-Hard & BOT-Hard & BOT-Hard
+> 2021-04-05 (2e740fea) #1:JDK & JK vs. #2:BOT-Hard & BOT-Hard
+> 2021-02-08 (2d5df6cb) #1:JK & JDK & Wicus vs. #2:BOT-Hard & BOT-Hard
 
 ``` 
 **$ game view UnrealTournament** 
@@ -68,13 +68,31 @@ Top 5 players:
 >  5: (μ)=21,0 (σ)=1,5 Wicus
 
 Statistics:
-> Most wins: JK (20)
+> Most wins: JK
 > Dominator: BOT-Masterful
 
 Last 3 matches:
-> 2020-07-09 (deba86f7) 1:JK vs. 2:Zeo vs. 3:Andrew vs. 4:Karl vs. 5:Wicus vs. 6:GingerNinja
-> 2020-07-09 (caf082b9) 1:Zeo vs. 2:Andrew vs. 3:JK vs. 4:Vikus vs. 5:Karl vs. 6:GingerNinja vs. 7:JDK
-> 2020-07-05 (5063f995) 1:JK vs. 2:GingerNinja vs. 3:BOT-Skilled vs. 4:BOT-Skilled vs. 5:BOT-Skilled
+> 2020-07-09 (deba86f7) #1:JK vs. #2:Zeo vs. #3:Andrew vs. #4:Karl vs. #5:Wicus vs. #6:GingerNinja
+> 2020-07-09 (caf082b9) #1:Zeo vs. #2:Andrew vs. #3:JK vs. #4:Vikus vs. #5:Karl vs. #6:GingerNinja vs. #7:JDK
+> 2020-07-05 (5063f995) #1:JK vs. #2:GingerNinja vs. #3:BOT-Skilled vs. #4:BOT-Skilled vs. #5:BOT-Skilled
+
+``` 
+**$ game view TableTennisVR** 
+``` 
+Top 3 players:
+>  1: (μ)=36,0 (σ)=4,7 Etienne
+>  2: (μ)=19,7 (σ)=5,9 Andrew
+>  3: (μ)=16,6 (σ)=5,6 Jaco
+
+Statistics:
+> Most wins: Etienne
+> Enthusiast: Etienne
+> Dominator: Etienne
+
+Last 3 matches:
+> 2020-07-23 (ef6f043f) #1:Etienne vs. #2:Andrew
+> 2020-07-23 (19efb9f4) #1:Etienne vs. #2:Andrew
+> 2020-07-23 (b306481c) #1:Etienne vs. #2:Andrew
 
 ``` 
 **$ match** 
@@ -94,26 +112,26 @@ Commands:
 **$ match ls** 
 ``` 
 Showing the last 10 matches:
-> 2021-05-25 GalaxyTrucker #0:Andrew vs. #1:Marius vs. #2:Karl (8b59f711)
-> 2021-04-20 AgeOfEmpires2 #0:JK & JDK & Wicus vs. #1:BOT-Hard & BOT-Hard & BOT-Hard (9cacfb0b)
-> 2021-04-05 AgeOfEmpires2 #0:JDK & JK vs. #1:BOT-Hard & BOT-Hard (2e740fea)
-> 2021-03-10 Northgard #0:Karl & BOT-Medium vs. #1:BOT-Medium & Andrew vs. #2:BOT-Medium & Marius (675b0d6d)
-> 2021-03-10 Northgard #0:Andrew vs. #2:Karl & Marius vs. #3:Rymert & Shifty (85c921d4)
-> 2021-02-08 AgeOfEmpires2 #0:JK & JDK & Wicus vs. #1:BOT-Hard & BOT-Hard (2d5df6cb)
-> 2021-02-04 AgeOfEmpires2 #1:BOT-Hardest vs. #0:JDK (811b8edf)
-> 2021-02-04 AgeOfEmpires2 #0:JK & JDK vs. #1:BOT-Hardest (4e162173)
-> 2021-02-04 AgeOfEmpires2 #0:JK & JDK vs. #1:BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate (dd82f42b)
-> 2021-02-04 AgeOfEmpires2 #0:Wicus & JDK & JK vs. #1:BOT-Hard & BOT-Hard & BOT-Hard (805f86b7)
+> 2021-05-25 GalaxyTrucker #1:Andrew vs. #2:Marius vs. #3:Karl (8b59f711)
+> 2021-04-20 AgeOfEmpires2 #1:JK & JDK & Wicus vs. #2:BOT-Hard & BOT-Hard & BOT-Hard (9cacfb0b)
+> 2021-04-05 AgeOfEmpires2 #1:JDK & JK vs. #2:BOT-Hard & BOT-Hard (2e740fea)
+> 2021-03-10 Northgard #1:Karl & BOT-Medium vs. #2:BOT-Medium & Andrew vs. #3:BOT-Medium & Marius (675b0d6d)
+> 2021-03-10 Northgard #1:Andrew vs. #2:Marius vs. #2:Karl vs. #3:Rymert vs. #3:Shifty (85c921d4)
+> 2021-02-08 AgeOfEmpires2 #1:JK & JDK & Wicus vs. #2:BOT-Hard & BOT-Hard (2d5df6cb)
+> 2021-02-04 AgeOfEmpires2 #2:JDK vs. #1:BOT-Hardest (811b8edf)
+> 2021-02-04 AgeOfEmpires2 #1:JK & JDK vs. #2:BOT-Hardest (4e162173)
+> 2021-02-04 AgeOfEmpires2 #1:JK & JDK vs. #2:BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate & BOT-Moderate (dd82f42b)
+> 2021-02-04 AgeOfEmpires2 #1:Wicus & JDK & JK vs. #2:BOT-Hard & BOT-Hard & BOT-Hard (805f86b7)
 ``` 
 **$ match view 9cacfb0b** 
 ``` 
 2021-04-20 AgeOfEmpires2 (9cacfb0b)
-> #1: (μ)=33 (σ)=2 JK
-> #1: (μ)=29 (σ)=2 JDK
-> #1: (μ)=27 (σ)=2 Wicus
-> #2: (μ)=27 (σ)=2 BOT-Hard
-> #2: (μ)=27 (σ)=2 BOT-Hard
-> #2: (μ)=27 (σ)=2 BOT-Hard
+> #2: (μ)=33 (σ)=2 JK
+> #2: (μ)=29 (σ)=2 JDK
+> #2: (μ)=27 (σ)=2 Wicus
+> #3: (μ)=27 (σ)=2 BOT-Hard
+> #3: (μ)=27 (σ)=2 BOT-Hard
+> #3: (μ)=27 (σ)=2 BOT-Hard
 ``` 
 **$ match suggest --help** 
 ``` 
@@ -204,11 +222,10 @@ Top 3 ranked games:
 > #1 in AgeOfEmpires2
 
 Statistics
-> Most played: AgeOfEmpires2 (40)
+> Most played: AgeOfEmpires2
 > Comrade: Wicus
 > Camaraderie: Andrew, BOT-Hard, GingerNinja, JDK, Stephan, Wicus
-> Guardian: JDK
-> Wards: Andrew, GingerNinja, JDK, Stephan
+> Dominating: AgeOfEmpires2
 
 ``` 
 **$ player view Andrew** 
@@ -227,10 +244,8 @@ Top 3 ranked games:
 > #2 in ToothAndTail
 
 Statistics
-> Most played: UnrealTournament (24)
+> Most played: UnrealTournament
 > Comrade: JK
-> Guardian: JK
-> Dominating: TableTennisVR
 
 ``` 
 **$ player view Wicus** 
@@ -247,11 +262,9 @@ Top 2 ranked games:
 > #5 in AgeOfEmpires2
 
 Statistics
-> Most played: AgeOfEmpires2 (28)
+> Most played: AgeOfEmpires2
 > Comrade: JK
 > Camaraderie: JK, Zeo
-> Guardian: JDK
-> Dominating: AgeOfEmpires2
 
 ``` 
 **$ player view Wicus -g=AgeOfEmpires2** 
@@ -264,7 +277,6 @@ Last played: 2021-04-20 (2 months ago)
 
 Statistics
 > Nemesis: Andrew
-> Minions: JDK
 > Comrade: JDK
 > Guardian: JK
 
@@ -279,10 +291,8 @@ Last played: 2020-07-09 (11 months ago)
 
 Statistics
 > Nemesis: BOT-Masterful
-> Minions: GingerNinja, Karl
 > Comrade: Wicus
 > Camaraderie: GingerNinja, Wicus
-> Guardian: GingerNinja
 > Wards: GingerNinja
 
 ``` 
@@ -295,12 +305,27 @@ Last played: 2021-04-20 (2 months ago)
      Stddev:  2,2σ
 
 Statistics
-> Nemesis: JDK
-> Minions: BOT-Moderate
+> Minions: BOT-Moderate, JDK
 > Comrade: JDK
 > Camaraderie: Andrew, BOT-Hard, JDK, Stephan
-> Guardian: JDK
-> Wards: JDK, Stephan, Wicus
+> Wards: BOT-Hard, JDK, Stephan, Wicus
+
+``` 
+**$ player view Etienne** 
+``` 
+Etienne has played a total of 1 games over 9 matches
+Last played: TableTennisVR, 2020-07-23 (11 months ago)
+
+Top 1 skilled games:
+> TableTennisVR at 21,8
+
+Top 1 ranked games:
+> #1 in TableTennisVR
+
+Statistics
+> Most played: TableTennisVR
+> Obsession: TableTennisVR
+> Dominating: TableTennisVR
 
 ``` 
 **$ changelog** 
