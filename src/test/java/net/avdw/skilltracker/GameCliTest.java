@@ -161,7 +161,7 @@ public class GameCliTest {
     public void testListAllGames() {
         cliTester.execute("game ls").success()
                 .notContains("Probability")
-                .distinct("UnrealTournament");
+                .distinct("Unreal Tournament");
     }
 
     @Test

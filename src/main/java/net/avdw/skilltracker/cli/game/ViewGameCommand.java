@@ -1,9 +1,9 @@
 package net.avdw.skilltracker.cli.game;
 
 import net.avdw.skilltracker.cli.converter.GameTypeConverter;
-import net.avdw.skilltracker.cli.game.model.GameDetailModel;
-import net.avdw.skilltracker.cli.game.model.GameMatchModel;
-import net.avdw.skilltracker.cli.game.model.GamePlayerModel;
+import net.avdw.skilltracker.cli.game.view.GameDetailModel;
+import net.avdw.skilltracker.cli.game.view.GameMatchModel;
+import net.avdw.skilltracker.cli.game.view.GamePlayerModel;
 import net.avdw.skilltracker.cli.game.view.GameDetailView;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Team;

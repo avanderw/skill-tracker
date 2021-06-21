@@ -8,6 +8,7 @@ import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.out.GameRepo;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,5 +69,28 @@ public class GameRepoAdapter implements GameRepo {
                 .query().stream()
                 .map(ormLiteMapper::toGame)
                 .findAny().orElseThrow();
+    }
+
+    @SneakyThrows
+    @Override
+    public List<Game> findAll() {
+        return playDao.queryBuilder()
+                .distinct()
+                .selectColumns(PlayEntity.GAME_NAME)
+                .query().stream()
+                .map(ormLiteMapper::toGame)
+                .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    @Override
+    public List<Game> findLike(String search) {
+        return playDao.queryBuilder()
+                .distinct()
+                .selectColumns(PlayEntity.GAME_NAME)
+                .where().like(PlayEntity.GAME_NAME, String.format("%%%s%%", search))
+                .query().stream()
+                .map(ormLiteMapper::toGame)
+                .collect(Collectors.toList());
     }
 }

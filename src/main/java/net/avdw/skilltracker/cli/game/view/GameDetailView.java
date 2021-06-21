@@ -1,8 +1,5 @@
 package net.avdw.skilltracker.cli.game.view;
 
-import net.avdw.skilltracker.cli.game.model.GameDetailModel;
-import net.avdw.skilltracker.cli.game.model.GameMatchModel;
-import net.avdw.skilltracker.cli.game.model.GamePlayerModel;
 import net.avdw.skilltracker.domain.Stat;
 
 public class GameDetailView {

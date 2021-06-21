@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Command(name = "view", description = "View player detail", mixinStandardHelpOptions = true)
+@Command(name = "view", description = "View player detail.", mixinStandardHelpOptions = true)
 public class ViewPlayerCommand implements Runnable {
     @Spec private CommandSpec spec;
     @Parameters(paramLabel = "name", arity = "1", converter = PlayerTypeConverter.class)

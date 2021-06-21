@@ -2,14 +2,13 @@ package net.avdw.skilltracker.cli.game;
 
 import net.avdw.skilltracker.game.CreateGameCli;
 import net.avdw.skilltracker.game.DeleteGameCli;
-import net.avdw.skilltracker.game.ListGameCli;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-@Command(name = "game", description = "Query game statistics", mixinStandardHelpOptions = true,
-        subcommands = {ListGameCli.class, CreateGameCli.class, ViewGameCommand.class, DeleteGameCli.class})
+@Command(name = "game", description = "Game feature.", mixinStandardHelpOptions = true,
+        subcommands = {ListGameCommand.class, CreateGameCli.class, ViewGameCommand.class, DeleteGameCli.class})
 public class GameCli implements Runnable {
     @Spec private CommandSpec spec;
 

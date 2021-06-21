@@ -6,6 +6,7 @@ import net.avdw.skilltracker.port.in.query.GameQuery;
 import net.avdw.skilltracker.port.out.GameRepo;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,6 +17,11 @@ public class GameService implements GameQuery {
     @Inject
     public GameService(GameRepo gameRepo) {
         this.gameRepo = gameRepo;
+    }
+
+    @Override
+    public List<Game> findAll() {
+        return gameRepo.findAll();
     }
 
     @Override
@@ -36,5 +42,10 @@ public class GameService implements GameQuery {
     @Override
     public Game lastPlayed(Player player) {
         return gameRepo.lastPlayed(player);
+    }
+
+    @Override
+    public List<Game> findLike(String search) {
+        return gameRepo.findLike(search);
     }
 }

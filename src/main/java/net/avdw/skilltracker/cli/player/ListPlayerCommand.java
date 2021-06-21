@@ -15,7 +15,7 @@ import picocli.CommandLine.Spec;
 import javax.inject.Inject;
 import java.util.stream.Collectors;
 
-@Command(name = "ls", description = "List all players", mixinStandardHelpOptions = true)
+@Command(name = "ls", description = "List all players.", mixinStandardHelpOptions = true)
 public class ListPlayerCommand implements Runnable {
     @Spec private CommandSpec spec;
 

@@ -1,7 +1,6 @@
 package net.avdw.skilltracker;
 
 import com.google.inject.Inject;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;

@@ -13,7 +13,7 @@ import picocli.CommandLine.Spec;
 
 import javax.inject.Inject;
 
-@Command(name = "mv", description = "Change name / combine players", mixinStandardHelpOptions = true)
+@Command(name = "mv", description = "Change name / combine players.", mixinStandardHelpOptions = true)
 public class MovePlayerCommand implements Runnable {
     @Spec private CommandSpec spec;
 
