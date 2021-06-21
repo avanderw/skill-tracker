@@ -2,10 +2,11 @@ package net.avdw.skilltracker.cli.player;
 
 import net.avdw.skilltracker.cli.converter.GameTypeConverter;
 import net.avdw.skilltracker.cli.converter.PlayerTypeConverter;
-import net.avdw.skilltracker.cli.player.model.ContestantModel;
-import net.avdw.skilltracker.cli.player.model.PlayerDetailModel;
-import net.avdw.skilltracker.cli.player.view.ContestantView;
+import net.avdw.skilltracker.cli.player.view.PlayerDetailModel;
 import net.avdw.skilltracker.cli.player.view.PlayerDetailView;
+import net.avdw.skilltracker.cli.player.view.PlayerGameModel;
+import net.avdw.skilltracker.cli.player.view.PlayerGameView;
+import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.PriorityObject;
@@ -30,7 +31,7 @@ public class ViewPlayerCommand implements Runnable {
     @Option(names = {"-g", "--game"}, converter = GameTypeConverter.class)
     private Game game;
 
-    @Inject private ContestantView contestantView;
+    @Inject private PlayerGameView playerGameView;
     @Inject private PlayerDetailView playerDetailView;
     @Inject private StatsQuery statsQuery;
     @Inject private SkillQuery skillQuery;
@@ -74,13 +75,14 @@ public class ViewPlayerCommand implements Runnable {
                     .build();
             spec.commandLine().getOut().println(playerDetailView.render(playerDetailModel));
         } else {
-            ContestantModel contestantModel = ContestantModel.builder()
-                    .contestant(contestantQuery.findContestant(game, player))
+            Contestant contestant = contestantQuery.findContestant(game, player);
+            PlayerGameModel playerGameModel = PlayerGameModel.builder()
+                    .contestant(contestant)
                     .contestantRank(rankQuery.findBy(game, player))
                     .totalMatches(matchQuery.totalMatches(game, player))
                     .stats(statsQuery.gameStatsForPlayer(game, player))
                     .build();
-            spec.commandLine().getOut().println(contestantView.render(contestantModel));
+            spec.commandLine().getOut().println(playerGameView.render(playerGameModel));
         }
     }
 }

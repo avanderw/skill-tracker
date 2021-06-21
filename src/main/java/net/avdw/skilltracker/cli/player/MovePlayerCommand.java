@@ -1,7 +1,7 @@
 package net.avdw.skilltracker.cli.player;
 
 import net.avdw.skilltracker.cli.converter.PlayerTypeConverter;
-import net.avdw.skilltracker.cli.player.model.MovePlayerModel;
+import net.avdw.skilltracker.cli.player.view.MovePlayerModel;
 import net.avdw.skilltracker.cli.player.view.MovePlayerView;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.RenamePlayerCmd;

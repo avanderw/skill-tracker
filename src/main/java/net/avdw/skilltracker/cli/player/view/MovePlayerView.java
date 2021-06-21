@@ -1,7 +1,5 @@
 package net.avdw.skilltracker.cli.player.view;
 
-import net.avdw.skilltracker.cli.player.model.MovePlayerModel;
-
 public class MovePlayerView {
 
     private static final String TEMPLATE = "Change name from %s to %s.%n";

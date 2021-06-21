@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.cli.player.model;
+package net.avdw.skilltracker.cli.player.view;
 
 import lombok.Builder;
 import lombok.Value;

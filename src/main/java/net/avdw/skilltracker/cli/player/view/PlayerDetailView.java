@@ -1,6 +1,5 @@
 package net.avdw.skilltracker.cli.player.view;
 
-import net.avdw.skilltracker.cli.player.model.PlayerDetailModel;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.PriorityObject;
 import net.avdw.skilltracker.domain.Stat;

@@ -1,7 +1,5 @@
 package net.avdw.skilltracker.cli.player.view;
 
-import net.avdw.skilltracker.cli.player.model.PlayerListDetailModel;
-
 import java.util.Comparator;
 
 public class PlayerListDetailView {

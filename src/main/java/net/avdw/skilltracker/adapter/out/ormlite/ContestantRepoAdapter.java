@@ -3,10 +3,7 @@ package net.avdw.skilltracker.adapter.out.ormlite;
 import com.j256.ormlite.dao.Dao;
 import lombok.SneakyThrows;
 import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
-import net.avdw.skilltracker.domain.Contestant;
-import net.avdw.skilltracker.domain.Game;
-import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.domain.Skill;
+import net.avdw.skilltracker.domain.*;
 import net.avdw.skilltracker.port.in.query.SkillQuery;
 import net.avdw.skilltracker.port.out.ContestantRepo;
 
@@ -15,6 +12,9 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Todo: Logic in this class needs to move into the domain service
+ */
 public class ContestantRepoAdapter implements ContestantRepo {
     private final Dao<PlayEntity, Integer> playDao;
     private final SkillQuery skillQuery;
@@ -74,6 +74,7 @@ public class ContestantRepoAdapter implements ContestantRepo {
                                     .build())
                             .winCount(winCount(game, player))
                             .playCount(playCount(game, player))
+                            .winStreak(winStreak(game, player))
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -111,6 +112,7 @@ public class ContestantRepoAdapter implements ContestantRepo {
                             .playCount(databaseResults.getLong(0))
                             .winCount(winCount(game, player))
                             .skill(skillQuery.findLatest(game, player))
+                            .winStreak(winStreak(game, player))
                             .build();
                 }
         ).getResults().stream().findAny().orElseThrow();
@@ -122,7 +124,7 @@ public class ContestantRepoAdapter implements ContestantRepo {
         return playDao.queryBuilder()
                 .distinct().selectColumns(PlayEntity.PLAYER_NAME)
                 .where().eq(PlayEntity.GAME_NAME, game.getName())
-                .query().stream().map(p->{
+                .query().stream().map(p -> {
                     Player player = Player.builder().name(p.getPlayerName()).build();
                     return Contestant.builder()
                             .game(game)
@@ -130,8 +132,36 @@ public class ContestantRepoAdapter implements ContestantRepo {
                             .playCount(playCount(game, player))
                             .winCount(winCount(game, player))
                             .skill(skillQuery.findLatest(game, player))
+                            .winStreak(winStreak(game, player))
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    @Override
+    public WinStreak winStreak(Game game, Player player) {
+        List<PlayEntity> plays = playDao.queryBuilder()
+                .orderBy(PlayEntity.PLAY_DATE, true)
+                .where().eq(PlayEntity.GAME_NAME, game.getName())
+                .and().eq(PlayEntity.PLAYER_NAME, player.getName())
+                .query();
+
+        int curr = 0;
+        int longest = 0;
+        for (PlayEntity playEntity : plays) {
+            if (playEntity.getTeamRank() == 1) {
+                curr++;
+            } else {
+                curr = 0;
+            }
+
+            longest = Math.max(curr, longest);
+        }
+
+        return WinStreak.builder()
+                .current(curr)
+                .longest(longest)
+                .build();
     }
 }

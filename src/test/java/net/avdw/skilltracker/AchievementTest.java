@@ -16,20 +16,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class StatTest {
+public class AchievementTest {
     private static final Path DATABASE_SNAPSHOT;
 
     static {
         Path path = null;
         try {
-            path = new File(StatTest.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
+            path = new File(MainCli.class.getResource("/database/2021-06-03-new.sqlite").toURI()).toPath();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         DATABASE_SNAPSHOT = path;
     }
 
-    private static final Path DATABASE_TEST = Paths.get("target/test-resources/database/stat-test.sqlite");
+    private static final Path DATABASE_TEST = Paths.get("target/test-resources/database",
+            String.format("%s.sqlite", AchievementTest.class.getSimpleName()));
     private CliTester cliTester;
     private IFactory instance;
 
@@ -65,11 +66,6 @@ public class StatTest {
                 .contains("28 matches");
     }
 
-    @Test
-    public void testMostPlayed() {
-        cliTester.execute("player view JK").success()
-                .contains("Most played: AgeOfEmpires2");
-    }
 
     @Test
     public void testEnthusiast() {

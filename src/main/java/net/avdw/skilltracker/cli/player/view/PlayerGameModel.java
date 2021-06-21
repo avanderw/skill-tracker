@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.cli.player.model;
+package net.avdw.skilltracker.cli.player.view;
 
 import lombok.Builder;
 import lombok.NonNull;
@@ -10,7 +10,7 @@ import net.avdw.skilltracker.domain.Stat;
 import java.util.List;
 
 @Value @Builder
-public class ContestantModel {
+public class PlayerGameModel {
     @NonNull Contestant contestant;
     @NonNull Integer contestantRank;
     @NonNull Integer totalMatches;

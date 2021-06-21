@@ -32,6 +32,7 @@ public class ContestantService implements ContestantQuery {
                 .player(player)
                 .playCount(contestantRepo.playCount(game, player))
                 .winCount(contestantRepo.winCount(game, player))
+                .winStreak(contestantRepo.winStreak(game, player))
                 .skill(skillQuery.findLatest(game, player))
                 .build();
     }

@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-public class AchievementCliTest {
+public class PlayerStatisticTest {
     private static final Path DATABASE_SNAPSHOT;
 
     static {
@@ -28,7 +28,8 @@ public class AchievementCliTest {
         DATABASE_SNAPSHOT = path;
     }
 
-    private static final Path DATABASE_TEST = Paths.get("target/test-resources/database/achievement-test.sqlite");
+    private static final Path DATABASE_TEST = Paths.get("target/test-resources/database",
+            String.format("%s.sqlite", PlayerStatisticTest.class.getSimpleName()));
     private CliTester cliTester;
     private CommandLine.IFactory instance;
 
@@ -51,48 +52,14 @@ public class AchievementCliTest {
     }
 
     @Test
-    public void testHelp() {
-        cliTester.execute("achievement --help").success();
+    public void testWinStreak() {
+        cliTester.execute("player view JK --game AgeOfEmpires2").success()
+                .contains("Win streak: 7 / 11");
     }
 
     @Test
-    public void testAchievement() {
-        cliTester.execute("achievement").success()
-                .contains("comrade")
-                .contains("dominator")
-                .contains("enthusiast")
-                .contains("guardian")
-                .contains("nemesis");
+    public void testMostPlayed() {
+        cliTester.execute("player view JK").success()
+                .contains("Most played: AgeOfEmpires2");
     }
-
-    @Test
-    public void testComrade() {
-        cliTester.execute("achievement comrade").success()
-                .contains("Comrade");
-    }
-
-    @Test
-    public void testDominator() {
-        cliTester.execute("achievement dominator").success()
-                .contains("Dominator");
-    }
-
-    @Test
-    public void testEnthusiast() {
-        cliTester.execute("achievement enthusiast").success()
-                .contains("Enthusiast");
-    }
-
-    @Test
-    public void testGuardian() {
-        cliTester.execute("achievement guardian").success()
-                .contains("Guardian");
-    }
-
-    @Test
-    public void testNemesis() {
-        cliTester.execute("achievement nemesis").success()
-                .contains("Nemesis");
-    }
-
 }

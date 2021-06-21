@@ -1,6 +1,5 @@
 package net.avdw.skilltracker.cli.player.view;
 
-import net.avdw.skilltracker.cli.player.model.PlayerListModel;
 import net.avdw.skilltracker.domain.Player;
 import org.apache.commons.lang3.StringUtils;
 

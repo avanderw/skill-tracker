@@ -1,9 +1,6 @@
 package net.avdw.skilltracker.app.service;
 
-import net.avdw.skilltracker.domain.Contestant;
-import net.avdw.skilltracker.domain.Game;
-import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.domain.Stat;
+import net.avdw.skilltracker.domain.*;
 import net.avdw.skilltracker.port.in.query.StatsQuery;
 import net.avdw.skilltracker.port.in.query.stat.*;
 import net.avdw.skilltracker.port.out.ContestantRepo;
@@ -148,4 +145,5 @@ public class StatsService implements StatsQuery {
 
         return stats;
     }
+
 }
