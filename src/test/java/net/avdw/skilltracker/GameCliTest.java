@@ -116,31 +116,8 @@ public class GameCliTest {
 
     @Test
     public void test_QuotedName() {
-        cliTester.execute("game add Tooth&Tail").success();
         cliTester.execute("game ls").success()
                 .notContains("&amp;");
-    }
-
-    @Test
-    public void testDeleteGameWithMatches() {
-        cliTester.execute("match add A1,B2 C3,D4, E5,F6 --ranks 1,2,2 -g=G1").success()
-                .notContains("No game found:");
-        cliTester.execute("player view B2").success();
-        cliTester.execute("game rm G1").success();
-        cliTester.execute("player view B2").failure();
-    }
-
-    @Test
-    public void test_Delete_Fail() {
-        assertSuccess(commandLine.execute("game", "rm", "Northgard"));
-    }
-
-    @Test
-    public void test_Delete_Pass() {
-        assertSuccess(commandLine.execute("game", "add", "Northgard", "0"));
-        resetOutput();
-
-        assertSuccess(commandLine.execute("game", "rm", "Northgard"));
     }
 
     @Test
