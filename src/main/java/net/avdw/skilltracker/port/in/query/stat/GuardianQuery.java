@@ -6,14 +6,22 @@ import net.avdw.skilltracker.domain.Player;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * A Guardian is an Ally that:
- * - Has won together at least 3 times
- * - Has a higher skill
- * - Has at least a 50% win ratio together
- * - Has the highest win ratio
- */
-public interface GuardianQuery {
+public interface GuardianQuery extends GenericStatQuery {
+
+    @Override
+    default String getTitle() {
+        return "Guardian";
+    }
+
+    @Override
+    default String getDescription() {
+        return "A Guardian is an Ally that:\n" +
+                "- Has won together at least 3 times\n" +
+                "- Has a higher skill\n" +
+                "- Has at least a 50% win ratio together\n" +
+                "- Has the highest win ratio";
+    }
+
     Optional<Player> findGuardian(Game game, Player player);
     List<Player> findWards(Game game, Player player);
 }

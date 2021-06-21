@@ -6,13 +6,21 @@ import net.avdw.skilltracker.domain.Player;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * A Dominator is a Competitor that:
- * - Has at least 3 wins
- * - Has at least 50% win ratio
- * - Has the highest skill
- */
-public interface DominatorQuery {
+public interface DominatorQuery extends GenericStatQuery {
+
+    @Override
+    default String getTitle() {
+        return "Dominator";
+    }
+
+    @Override
+    default String getDescription() {
+        return "A Dominator is a Competitor that:\n" +
+                "- Has at least 3 wins\n" +
+                "- Has at least 50% win ratio\n" +
+                "- Has the highest skill";
+    }
+
     Optional<Player> findDominator(Game game);
     List<Game> findDominating(Player player);
 }

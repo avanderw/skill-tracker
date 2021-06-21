@@ -1,5 +1,6 @@
 package net.avdw.skilltracker;
 
+import net.avdw.skilltracker.cli.achievement.AchievementCli;
 import net.avdw.skilltracker.cli.game.GameCli;
 import net.avdw.skilltracker.cli.player.PlayerCli;
 import net.avdw.skilltracker.match.MatchCli;
@@ -13,6 +14,7 @@ import picocli.CommandLine.Spec;
                 GameCli.class,
                 MatchCli.class,
                 PlayerCli.class,
+                AchievementCli.class,
                 ChangelogCli.class})
 public class MainCli implements Runnable {
     @Spec

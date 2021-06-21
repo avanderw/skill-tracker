@@ -3,12 +3,13 @@ package net.avdw.skilltracker;
 import com.google.inject.Inject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 
 @Command(name = "changelog", description = "Show last changelog", mixinStandardHelpOptions = true)
 public class ChangelogCli implements Runnable {
     @Spec
-    private CommandLine.Model.CommandSpec spec;
+    private CommandSpec spec;
 
     @Inject
     @SkillTracker

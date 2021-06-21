@@ -31,3 +31,4 @@ hs_err_pid*
 /skill-tracker.sqlite*
 /backups/
 /discord.properties
+/demo/demo.md
