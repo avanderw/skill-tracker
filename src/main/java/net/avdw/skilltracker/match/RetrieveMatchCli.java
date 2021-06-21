@@ -47,7 +47,7 @@ public class RetrieveMatchCli implements Runnable {
         ormLiteMatchList.stream().sorted(Comparator.comparingInt(PlayEntity::getTeamRank)).forEach(m ->
                 spec.commandLine().getOut().println(templator.populate(MatchBundleKey.VIEW_MATCH_DETAIL_PLAYER_ENTRY,
                         gson.fromJson(String.format("{rank:'%s',person:'%s',mean:'%s',stdev:'%s'}",
-                                m.getTeamRank()+1, m.getPlayerName(),
+                                m.getTeamRank(), m.getPlayerName(),
                                 m.getPlayerMean().setScale(0, RoundingMode.HALF_UP),
                                 m.getPlayerStdDev().setScale(0, RoundingMode.HALF_UP)),
                                 Map.class))));
