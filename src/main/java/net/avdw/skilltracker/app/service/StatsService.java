@@ -132,12 +132,6 @@ public class StatsService implements StatsQuery {
     public List<Stat> gameStats(Game game) {
         List<Stat> stats = new ArrayList<>();
 
-        Contestant mostWins = contestantRepo.mostWinsForGame(game);
-        stats.add(Stat.builder()
-                .name("Most wins")
-                .value(String.format("%s", mostWins.getPlayer().getName()))
-                .build());
-
         enthusiastQuery.findEnthusiast(game)
                 .map(p -> Stat.builder()
                         .name("Enthusiast")

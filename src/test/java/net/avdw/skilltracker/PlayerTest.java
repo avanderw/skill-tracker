@@ -149,11 +149,10 @@ public class PlayerTest {
         cliTester.execute("game view CombineTest").success()
                 .notContains("#0")
                 .contains("#1")
-                .contains("Most wins: CombineA");
+                .contains("(μ)=30,1 (σ)=6,7 CombineA");
         cliTester.execute("player mv CombineA CombineB").success();
         cliTester.execute("game view CombineTest").success()
-                .contains("(μ)=26,3 (σ)=6,4 CombineB")
-                .contains("Most wins: CombineB");
+                .contains("(μ)=26,3 (σ)=6,4 CombineB");
         cliTester.execute("player ls").success()
                 .notContains("CombineA");
     }
