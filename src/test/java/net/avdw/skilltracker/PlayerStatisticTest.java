@@ -68,4 +68,10 @@ public class PlayerStatisticTest {
         cliTester.execute("player view Andrew").success()
                 .contains("Last played: Galaxy Trucker");
     }
+
+    @Test
+    public void testHIndex() {
+        cliTester.execute("player view Andrew").success()
+                .contains("H-Index: 3");
+    }
 }

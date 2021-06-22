@@ -6,9 +6,9 @@ import com.google.inject.Singleton;
 import de.gesundkrank.jskills.SkillCalculator;
 import de.gesundkrank.jskills.trueskill.FactorGraphTrueSkillCalculator;
 import net.avdw.skilltracker.Templator;
+import net.avdw.skilltracker.adapter.out.ormlite.DbMapper;
+import net.avdw.skilltracker.adapter.out.ormlite.DbMapperImpl;
 import net.avdw.skilltracker.adapter.out.ormlite.MatchRepositoryAdapter;
-import net.avdw.skilltracker.adapter.out.ormlite.OrmLiteMapper;
-import net.avdw.skilltracker.adapter.out.ormlite.OrmLiteMapperImpl;
 import net.avdw.skilltracker.port.out.MatchRepository;
 
 import java.util.Locale;
@@ -22,7 +22,7 @@ public class MatchModule extends AbstractModule {
         bind(SkillCalculator.class).to(FactorGraphTrueSkillCalculator.class).in(Singleton.class);
         bind(MatchMapper.class).to(MatchMapperImpl.class);
         bind(MatchRepository.class).to(MatchRepositoryAdapter.class);
-        bind(OrmLiteMapper.class).to(OrmLiteMapperImpl.class);
+        bind(DbMapper.class).to(DbMapperImpl.class);
     }
 
 

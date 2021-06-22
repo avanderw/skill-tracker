@@ -17,6 +17,7 @@ import java.util.Set;
 @Builder
 public class PlayerDetailModel {
     @NonNull Player player;
+    @NonNull Integer hIndex;
     @NonNull Integer totalGames;
     @NonNull Integer totalMatches;
     @NonNull Game lastPlayedGame;

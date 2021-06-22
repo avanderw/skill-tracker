@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 public class OpponentRepoAdapter implements OpponentRepo {
 
     private final Dao<PlayEntity, Integer> playDao;
-    private final OrmLiteMapper ormLiteMapper;
+    private final DbMapper ormLiteMapper;
 
     @Inject
-    public OpponentRepoAdapter(Dao<PlayEntity, Integer> playDao, OrmLiteMapper ormLiteMapper) {
+    public OpponentRepoAdapter(Dao<PlayEntity, Integer> playDao, DbMapper ormLiteMapper) {
         this.playDao = playDao;
         this.ormLiteMapper = ormLiteMapper;
     }

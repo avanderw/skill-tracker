@@ -3,7 +3,6 @@ package net.avdw.skilltracker.app.achievement;
 import net.avdw.skilltracker.domain.KeyValue;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.query.achievement.AllAchievements;
-import net.avdw.skilltracker.port.in.query.achievement.NemesisAchievement;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

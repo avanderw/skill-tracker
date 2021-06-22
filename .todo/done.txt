@@ -54,3 +54,4 @@ x 2021-06-22 2021-06-21 A Badge indicates membership or support
 x 2021-06-22 2021-06-21 A Challange is an Achievement that is complete
 x 2021-06-22 2021-06-21 A Trophy only one person can hold at a given time
 x 2021-06-22 2021-06-21 An Achievement is earned or lost through skill
+x 2021-06-22 2021-05-11 @Add H-index +statistic to player

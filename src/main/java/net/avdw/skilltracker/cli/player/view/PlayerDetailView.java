@@ -28,6 +28,7 @@ public class PlayerDetailView {
         ctx.put("lp-date", model.getLastPlayedDate());
         ctx.put("lp-date-nlp", new PrettyTime().format(model.getLastPlayedDate()));
         ctx.put("mp-game", StringFormat.camelCaseToTitleCase(model.getMostPlayedGame().getName()));
+        ctx.put("h-index", model.getHIndex());
         ctx.put("ts-games-cnt", model.getSkilledGames().size());
         ctx.put("ts-games-pl", model.getSkilledGames().size() == 1 ? "game" : "games");
         ctx.put("ts-games", model.getSkilledGames().stream().map(po->{

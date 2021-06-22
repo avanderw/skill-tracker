@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 public class PlayerRepoAdapter implements PlayerRepo {
 
     private final Dao<PlayEntity, Integer> playDao;
-    private final OrmLiteMapper ormLiteMapper;
+    private final DbMapper dbMapper;
 
     @Inject
-    public PlayerRepoAdapter(Dao<PlayEntity, Integer> playDao, OrmLiteMapper ormLiteMapper) {
+    public PlayerRepoAdapter(Dao<PlayEntity, Integer> playDao, DbMapper dbMapper) {
         this.playDao = playDao;
-        this.ormLiteMapper = ormLiteMapper;
+        this.dbMapper = dbMapper;
     }
 
     @SneakyThrows
@@ -32,7 +32,7 @@ public class PlayerRepoAdapter implements PlayerRepo {
                 .where()
                 .eq(PlayEntity.PLAYER_NAME, name)
                 .query().stream()
-                .map(ormLiteMapper::toPlayer)
+                .map(dbMapper::toPlayer)
                 .findAny();
     }
 
@@ -44,7 +44,7 @@ public class PlayerRepoAdapter implements PlayerRepo {
                 .selectColumns(PlayEntity.PLAYER_NAME)
                 .where().eq(PlayEntity.GAME_NAME, game.getName())
                 .query().stream()
-                .map(ormLiteMapper::toPlayer)
+                .map(dbMapper::toPlayer)
                 .collect(Collectors.toSet());
     }
 
@@ -55,7 +55,7 @@ public class PlayerRepoAdapter implements PlayerRepo {
                 .distinct()
                 .selectColumns(PlayEntity.PLAYER_NAME)
                 .query().stream()
-                .map(ormLiteMapper::toPlayer)
+                .map(dbMapper::toPlayer)
                 .collect(Collectors.toSet());
     }
 

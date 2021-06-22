@@ -1,15 +1,14 @@
 package net.avdw.skilltracker.app.service;
 
 import net.avdw.skilltracker.domain.Game;
-import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.KeyValue;
+import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.query.StatsQuery;
 import net.avdw.skilltracker.port.in.query.achievement.GuardianAchievement;
 import net.avdw.skilltracker.port.in.query.achievement.NemesisAchievement;
 import net.avdw.skilltracker.port.in.query.badge.ComradeBadge;
 import net.avdw.skilltracker.port.in.query.badge.EnthusiastBadge;
 import net.avdw.skilltracker.port.in.query.trophy.DominatorTrophy;
-import net.avdw.skilltracker.port.out.ContestantRepo;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -20,21 +19,18 @@ import java.util.stream.Collectors;
 public class StatsService implements StatsQuery {
     private final NemesisAchievement nemesisAchievement;
     private final ComradeBadge comradeBadge;
-    private final ContestantRepo contestantRepo;
     private final EnthusiastBadge enthusiastBadge;
     private final GuardianAchievement guardianAchievement;
     private final DominatorTrophy dominatorTrophy;
 
     @Inject
-    public StatsService(                        NemesisAchievement nemesisAchievement,
+    public StatsService(NemesisAchievement nemesisAchievement,
                         ComradeBadge comradeBadge,
-                        ContestantRepo contestantRepo,
                         EnthusiastBadge enthusiastBadge,
                         GuardianAchievement guardianAchievement,
                         DominatorTrophy dominatorTrophy) {
         this.nemesisAchievement = nemesisAchievement;
         this.comradeBadge = comradeBadge;
-        this.contestantRepo = contestantRepo;
         this.enthusiastBadge = enthusiastBadge;
         this.guardianAchievement = guardianAchievement;
         this.dominatorTrophy = dominatorTrophy;

@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 
 public class GameRepoAdapter implements GameRepo {
     private final Dao<PlayEntity, Integer> playDao;
-    private final OrmLiteMapper ormLiteMapper;
+    private final DbMapper dbMapper;
 
     @Inject
-    public GameRepoAdapter(Dao<PlayEntity, Integer> playDao, OrmLiteMapper ormLiteMapper) {
+    public GameRepoAdapter(Dao<PlayEntity, Integer> playDao, DbMapper dbMapper) {
         this.playDao = playDao;
-        this.ormLiteMapper = ormLiteMapper;
+        this.dbMapper = dbMapper;
     }
 
     @SneakyThrows
@@ -47,7 +47,7 @@ public class GameRepoAdapter implements GameRepo {
                 .where()
                 .eq(PlayEntity.GAME_NAME, name)
                 .query().stream()
-                .map(ormLiteMapper::toGame)
+                .map(dbMapper::toGame)
                 .findAny();
     }
 
@@ -67,7 +67,7 @@ public class GameRepoAdapter implements GameRepo {
                 .orderBy(PlayEntity.PLAY_DATE, false)
                 .where().eq(PlayEntity.PLAYER_NAME, player.getName())
                 .query().stream()
-                .map(ormLiteMapper::toGame)
+                .map(dbMapper::toGame)
                 .findAny().orElseThrow();
     }
 
@@ -78,7 +78,7 @@ public class GameRepoAdapter implements GameRepo {
                 .distinct()
                 .selectColumns(PlayEntity.GAME_NAME)
                 .query().stream()
-                .map(ormLiteMapper::toGame)
+                .map(dbMapper::toGame)
                 .collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public class GameRepoAdapter implements GameRepo {
                 .selectColumns(PlayEntity.GAME_NAME)
                 .where().like(PlayEntity.GAME_NAME, String.format("%%%s%%", search))
                 .query().stream()
-                .map(ormLiteMapper::toGame)
+                .map(dbMapper::toGame)
                 .collect(Collectors.toList());
     }
 }

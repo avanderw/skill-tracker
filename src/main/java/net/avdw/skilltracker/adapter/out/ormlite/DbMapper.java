@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
-public interface OrmLiteMapper {
+public interface DbMapper {
 
 
     @Mapping(target = "name", source = "gameName")

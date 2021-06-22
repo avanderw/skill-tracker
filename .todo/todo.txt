@@ -10,6 +10,4 @@
 2021-05-11 @Add days-of-week histogram +keyValue
 2021-05-11 @Add average players per game +keyValue
 2021-05-11 @Add Rival +keyValue which lists the person with the closest skill
-2021-05-11 @Add H-index +statistic to player
 2020-08-14 @Update connection error to print to stdout
-r 2021-06-22 2021-06-22 .
