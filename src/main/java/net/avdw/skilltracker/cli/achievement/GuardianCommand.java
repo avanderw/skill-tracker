@@ -2,7 +2,7 @@ package net.avdw.skilltracker.cli.achievement;
 
 import net.avdw.skilltracker.cli.achievement.view.AchievementModel;
 import net.avdw.skilltracker.cli.achievement.view.AchievementView;
-import net.avdw.skilltracker.port.in.query.stat.GuardianQuery;
+import net.avdw.skilltracker.port.in.query.achievement.GuardianAchievement;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -13,13 +13,13 @@ public class GuardianCommand implements Runnable {
     @CommandLine.Spec private CommandLine.Model.CommandSpec spec;
 
     @Inject private AchievementView achievementView;
-    @Inject private GuardianQuery guardianQuery;
+    @Inject private GuardianAchievement guardianAchievement;
 
     @Override
     public void run() {
         spec.commandLine().getOut().println(achievementView.render(AchievementModel.builder()
-                .title(guardianQuery.getTitle())
-                .description(guardianQuery.getDescription())
+                .title(guardianAchievement.getTitle())
+                .description(guardianAchievement.getDescription())
                 .build()));
     }
 }

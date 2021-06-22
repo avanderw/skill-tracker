@@ -1,11 +1,11 @@
-package net.avdw.skilltracker.port.in.query.stat;
+package net.avdw.skilltracker.port.in.query.badge;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 
 import java.util.Optional;
 
-public interface ComradeQuery extends GenericStatQuery {
+public interface ComradeBadge extends Badge {
 
     @Override
     default String getTitle() {

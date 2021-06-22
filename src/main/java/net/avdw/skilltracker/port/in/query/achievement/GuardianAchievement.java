@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.port.in.query.stat;
+package net.avdw.skilltracker.port.in.query.achievement;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
@@ -6,7 +6,7 @@ import net.avdw.skilltracker.domain.Player;
 import java.util.List;
 import java.util.Optional;
 
-public interface GuardianQuery extends GenericStatQuery {
+public interface GuardianAchievement extends Achievement {
 
     @Override
     default String getTitle() {

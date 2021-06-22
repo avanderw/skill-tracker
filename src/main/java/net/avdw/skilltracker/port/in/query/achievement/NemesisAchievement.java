@@ -1,11 +1,12 @@
-package net.avdw.skilltracker.port.in.query.stat;
+package net.avdw.skilltracker.port.in.query.achievement;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 
 import java.util.Optional;
+import java.util.Set;
 
-public interface NemesisQuery extends GenericStatQuery {
+public interface NemesisAchievement extends Achievement {
     @Override
     default String getTitle() {
         return "Nemesis";
@@ -20,4 +21,5 @@ public interface NemesisQuery extends GenericStatQuery {
     }
 
     Optional<Player> findNemesis(Game game, Player player);
+    Set<Player> findAllMinions(Game game, Player player);
 }

@@ -1,10 +1,9 @@
-package net.avdw.skilltracker.app.service;
+package net.avdw.skilltracker.app.badge;
 
 import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.port.in.query.stat.EnthusiastQuery;
-import net.avdw.skilltracker.port.in.query.stat.ObsessionQuery;
+import net.avdw.skilltracker.port.in.query.badge.EnthusiastBadge;
 import net.avdw.skilltracker.port.out.ContestantRepo;
 import net.avdw.skilltracker.port.out.GameRepo;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class EnthusiastService implements EnthusiastQuery, ObsessionQuery {
+public class EnthusiastService implements EnthusiastBadge {
     private final ContestantRepo contestantRepo;
     private final GameRepo gameRepo;
 

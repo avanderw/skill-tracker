@@ -1,11 +1,12 @@
-package net.avdw.skilltracker.port.in.query.stat;
+package net.avdw.skilltracker.port.in.query.badge;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface EnthusiastQuery extends GenericStatQuery {
+public interface EnthusiastBadge extends Badge {
 
     @Override
     default String getTitle() {
@@ -21,4 +22,5 @@ public interface EnthusiastQuery extends GenericStatQuery {
     }
 
     Optional<Player> findEnthusiast(Game game);
+    List<Game> findObsession(Player player);
 }

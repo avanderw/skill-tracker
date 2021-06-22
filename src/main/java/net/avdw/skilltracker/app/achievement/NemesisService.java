@@ -1,18 +1,17 @@
-package net.avdw.skilltracker.app.service;
+package net.avdw.skilltracker.app.achievement;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Matchup;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.query.MatchupQuery;
 import net.avdw.skilltracker.port.in.query.OpponentQuery;
-import net.avdw.skilltracker.port.in.query.stat.MinionQuery;
-import net.avdw.skilltracker.port.in.query.stat.NemesisQuery;
+import net.avdw.skilltracker.port.in.query.achievement.NemesisAchievement;
 
 import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class NemesisService implements NemesisQuery, MinionQuery {
+public class NemesisService implements NemesisAchievement {
     private final MatchupQuery matchupQuery;
     private final OpponentQuery opponentQuery;
 
@@ -26,7 +25,7 @@ public class NemesisService implements NemesisQuery, MinionQuery {
     public Optional<Player> findNemesis(Game game, Player player) {
         final Set<Player> opponents = opponentQuery.findBy(game, player);
         final Set<Matchup> matchups = opponents.stream()
-                .map(opponent-> matchupQuery.findBy(player, opponent, game))
+                .map(opponent -> matchupQuery.findBy(player, opponent, game))
                 .collect(Collectors.toSet());
         final Queue<Matchup> nemesisQueue = new PriorityQueue<>(Comparator.comparing(Matchup::getOpponentWinRatio).reversed());
         nemesisQueue.addAll(matchups.stream()

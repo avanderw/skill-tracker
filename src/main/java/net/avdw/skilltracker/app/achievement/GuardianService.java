@@ -1,10 +1,10 @@
-package net.avdw.skilltracker.app.service;
+package net.avdw.skilltracker.app.achievement;
 
 import net.avdw.skilltracker.domain.Ally;
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.in.query.SkillQuery;
-import net.avdw.skilltracker.port.in.query.stat.GuardianQuery;
+import net.avdw.skilltracker.port.in.query.achievement.GuardianAchievement;
 import net.avdw.skilltracker.port.out.AllyRepo;
 
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class GuardianService implements GuardianQuery {
+public class GuardianService implements GuardianAchievement {
     private final AllyRepo allyRepo;
     private final SkillQuery skillQuery;
 

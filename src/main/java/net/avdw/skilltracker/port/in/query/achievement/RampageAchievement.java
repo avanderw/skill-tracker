@@ -1,6 +1,6 @@
-package net.avdw.skilltracker.port.in.query.stat;
+package net.avdw.skilltracker.port.in.query.achievement;
 
-public interface RampageQuery extends GenericStatQuery {
+public interface RampageAchievement extends Achievement {
     @Override
     default String getTitle() {
         return "Rampage";

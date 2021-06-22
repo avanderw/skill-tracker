@@ -1,8 +1,14 @@
 package net.avdw.skilltracker.app.service;
 
-import net.avdw.skilltracker.domain.*;
+import net.avdw.skilltracker.domain.Game;
+import net.avdw.skilltracker.domain.Player;
+import net.avdw.skilltracker.domain.Stat;
 import net.avdw.skilltracker.port.in.query.StatsQuery;
-import net.avdw.skilltracker.port.in.query.stat.*;
+import net.avdw.skilltracker.port.in.query.achievement.GuardianAchievement;
+import net.avdw.skilltracker.port.in.query.achievement.NemesisAchievement;
+import net.avdw.skilltracker.port.in.query.badge.ComradeBadge;
+import net.avdw.skilltracker.port.in.query.badge.EnthusiastBadge;
+import net.avdw.skilltracker.port.in.query.trophy.DominatorTrophy;
 import net.avdw.skilltracker.port.out.ContestantRepo;
 
 import javax.inject.Inject;
@@ -12,43 +18,37 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class StatsService implements StatsQuery {
-    private final MinionQuery minionQuery;
-    private final NemesisQuery nemesisQuery;
-    private final ComradeQuery comradeQuery;
+    private final NemesisAchievement nemesisAchievement;
+    private final ComradeBadge comradeBadge;
     private final ContestantRepo contestantRepo;
-    private final EnthusiastQuery enthusiastQuery;
-    private final ObsessionQuery obsessionQuery;
-    private final GuardianQuery guardianQuery;
-    private final DominatorQuery dominatorQuery;
+    private final EnthusiastBadge enthusiastBadge;
+    private final GuardianAchievement guardianAchievement;
+    private final DominatorTrophy dominatorTrophy;
 
     @Inject
-    public StatsService(MinionQuery minionQuery,
-                        NemesisQuery nemesisQuery,
-                        ComradeQuery comradeQuery,
+    public StatsService(                        NemesisAchievement nemesisAchievement,
+                        ComradeBadge comradeBadge,
                         ContestantRepo contestantRepo,
-                        EnthusiastQuery enthusiastQuery,
-                        ObsessionQuery obsessionQuery,
-                        GuardianQuery guardianQuery,
-                        DominatorQuery dominatorQuery) {
-        this.minionQuery = minionQuery;
-        this.nemesisQuery = nemesisQuery;
-        this.comradeQuery = comradeQuery;
+                        EnthusiastBadge enthusiastBadge,
+                        GuardianAchievement guardianAchievement,
+                        DominatorTrophy dominatorTrophy) {
+        this.nemesisAchievement = nemesisAchievement;
+        this.comradeBadge = comradeBadge;
         this.contestantRepo = contestantRepo;
-        this.enthusiastQuery = enthusiastQuery;
-        this.obsessionQuery = obsessionQuery;
-        this.guardianQuery = guardianQuery;
-        this.dominatorQuery = dominatorQuery;
+        this.enthusiastBadge = enthusiastBadge;
+        this.guardianAchievement = guardianAchievement;
+        this.dominatorTrophy = dominatorTrophy;
     }
 
     @Override
     public List<Stat> gameStatsForPlayer(Game game, Player player) {
         List<Stat> stats = new ArrayList<>();
 
-        nemesisQuery.findNemesis(game, player)
+        nemesisAchievement.findNemesis(game, player)
                 .map(nemesis -> Stat.builder().name("Nemesis").value(nemesis.getName()).build())
                 .ifPresent(stats::add);
 
-        Set<Player> minions = minionQuery.findAllMinions(game, player);
+        Set<Player> minions = nemesisAchievement.findAllMinions(game, player);
         if (!minions.isEmpty()) {
             stats.add(Stat.builder().name("Minions").value(minions.stream()
                     .map(Player::getName)
@@ -57,20 +57,20 @@ public class StatsService implements StatsQuery {
                     .build());
         }
 
-        comradeQuery.findComrade(game, player)
+        comradeBadge.findComrade(game, player)
                 .map(p -> Stat.builder()
                         .name("Comrade")
                         .value(p.getName())
                         .build())
                 .ifPresent(stats::add);
 
-        guardianQuery.findGuardian(game, player)
+        guardianAchievement.findGuardian(game, player)
                 .map(g -> Stat.builder()
                         .name("Guardian")
                         .value(g.getName())
                         .build())
                 .ifPresent(stats::add);
-        String wards = guardianQuery.findWards(game, player).stream()
+        String wards = guardianAchievement.findWards(game, player).stream()
                 .map(Player::getName)
                 .sorted()
                 .collect(Collectors.joining(", "));
@@ -88,14 +88,14 @@ public class StatsService implements StatsQuery {
     public List<Stat> playerStats(Player player) {
         List<Stat> stats = new ArrayList<>();
 
-        comradeQuery.findComrade(player)
+        comradeBadge.findComrade(player)
                 .map(p -> Stat.builder()
                         .name("Comrade")
                         .value(p.getName())
                         .build())
                 .ifPresent(stats::add);
 
-        String obsession = obsessionQuery.findObsession(player).stream()
+        String obsession = enthusiastBadge.findObsession(player).stream()
                 .map(Game::getName)
                 .collect(Collectors.joining(", "));
         if (!obsession.isBlank()) {
@@ -105,7 +105,7 @@ public class StatsService implements StatsQuery {
                     .build());
         }
 
-        String dominating = dominatorQuery.findDominating(player).stream()
+        String dominating = dominatorTrophy.findDominating(player).stream()
                 .map(Game::getName)
                 .sorted()
                 .collect(Collectors.joining(", "));
@@ -123,14 +123,14 @@ public class StatsService implements StatsQuery {
     public List<Stat> gameStats(Game game) {
         List<Stat> stats = new ArrayList<>();
 
-        enthusiastQuery.findEnthusiast(game)
+        enthusiastBadge.findEnthusiast(game)
                 .map(p -> Stat.builder()
                         .name("Enthusiast")
                         .value(p.getName())
                         .build())
                 .ifPresent(stats::add);
 
-        dominatorQuery.findDominator(game)
+        dominatorTrophy.findDominator(game)
                 .map(p -> Stat.builder()
                         .name("Dominator")
                         .value(p.getName())

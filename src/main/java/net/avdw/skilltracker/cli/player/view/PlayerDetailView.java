@@ -17,32 +17,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PlayerDetailView {
-    private static final String PRIMARY_TEMPLATE = "" +
-            "{[name}} has played {{total-games}} {{games}} over {{total-matches}} {{matches}}\n" +
-            "Last played: {{last-played-game}}, {{last-played-date}} ({{last-played-nlp}})\n" +
-            "\n" +
-            "| {{top-skilled-games}} | {{top-ranked-games}} |\n" +
-            "{{#has-achievement}}\n" +
-            "{{achievements-title}}\n" +
-            "" +
-            "{{/has-achievement}}";
-
-    private static final String BASE_PROFILE = "" +
-            "%s has played a total of %s games over %s matches%n" +
-            "Last played: %s, %s (%s)%n";
-    private static final String TOP_GAME_BY_SKILL_HR = "%n" +
-            "Top %d skilled games:%n";
-    private static final String TOP_GAME_BY_SKILL_LI = "" +
-            "> %s at %.1f%n";
-    private static final String TOP_GAME_BY_RANK_HR = "%n" +
-            "Top %d ranked games:%n";
-    private static final String TOP_GAME_BY_RANK_LI = "" +
-            "> #%d in %s%n";
-    private static final String STATISTIC_HR = "%n" +
-            "Statistics%n";
-    private static final String STATISTIC_LI = "" +
-            "> %s: %s%n";
-
     @SneakyThrows
     public String render(PlayerDetailModel model) {
         MustacheFactory mf = new DefaultMustacheFactory();
@@ -80,32 +54,5 @@ public class PlayerDetailView {
         StringWriter writer = new StringWriter();
         m.execute(writer, ctx).flush();
         return writer.toString();
-
-//        StringBuilder render = new StringBuilder(String.format(BASE_PROFILE,
-//                model.getPlayer().getName(), model.getTotalGames(), model.getTotalMatches(),
-//                model.getLastPlayedGame().getName(), model.getLastPlayedDate(), new PrettyTime().format(model.getLastPlayedDate())));
-//
-//        render.append(String.format(TOP_GAME_BY_SKILL_HR, model.getSkilledGames().size()));
-//        for (PriorityObject<Game> priorityObject : model.getSkilledGames()) {
-//            render.append(String.format(TOP_GAME_BY_SKILL_LI, priorityObject.getObject().getName(), priorityObject.getPriority().doubleValue()));
-//        }
-//
-//        render.append(String.format(TOP_GAME_BY_RANK_HR, model.getRankedGames().size()));
-//        for (PriorityObject<Game> priorityObject : model.getRankedGames()) {
-//            render.append(String.format(TOP_GAME_BY_RANK_LI, priorityObject.getPriority().intValue(), priorityObject.getObject().getName()));
-//        }
-//
-//        if (!model.getAllStats().isEmpty()) {
-//            render.append(String.format(STATISTIC_HR));
-//            long width = model.getAllStats().stream()
-//                    .map(Stat::getName)
-//                    .mapToLong(String::length)
-//                    .max().orElseThrow();
-//            for (Stat stat : model.getAllStats()) {
-//                render.append(String.format(STATISTIC_LI, String.format("%" + width + "s", stat.getName()), stat.getValue()));
-//            }
-//        }
-//
-//        return render.toString();
     }
 }

@@ -2,7 +2,7 @@ package net.avdw.skilltracker.cli.achievement;
 
 import net.avdw.skilltracker.cli.achievement.view.AchievementModel;
 import net.avdw.skilltracker.cli.achievement.view.AchievementView;
-import net.avdw.skilltracker.port.in.query.stat.EnthusiastQuery;
+import net.avdw.skilltracker.port.in.query.badge.EnthusiastBadge;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -13,13 +13,13 @@ public class EnthusiastCommand implements Runnable {
     @CommandLine.Spec private CommandLine.Model.CommandSpec spec;
 
     @Inject private AchievementView achievementView;
-    @Inject private EnthusiastQuery enthusiastQuery;
+    @Inject private EnthusiastBadge enthusiastBadge;
 
     @Override
     public void run() {
         spec.commandLine().getOut().println(achievementView.render(AchievementModel.builder()
-                .title(enthusiastQuery.getTitle())
-                .description(enthusiastQuery.getDescription())
+                .title(enthusiastBadge.getTitle())
+                .description(enthusiastBadge.getDescription())
                 .build()));
     }
 }
