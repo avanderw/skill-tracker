@@ -72,7 +72,9 @@ public class AchievementTest {
         cliTester.execute("game view TableTennisVR").success()
                 .contains("Enthusiast: Etienne");
         cliTester.execute("player view Etienne").success()
-                .contains("Obsession: TableTennisVR");
+                .contains("Obsession: TableTennisVR")
+                .contains("1 game")
+                .contains("9 matches");
     }
 
     @Test
