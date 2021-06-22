@@ -160,13 +160,13 @@ public class PlayerTest {
     @Test
     public void testMovePlayer() {
         cliTester.execute("player view Andrew").success()
-                .contains("Andrew has played a total of 7 games over 44 matches");
+                .contains("Andrew has played 7 games over 44 matches");
         cliTester.execute("player mv Andrew Rename").success();
         cliTester.execute("player ls").success()
                 .notContains("Andrew")
                 .contains("Rename");
         cliTester.execute("player view Rename").success()
-                .contains("Rename has played a total of 7 games over 44 matches");
+                .contains("Rename has played 7 games over 44 matches");
     }
 
     @Test
@@ -181,11 +181,11 @@ public class PlayerTest {
         cliTester.execute("player view Andrew").success()
                 .contains("7 games")
                 .contains("44 matches")
-                .contains("Last played: GalaxyTrucker")
+                .contains("Last played: Galaxy Trucker")
                 .contains("Top 3 skilled")
                 .contains("Top 3 ranked")
                 .contains("Most played: Unreal Tournament")
-                .distinct("Most played");
+                .contains("Badge");
     }
 
     @Test

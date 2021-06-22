@@ -100,8 +100,8 @@ public class AchievementTest {
         cliTester.execute("game view AgeOfEmpires2").success()
                 .contains("Dominator: JK");
         cliTester.execute("player view JK").success()
-                .contains("Dominating: AgeOfEmpires2");
+                .contains("Dominating: Age Of Empires 2");
         cliTester.execute("player view Andrew").success()
-                .notContains("Dominating: TableTennisVR");
+                .notContains("Dominating: Table Tennis VR");
     }
 }

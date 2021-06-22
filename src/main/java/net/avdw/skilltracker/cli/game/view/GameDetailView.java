@@ -1,6 +1,6 @@
 package net.avdw.skilltracker.cli.game.view;
 
-import net.avdw.skilltracker.domain.Stat;
+import net.avdw.skilltracker.domain.KeyValue;
 
 public class GameDetailView {
     private static final String TOP_PLAYERS_HR = "Top %s players:\n";
@@ -17,14 +17,14 @@ public class GameDetailView {
             sb.append(String.format(TOP_PLAYERS_LI, player.getPosition(), player.getMean(), player.getStdDev(), player.getName()));
         }
 
-        if (model.getGameStats().size() > 0) {
+        if (model.getGameKeyValues().size() > 0) {
             sb.append(STAT_HR);
-            long width = model.getGameStats().stream()
-                    .map(Stat::getName)
+            long width = model.getGameKeyValues().stream()
+                    .map(KeyValue::getKey)
                     .mapToLong(String::length)
                     .max().orElseThrow();
-            for (Stat stat : model.getGameStats()) {
-                sb.append(String.format(STAT_LI, String.format("%" + width + "s", stat.getName()), stat.getValue()));
+            for (KeyValue keyValue : model.getGameKeyValues()) {
+                sb.append(String.format(STAT_LI, String.format("%" + width + "s", keyValue.getKey()), keyValue.getValue()));
             }
         }
 

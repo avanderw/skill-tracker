@@ -4,12 +4,12 @@
 2021-05-11 @Remove mustache dependency
 2021-05-11 @Remove maven model dependency
 2021-05-11 @Remove guice dependency
-2021-05-11 @Add list of all people played against +stat
-2021-05-11 @Add history of growth on mu and sigma +stat
-2021-05-11 @Add first match +stat for player and game
-2021-05-11 @Add days-of-week histogram +stat
-2021-05-11 @Add average players per game +stat
-2021-05-11 @Add Rival +stat which lists the person with the closest skill
+2021-05-11 @Add list of all people played against +keyValue
+2021-05-11 @Add history of growth on mu and sigma +keyValue
+2021-05-11 @Add first match +keyValue for player and game
+2021-05-11 @Add days-of-week histogram +keyValue
+2021-05-11 @Add average players per game +keyValue
+2021-05-11 @Add Rival +keyValue which lists the person with the closest skill
 2021-05-11 @Add H-index +statistic to player
 2020-08-14 @Update connection error to print to stdout
 r 2021-06-22 2021-06-22 .

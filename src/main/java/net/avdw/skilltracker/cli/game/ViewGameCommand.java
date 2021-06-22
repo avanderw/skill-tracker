@@ -44,7 +44,7 @@ public class ViewGameCommand implements Runnable {
                                 .stdDev(c.getSkill().getStdDev())
                                 .build())
                         .collect(Collectors.toList()))
-                .gameStats(statsQuery.gameStats(game))
+                .gameKeyValues(statsQuery.gameStats(game))
                 .matches(matchQuery.findLastBy(game, 3L).stream()
                         .map(m -> GameMatchModel.builder()
                                 .date(m.getDate())

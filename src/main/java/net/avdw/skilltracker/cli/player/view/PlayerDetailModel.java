@@ -5,9 +5,9 @@ import lombok.NonNull;
 import lombok.Singular;
 import lombok.Value;
 import net.avdw.skilltracker.domain.Game;
+import net.avdw.skilltracker.domain.KeyValue;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.PriorityObject;
-import net.avdw.skilltracker.domain.Stat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,5 +24,8 @@ public class PlayerDetailModel {
     @NonNull LocalDate lastPlayedDate;
     @NonNull List<PriorityObject<Game>> rankedGames;
     @NonNull List<PriorityObject<Game>> skilledGames;
-    @NonNull @Singular Set<Stat> achievements;
+    @NonNull @Singular Set<KeyValue> trophies;
+    @NonNull @Singular Set<KeyValue> challenges;
+    @NonNull @Singular Set<KeyValue> achievements;
+    @NonNull @Singular Set<KeyValue> badges;
 }

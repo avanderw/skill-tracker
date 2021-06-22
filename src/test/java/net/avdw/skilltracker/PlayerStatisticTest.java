@@ -60,6 +60,12 @@ public class PlayerStatisticTest {
     @Test
     public void testMostPlayed() {
         cliTester.execute("player view JK").success()
-                .contains("Most played: AgeOfEmpires2");
+                .contains("Most played: Age Of Empires 2");
+    }
+
+    @Test
+    public void testLastPlayed() {
+        cliTester.execute("player view Andrew").success()
+                .contains("Last played: Galaxy Trucker");
     }
 }

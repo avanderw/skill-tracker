@@ -11,6 +11,10 @@ import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.domain.PriorityObject;
 import net.avdw.skilltracker.port.in.query.*;
+import net.avdw.skilltracker.port.in.query.achievement.AllAchievements;
+import net.avdw.skilltracker.port.in.query.badge.AllBadges;
+import net.avdw.skilltracker.port.in.query.challenge.AllChallenges;
+import net.avdw.skilltracker.port.in.query.trophy.AllTrophies;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -33,6 +37,10 @@ public class ViewPlayerCommand implements Runnable {
 
     @Inject private PlayerGameView playerGameView;
     @Inject private PlayerDetailView playerDetailView;
+    @Inject private AllTrophies allTrophies;
+    @Inject private AllChallenges allChallenges;
+    @Inject private AllAchievements allAchievements;
+    @Inject private AllBadges allBadges;
     @Inject private StatsQuery statsQuery;
     @Inject private SkillQuery skillQuery;
     @Inject private GameQuery gameQuery;
@@ -72,7 +80,10 @@ public class ViewPlayerCommand implements Runnable {
                             .sorted(Comparator.comparing((PriorityObject<Game> g) -> g.getPriority().doubleValue()).reversed())
                             .limit(3)
                             .collect(Collectors.toList()))
-                    .achievements(statsQuery.playerStats(player))
+                    .trophies(allTrophies.forPlayer(player))
+                    .challenges(allChallenges.forPlayer(player))
+                    .achievements(allAchievements.forPlayer(player))
+                    .badges(allBadges.forPlayer(player))
                     .build();
             spec.commandLine().getOut().println(playerDetailView.render(playerDetailModel));
         } else {

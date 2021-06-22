@@ -1,8 +1,8 @@
 package net.avdw.skilltracker.cli.player.view;
 
 import net.avdw.skilltracker.domain.Contestant;
+import net.avdw.skilltracker.domain.KeyValue;
 import net.avdw.skilltracker.domain.Skill;
-import net.avdw.skilltracker.domain.Stat;
 import org.ocpsoft.prettytime.PrettyTime;
 
 public class PlayerGameView {
@@ -30,11 +30,11 @@ public class PlayerGameView {
         if (!model.getStats().isEmpty()) {
             render.append(String.format(STAT_HEADER));
             long width = model.getStats().stream()
-                    .map(Stat::getName)
+                    .map(KeyValue::getKey)
                     .mapToLong(String::length)
                     .max().orElseThrow();
-            for (Stat stat : model.getStats()) {
-                render.append(String.format(STAT, String.format("%" + width + "s", stat.getName()), stat.getValue()));
+            for (KeyValue keyValue : model.getStats()) {
+                render.append(String.format(STAT, String.format("%" + width + "s", keyValue.getKey()), keyValue.getValue()));
             }
         }
 

@@ -11,10 +11,31 @@ Top {{tr-games-cnt}} ranked {{tr-games-pl}}
 {{#tr-games}}
 > #{{rank}} in {{game}}
 {{/tr-games}}
+{{#has-trophies}}
+
+Trophies
+{{#trophies}}
+> {{trophy}}: {{game}}
+{{/trophies}}
+{{/has-trophies}}
+{{#has-challenges}}
+
+Challenges
+{{#challenges}}
+> {{challenge}}: {{value}}
+{{/challenges}}
+{{/has-challenges}}
 {{#has-achievements}}
 
 Achievements
 {{#achievements}}
-> {{name}}: {{value}}
+> {{achievement}}: {{value}}
 {{/achievements}}
 {{/has-achievements}}
+{{#has-badges}}
+
+Badges
+{{#badges}}
+> {{badge}}: {{value}}
+{{/badges}}
+{{/has-badges}}

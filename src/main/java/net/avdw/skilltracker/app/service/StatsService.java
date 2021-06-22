@@ -2,7 +2,7 @@ package net.avdw.skilltracker.app.service;
 
 import net.avdw.skilltracker.domain.Game;
 import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.domain.Stat;
+import net.avdw.skilltracker.domain.KeyValue;
 import net.avdw.skilltracker.port.in.query.StatsQuery;
 import net.avdw.skilltracker.port.in.query.achievement.GuardianAchievement;
 import net.avdw.skilltracker.port.in.query.achievement.NemesisAchievement;
@@ -41,16 +41,16 @@ public class StatsService implements StatsQuery {
     }
 
     @Override
-    public List<Stat> gameStatsForPlayer(Game game, Player player) {
-        List<Stat> stats = new ArrayList<>();
+    public List<KeyValue> gameStatsForPlayer(Game game, Player player) {
+        List<KeyValue> keyValues = new ArrayList<>();
 
         nemesisAchievement.findNemesis(game, player)
-                .map(nemesis -> Stat.builder().name("Nemesis").value(nemesis.getName()).build())
-                .ifPresent(stats::add);
+                .map(nemesis -> KeyValue.builder().key("Nemesis").value(nemesis.getName()).build())
+                .ifPresent(keyValues::add);
 
         Set<Player> minions = nemesisAchievement.findAllMinions(game, player);
         if (!minions.isEmpty()) {
-            stats.add(Stat.builder().name("Minions").value(minions.stream()
+            keyValues.add(KeyValue.builder().key("Minions").value(minions.stream()
                     .map(Player::getName)
                     .sorted()
                     .collect(Collectors.joining(", ")))
@@ -58,49 +58,49 @@ public class StatsService implements StatsQuery {
         }
 
         comradeBadge.findComrade(game, player)
-                .map(p -> Stat.builder()
-                        .name("Comrade")
+                .map(p -> KeyValue.builder()
+                        .key("Comrade")
                         .value(p.getName())
                         .build())
-                .ifPresent(stats::add);
+                .ifPresent(keyValues::add);
 
         guardianAchievement.findGuardian(game, player)
-                .map(g -> Stat.builder()
-                        .name("Guardian")
+                .map(g -> KeyValue.builder()
+                        .key("Guardian")
                         .value(g.getName())
                         .build())
-                .ifPresent(stats::add);
+                .ifPresent(keyValues::add);
         String wards = guardianAchievement.findWards(game, player).stream()
                 .map(Player::getName)
                 .sorted()
                 .collect(Collectors.joining(", "));
         if (!wards.isBlank()) {
-            stats.add(Stat.builder()
-                    .name("Wards")
+            keyValues.add(KeyValue.builder()
+                    .key("Wards")
                     .value(wards)
                     .build());
         }
 
-        return stats;
+        return keyValues;
     }
 
     @Override
-    public List<Stat> playerStats(Player player) {
-        List<Stat> stats = new ArrayList<>();
+    public List<KeyValue> playerStats(Player player) {
+        List<KeyValue> keyValues = new ArrayList<>();
 
         comradeBadge.findComrade(player)
-                .map(p -> Stat.builder()
-                        .name("Comrade")
+                .map(p -> KeyValue.builder()
+                        .key("Comrade")
                         .value(p.getName())
                         .build())
-                .ifPresent(stats::add);
+                .ifPresent(keyValues::add);
 
         String obsession = enthusiastBadge.findObsession(player).stream()
                 .map(Game::getName)
                 .collect(Collectors.joining(", "));
         if (!obsession.isBlank()) {
-            stats.add(Stat.builder()
-                    .name("Obsession")
+            keyValues.add(KeyValue.builder()
+                    .key("Obsession")
                     .value(obsession)
                     .build());
         }
@@ -110,34 +110,34 @@ public class StatsService implements StatsQuery {
                 .sorted()
                 .collect(Collectors.joining(", "));
         if (!dominating.isBlank()) {
-            stats.add(Stat.builder()
-                    .name("Dominating")
+            keyValues.add(KeyValue.builder()
+                    .key("Dominating")
                     .value(dominating)
                     .build());
         }
 
-        return stats;
+        return keyValues;
     }
 
     @Override
-    public List<Stat> gameStats(Game game) {
-        List<Stat> stats = new ArrayList<>();
+    public List<KeyValue> gameStats(Game game) {
+        List<KeyValue> keyValues = new ArrayList<>();
 
         enthusiastBadge.findEnthusiast(game)
-                .map(p -> Stat.builder()
-                        .name("Enthusiast")
+                .map(p -> KeyValue.builder()
+                        .key("Enthusiast")
                         .value(p.getName())
                         .build())
-                .ifPresent(stats::add);
+                .ifPresent(keyValues::add);
 
         dominatorTrophy.findDominator(game)
-                .map(p -> Stat.builder()
-                        .name("Dominator")
+                .map(p -> KeyValue.builder()
+                        .key("Dominator")
                         .value(p.getName())
                         .build())
-                .ifPresent(stats::add);
+                .ifPresent(keyValues::add);
 
-        return stats;
+        return keyValues;
     }
 
 }
