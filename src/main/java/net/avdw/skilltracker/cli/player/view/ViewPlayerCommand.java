@@ -2,14 +2,12 @@ package net.avdw.skilltracker.cli.player.view;
 
 import net.avdw.skilltracker.cli.converter.GameTypeConverter;
 import net.avdw.skilltracker.cli.converter.PlayerTypeConverter;
-import net.avdw.skilltracker.domain.Contestant;
-import net.avdw.skilltracker.domain.Game;
-import net.avdw.skilltracker.domain.Player;
-import net.avdw.skilltracker.domain.PriorityObject;
+import net.avdw.skilltracker.domain.*;
 import net.avdw.skilltracker.port.in.query.*;
 import net.avdw.skilltracker.port.in.query.achievement.AllAchievements;
 import net.avdw.skilltracker.port.in.query.badge.AllBadges;
 import net.avdw.skilltracker.port.in.query.challenge.AllChallenges;
+import net.avdw.skilltracker.port.in.query.statistic.FirstPlayedStatistic;
 import net.avdw.skilltracker.port.in.query.statistic.HIndexStatistic;
 import net.avdw.skilltracker.port.in.query.trophy.AllTrophies;
 import picocli.CommandLine.Command;
@@ -45,6 +43,7 @@ public class ViewPlayerCommand implements Runnable {
     @Inject private MatchQuery matchQuery;
     @Inject private ContestantQuery contestantQuery;
     @Inject private HIndexStatistic hIndexStatistic;
+    @Inject private FirstPlayedStatistic firstPlayedStatistic;
 
     @Inject
     ViewPlayerCommand() {
@@ -56,7 +55,9 @@ public class ViewPlayerCommand implements Runnable {
             List<Game> games = new ArrayList<>(gameQuery.findAll(player));
             PlayerDetailModel playerDetailModel = PlayerDetailModel.builder()
                     .player(player)
-                    .hIndex(hIndexStatistic.getIndex(player))
+                    .hIndex(hIndexStatistic.lookupIndex(player))
+                    .firstPlayedGame(firstPlayedStatistic.lookupFirstGameFor(player))
+                    .firstPlayedDate(firstPlayedStatistic.lookupFirstDateFor(player))
                     .lastPlayedGame(gameQuery.lastPlayed(player))
                     .lastPlayedDate(matchQuery.lastPlayedDate(player))
                     .mostPlayedGame(contestantQuery.mostPlayedGame(player))

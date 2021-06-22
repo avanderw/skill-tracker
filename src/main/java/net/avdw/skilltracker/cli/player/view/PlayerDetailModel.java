@@ -21,7 +21,9 @@ public class PlayerDetailModel {
     @NonNull Integer totalGames;
     @NonNull Integer totalMatches;
     @NonNull Game lastPlayedGame;
+    @NonNull Game firstPlayedGame;
     @NonNull Game mostPlayedGame;
+    @NonNull LocalDate firstPlayedDate;
     @NonNull LocalDate lastPlayedDate;
     @NonNull List<PriorityObject<Game>> rankedGames;
     @NonNull List<PriorityObject<Game>> skilledGames;

@@ -10,6 +10,7 @@ import net.avdw.skilltracker.app.badge.ComradeService;
 import net.avdw.skilltracker.app.badge.EnthusiastService;
 import net.avdw.skilltracker.app.challenge.ChallengeService;
 import net.avdw.skilltracker.app.service.*;
+import net.avdw.skilltracker.app.statistic.FirstPlayedService;
 import net.avdw.skilltracker.app.statistic.HIndexService;
 import net.avdw.skilltracker.app.trophy.DominatorService;
 import net.avdw.skilltracker.app.trophy.TrophyService;
@@ -21,6 +22,7 @@ import net.avdw.skilltracker.port.in.query.badge.AllBadges;
 import net.avdw.skilltracker.port.in.query.badge.ComradeBadge;
 import net.avdw.skilltracker.port.in.query.badge.EnthusiastBadge;
 import net.avdw.skilltracker.port.in.query.challenge.AllChallenges;
+import net.avdw.skilltracker.port.in.query.statistic.FirstPlayedStatistic;
 import net.avdw.skilltracker.port.in.query.statistic.HIndexStatistic;
 import net.avdw.skilltracker.port.in.query.trophy.AllTrophies;
 import net.avdw.skilltracker.port.in.query.trophy.DominatorTrophy;
@@ -53,5 +55,6 @@ public class HexagonalModule extends AbstractModule {
         bind(AllBadges.class).to(BadgesService.class);
         bind(HIndexStatistic.class).to(HIndexService.class);
         bind(PlayRepo.class).to(PlayRepoAdapter.class);
+        bind(FirstPlayedStatistic.class).to(FirstPlayedService.class);
     }
 }

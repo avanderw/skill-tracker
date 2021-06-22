@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import lombok.SneakyThrows;
 import net.avdw.skilltracker.adapter.out.ormlite.entity.PlayEntity;
 import net.avdw.skilltracker.domain.Game;
+import net.avdw.skilltracker.domain.Play;
 import net.avdw.skilltracker.domain.Player;
 import net.avdw.skilltracker.port.out.PlayRepo;
 
@@ -42,4 +43,14 @@ public class PlayRepoAdapter implements PlayRepo {
                 .and().eq(PlayEntity.PLAYER_NAME, player.getName())
                 .countOf();
     }
+
+    @SneakyThrows
+    @Override
+    public Play lookupFirstPlay(Player player) {
+        return dbMapper.toPlay(playDao.queryBuilder()
+                .orderBy(PlayEntity.PLAY_DATE, true)
+                .where().eq(PlayEntity.PLAYER_NAME, player.getName())
+                .queryForFirst());
+    }
+
 }

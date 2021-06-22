@@ -64,6 +64,12 @@ public class PlayerStatisticTest {
     }
 
     @Test
+    public void testFirstPlayed() {
+        cliTester.execute("player view JDK").success()
+                .contains("First played: ");
+    }
+
+    @Test
     public void testLastPlayed() {
         cliTester.execute("player view Andrew").success()
                 .contains("Last played: Galaxy Trucker");

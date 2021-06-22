@@ -1,12 +1,10 @@
 2021-06-21 @Add Rampaging +achievement to player
 2021-06-21 @Add Rampagers +achievement to game
 2021-06-21 @Add Rampage +badge to contestant
-2021-05-11 @Remove mustache dependency
 2021-05-11 @Remove maven model dependency
 2021-05-11 @Remove guice dependency
-2021-05-11 @Add list of all people played against +keyValue
 2021-05-11 @Add history of growth on mu and sigma +keyValue
-2021-05-11 @Add first match +keyValue for player and game
+x 2021-06-22 2021-05-11 @Add first match +keyValue for player and game
 2021-05-11 @Add days-of-week histogram +keyValue
 2021-05-11 @Add average players per game +keyValue
 2021-05-11 @Add Rival +keyValue which lists the person with the closest skill

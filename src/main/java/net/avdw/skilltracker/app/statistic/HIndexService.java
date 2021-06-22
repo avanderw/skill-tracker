@@ -21,7 +21,7 @@ public class HIndexService implements HIndexStatistic {
     }
 
     @Override
-    public Integer getIndex(Player player) {
+    public Integer lookupIndex(Player player) {
         List<Game> games = playRepo.findAllGamesFor(player);
         Queue<PriorityObject<Game>> queue = new PriorityQueue<>(
                 Comparator.comparing((PriorityObject<Game> po) -> po.getPriority().intValue()).reversed());

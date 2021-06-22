@@ -9,3 +9,5 @@ x 2020-06-29 2020-06-24 Update getting last score to average out mean and standa
 2020-07-23 @Add proguard to reduce file size
 r 2021-06-21 2020-06-23 @Add Afrikaans language
 r 2021-06-22 2021-06-22 .
+r 2021-06-22 2021-05-11 @Remove mustache dependency
+r 2021-06-22 2021-05-11 @Add list of all people played against +keyValue

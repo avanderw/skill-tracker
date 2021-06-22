@@ -24,6 +24,9 @@ public class PlayerDetailView {
         ctx.put("tot-games-pl", model.getTotalGames() == 1 ? "game" : "games");
         ctx.put("tot-matches", model.getTotalMatches());
         ctx.put("tot-matches-pl", model.getTotalGames() == 1 ? "match" : "matches");
+        ctx.put("fp-game", StringFormat.camelCaseToTitleCase(model.getFirstPlayedGame().getName()));
+        ctx.put("fp-date", model.getFirstPlayedDate());
+        ctx.put("fp-date-nlp", new PrettyTime().format(model.getFirstPlayedDate()));
         ctx.put("lp-game", StringFormat.camelCaseToTitleCase(model.getLastPlayedGame().getName()));
         ctx.put("lp-date", model.getLastPlayedDate());
         ctx.put("lp-date-nlp", new PrettyTime().format(model.getLastPlayedDate()));
