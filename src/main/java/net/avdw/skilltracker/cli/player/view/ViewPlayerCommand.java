@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.cli.player;
+package net.avdw.skilltracker.cli.player.view;
 
 import net.avdw.skilltracker.cli.converter.GameTypeConverter;
 import net.avdw.skilltracker.cli.converter.PlayerTypeConverter;
@@ -52,6 +52,7 @@ public class ViewPlayerCommand implements Runnable {
                     .player(player)
                     .lastPlayedGame(gameQuery.lastPlayed(player))
                     .lastPlayedDate(matchQuery.lastPlayedDate(player))
+                    .mostPlayedGame(contestantQuery.mostPlayedGame(player))
                     .totalGames(gameQuery.totalGames(player))
                     .totalMatches(matchQuery.totalMatches(player))
                     .rankedGames(games.stream()
@@ -71,7 +72,7 @@ public class ViewPlayerCommand implements Runnable {
                             .sorted(Comparator.comparing((PriorityObject<Game> g) -> g.getPriority().doubleValue()).reversed())
                             .limit(3)
                             .collect(Collectors.toList()))
-                    .allStats(statsQuery.playerStats(player))
+                    .achievements(statsQuery.playerStats(player))
                     .build();
             spec.commandLine().getOut().println(playerDetailView.render(playerDetailModel));
         } else {

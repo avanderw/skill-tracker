@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.cli.player.view;
+package net.avdw.skilltracker.cli.player.list;
 
 import net.avdw.skilltracker.domain.Player;
 import org.apache.commons.lang3.StringUtils;

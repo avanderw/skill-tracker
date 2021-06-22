@@ -47,3 +47,10 @@ x 2021-06-15 2021-06-12 @Add most played +stat the player view
 x 2021-06-17 2021-06-12 @Add Ally +stat to a game for a person who has played on the same team the most
 x 2021-06-17 2021-06-12 @Add Powerful Ally +stat for most wins with Ally
 x 2021-06-17 2021-06-12 @Add +stat for ally with the most losses
+x 2021-06-21 2020-08-14 @Update 'game <game>' to redirect to 'game view <game>'
+x 2021-06-21 2021-05-11 @Add longest win streak +stat to a game or player
+x 2021-06-22 2021-06-21 @Review that +statistics indicate tracking of a variable e.g. play count
+x 2021-06-22 2021-06-21 A Badge indicates membership or support
+x 2021-06-22 2021-06-21 A Challange is an Achievement that is complete
+x 2021-06-22 2021-06-21 A Trophy only one person can hold at a given time
+x 2021-06-22 2021-06-21 An Achievement is earned or lost through skill

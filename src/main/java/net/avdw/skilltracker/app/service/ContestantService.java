@@ -1,4 +1,4 @@
-package net.avdw.skilltracker.app;
+package net.avdw.skilltracker.app.service;
 
 import net.avdw.skilltracker.domain.Contestant;
 import net.avdw.skilltracker.domain.Game;
@@ -35,5 +35,10 @@ public class ContestantService implements ContestantQuery {
                 .winStreak(contestantRepo.winStreak(game, player))
                 .skill(skillQuery.findLatest(game, player))
                 .build();
+    }
+
+    @Override
+    public Game mostPlayedGame(Player player) {
+        return contestantRepo.mostPlayed(player).getGame();
     }
 }

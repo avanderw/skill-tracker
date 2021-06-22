@@ -1,15 +1,14 @@
+2021-06-21 @Add Rampaging +achievement to player
+2021-06-21 @Add Rampagers +achievement to game
+2021-06-21 @Add Rampage +badge to contestant
 2021-05-11 @Remove mustache dependency
 2021-05-11 @Remove maven model dependency
 2021-05-11 @Remove guice dependency
-2021-05-11 @Add longest win streak +stat to a game or player
 2021-05-11 @Add list of all people played against +stat
 2021-05-11 @Add history of growth on mu and sigma +stat
 2021-05-11 @Add first match +stat for player and game
 2021-05-11 @Add days-of-week histogram +stat
 2021-05-11 @Add average players per game +stat
 2021-05-11 @Add Rival +stat which lists the person with the closest skill
-2021-05-11 @Add H-index +stat which tracks h games were played at least h times
+2021-05-11 @Add H-index +statistic to player
 2020-08-14 @Update connection error to print to stdout
-2020-08-14 @Update 'game <game>' to redirect to 'game view <game>'
-2020-06-23 @Add Afrikaans language
-2021-06-21 @Add Rampage +stat which is achieved for long win streaks

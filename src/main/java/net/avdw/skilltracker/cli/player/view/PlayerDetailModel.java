@@ -20,8 +20,9 @@ public class PlayerDetailModel {
     @NonNull Integer totalGames;
     @NonNull Integer totalMatches;
     @NonNull Game lastPlayedGame;
+    @NonNull Game mostPlayedGame;
     @NonNull LocalDate lastPlayedDate;
     @NonNull List<PriorityObject<Game>> rankedGames;
     @NonNull List<PriorityObject<Game>> skilledGames;
-    @NonNull @Singular Set<Stat> allStats;
+    @NonNull @Singular Set<Stat> achievements;
 }

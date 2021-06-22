@@ -184,7 +184,8 @@ public class PlayerTest {
                 .contains("Last played: GalaxyTrucker")
                 .contains("Top 3 skilled")
                 .contains("Top 3 ranked")
-                .contains("Most played: UnrealTournament");
+                .contains("Most played: Unreal Tournament")
+                .distinct("Most played");
     }
 
     @Test

@@ -1,9 +1,9 @@
-package net.avdw.skilltracker.cli.player;
+package net.avdw.skilltracker.cli.player.list;
 
-import net.avdw.skilltracker.cli.player.view.PlayerListDetailModel;
-import net.avdw.skilltracker.cli.player.view.PlayerListModel;
-import net.avdw.skilltracker.cli.player.view.PlayerListDetailView;
-import net.avdw.skilltracker.cli.player.view.PlayerListView;
+import net.avdw.skilltracker.cli.player.list.PlayerListDetailModel;
+import net.avdw.skilltracker.cli.player.list.PlayerListModel;
+import net.avdw.skilltracker.cli.player.list.PlayerListDetailView;
+import net.avdw.skilltracker.cli.player.list.PlayerListView;
 import net.avdw.skilltracker.port.in.query.GameQuery;
 import net.avdw.skilltracker.port.in.query.MatchQuery;
 import net.avdw.skilltracker.port.in.query.PlayerQuery;

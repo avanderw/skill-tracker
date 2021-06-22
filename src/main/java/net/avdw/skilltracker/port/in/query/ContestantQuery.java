@@ -10,4 +10,6 @@ public interface ContestantQuery {
     List<Contestant> topContestantsBySkill(Game game, Long limit);
 
     Contestant findContestant(Game game, Player player);
+
+    Game mostPlayedGame(Player player);
 }

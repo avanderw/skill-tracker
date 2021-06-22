@@ -88,12 +88,6 @@ public class StatsService implements StatsQuery {
     public List<Stat> playerStats(Player player) {
         List<Stat> stats = new ArrayList<>();
 
-        Contestant mostPlayed = contestantRepo.mostPlayed(player);
-        stats.add(Stat.builder()
-                .name("Most played")
-                .value(String.format("%s", mostPlayed.getGame().getName()))
-                .build());
-
         comradeQuery.findComrade(player)
                 .map(p -> Stat.builder()
                         .name("Comrade")

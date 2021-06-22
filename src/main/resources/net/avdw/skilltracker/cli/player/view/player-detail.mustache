@@ -1,0 +1,20 @@
+{{player-name}} has played {{tot-games}} {{tot-games-pl}} over {{tot-matches}} {{tot-matches-pl}}
+Last played: {{lp-game}}, {{lp-date}} ({{lp-date-nlp}})
+Most played: {{mp-game}}
+
+Top {{ts-games-cnt}} skilled {{ts-games-pl}}
+{{#ts-games}}
+> {{skill}} in {{game}}
+{{/ts-games}}
+
+Top {{tr-games-cnt}} ranked {{tr-games-pl}}
+{{#tr-games}}
+> #{{rank}} in {{game}}
+{{/tr-games}}
+{{#has-achievements}}
+
+Achievements
+{{#achievements}}
+> {{name}}: {{value}}
+{{/achievements}}
+{{/has-achievements}}

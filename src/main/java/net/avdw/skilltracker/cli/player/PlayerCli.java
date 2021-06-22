@@ -1,5 +1,7 @@
 package net.avdw.skilltracker.cli.player;
 
+import net.avdw.skilltracker.cli.player.list.ListPlayerCommand;
+import net.avdw.skilltracker.cli.player.view.ViewPlayerCommand;
 import net.avdw.skilltracker.player.MovePlayerCli;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;

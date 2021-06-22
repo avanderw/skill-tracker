@@ -2,7 +2,7 @@ package net.avdw.skilltracker;
 
 import com.google.inject.AbstractModule;
 import net.avdw.skilltracker.adapter.out.ormlite.*;
-import net.avdw.skilltracker.app.ContestantService;
+import net.avdw.skilltracker.app.service.ContestantService;
 import net.avdw.skilltracker.app.service.*;
 import net.avdw.skilltracker.port.in.query.*;
 import net.avdw.skilltracker.port.in.query.stat.*;
