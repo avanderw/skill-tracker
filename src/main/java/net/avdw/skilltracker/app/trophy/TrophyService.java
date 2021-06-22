@@ -20,7 +20,7 @@ public class TrophyService implements AllTrophies {
     }
 
     @Override
-    public List<KeyValue> forPlayer(Player player) {
+    public List<KeyValue> findFor(Player player) {
         List<KeyValue> keyValues = new ArrayList<>();
 
         String dominating = dominatorTrophy.findDominating(player).stream()
@@ -33,6 +33,13 @@ public class TrophyService implements AllTrophies {
                     .value(dominating)
                     .build());
         }
+
+        return keyValues;
+    }
+
+    @Override
+    public List<KeyValue> findFor(Game game, Player player) {
+        List<KeyValue> keyValues = new ArrayList<>();
 
         return keyValues;
     }

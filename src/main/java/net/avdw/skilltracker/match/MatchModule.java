@@ -8,6 +8,7 @@ import de.gesundkrank.jskills.trueskill.FactorGraphTrueSkillCalculator;
 import net.avdw.skilltracker.Templator;
 import net.avdw.skilltracker.adapter.out.ormlite.DbMapper;
 import net.avdw.skilltracker.adapter.out.ormlite.DbMapperImpl;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 

@@ -23,7 +23,7 @@ public class BadgesService implements AllBadges {
     }
 
     @Override
-    public List<KeyValue> forPlayer(Player player) {
+    public List<KeyValue> findFor(Player player) {
         List<KeyValue> keyValues = new ArrayList<>();
 
         comradeBadge.findComrade(player)
@@ -42,6 +42,20 @@ public class BadgesService implements AllBadges {
                     .value(obsession)
                     .build());
         }
+
+        return keyValues;
+    }
+
+    @Override
+    public List<KeyValue> findFor(Game game, Player player) {
+        List<KeyValue> keyValues = new ArrayList<>();
+
+        comradeBadge.findComrade(game, player)
+                .map(p -> KeyValue.builder()
+                        .key("Comrade")
+                        .value(p.getName())
+                        .build())
+                .ifPresent(keyValues::add);
 
         return keyValues;
     }

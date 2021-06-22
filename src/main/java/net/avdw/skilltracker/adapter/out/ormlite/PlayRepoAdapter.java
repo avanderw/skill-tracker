@@ -46,11 +46,39 @@ public class PlayRepoAdapter implements PlayRepo {
 
     @SneakyThrows
     @Override
-    public Play lookupFirstPlay(Player player) {
+    public Play lookupFirstPlayFor(Player player) {
         return dbMapper.toPlay(playDao.queryBuilder()
                 .orderBy(PlayEntity.PLAY_DATE, true)
                 .where().eq(PlayEntity.PLAYER_NAME, player.getName())
                 .queryForFirst());
     }
 
+    @SneakyThrows
+    @Override
+    public Play lookupFirstPlayFor(Game game, Player player) {
+        return dbMapper.toPlay(playDao.queryBuilder()
+                .orderBy(PlayEntity.PLAY_DATE, true)
+                .where().eq(PlayEntity.PLAYER_NAME, player.getName())
+                .and().eq(PlayEntity.GAME_NAME, game.getName())
+                .queryForFirst());
+    }
+
+    @SneakyThrows
+    @Override
+    public Play lookupLastPlayFor(Player player) {
+        return dbMapper.toPlay(playDao.queryBuilder()
+                .orderBy(PlayEntity.PLAY_DATE, false)
+                .where().eq(PlayEntity.PLAYER_NAME, player.getName())
+                .queryForFirst());
+    }
+
+    @SneakyThrows
+    @Override
+    public Play lookupLastPlayFor(Game game, Player player) {
+        return dbMapper.toPlay(playDao.queryBuilder()
+                .orderBy(PlayEntity.PLAY_DATE, false)
+                .where().eq(PlayEntity.PLAYER_NAME, player.getName())
+                .and().eq(PlayEntity.GAME_NAME, game.getName())
+                .queryForFirst());
+    }
 }

@@ -1,0 +1,33 @@
+{{player-name}} is #{{player-rank}} in {{game}} with {{tot-matches}} {{tot-matches-pl}}
+First played: {{fp-date}} ({{fp-date-nlp}})
+ Last played: {{lp-date}} ({{lp-date-nlp}})
+  Win streak: {{ws-current}} / {{ws-longest}}
+       Skill: {{skill}} ({{mean}}μ; {{stddev}}σ)
+{{#has-trophies}}
+
+Trophies
+{{#trophies}}
+> {{trophy}}: {{game}}
+{{/trophies}}
+{{/has-trophies}}
+{{#has-challenges}}
+
+Challenges
+{{#challenges}}
+> {{challenge}}: {{value}}
+{{/challenges}}
+{{/has-challenges}}
+{{#has-achievements}}
+
+Achievements
+{{#achievements}}
+> {{achievement}}: {{value}}
+{{/achievements}}
+{{/has-achievements}}
+{{#has-badges}}
+
+Badges
+{{#badges}}
+> {{badge}}: {{value}}
+{{/badges}}
+{{/has-badges}}

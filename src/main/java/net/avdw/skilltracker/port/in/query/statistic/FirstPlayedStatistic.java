@@ -9,4 +9,5 @@ public interface FirstPlayedStatistic {
     Game lookupFirstGameFor(Player player);
 
     LocalDate lookupFirstDateFor(Player player);
+    LocalDate lookupFirstDateFor(Game game, Player player);
 }

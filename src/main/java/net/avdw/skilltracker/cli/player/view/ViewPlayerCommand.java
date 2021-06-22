@@ -2,13 +2,17 @@ package net.avdw.skilltracker.cli.player.view;
 
 import net.avdw.skilltracker.cli.converter.GameTypeConverter;
 import net.avdw.skilltracker.cli.converter.PlayerTypeConverter;
-import net.avdw.skilltracker.domain.*;
+import net.avdw.skilltracker.domain.Contestant;
+import net.avdw.skilltracker.domain.Game;
+import net.avdw.skilltracker.domain.Player;
+import net.avdw.skilltracker.domain.PriorityObject;
 import net.avdw.skilltracker.port.in.query.*;
 import net.avdw.skilltracker.port.in.query.achievement.AllAchievements;
 import net.avdw.skilltracker.port.in.query.badge.AllBadges;
 import net.avdw.skilltracker.port.in.query.challenge.AllChallenges;
 import net.avdw.skilltracker.port.in.query.statistic.FirstPlayedStatistic;
 import net.avdw.skilltracker.port.in.query.statistic.HIndexStatistic;
+import net.avdw.skilltracker.port.in.query.statistic.LastPlayedStatistic;
 import net.avdw.skilltracker.port.in.query.trophy.AllTrophies;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -44,6 +48,7 @@ public class ViewPlayerCommand implements Runnable {
     @Inject private ContestantQuery contestantQuery;
     @Inject private HIndexStatistic hIndexStatistic;
     @Inject private FirstPlayedStatistic firstPlayedStatistic;
+    @Inject private LastPlayedStatistic lastPlayedStatistic;
 
     @Inject
     ViewPlayerCommand() {
@@ -80,19 +85,25 @@ public class ViewPlayerCommand implements Runnable {
                             .sorted(Comparator.comparing((PriorityObject<Game> g) -> g.getPriority().doubleValue()).reversed())
                             .limit(3)
                             .collect(Collectors.toList()))
-                    .trophies(allTrophies.forPlayer(player))
-                    .challenges(allChallenges.forPlayer(player))
-                    .achievements(allAchievements.forPlayer(player))
-                    .badges(allBadges.forPlayer(player))
+                    .trophies(allTrophies.findFor(player))
+                    .challenges(allChallenges.findFor(player))
+                    .achievements(allAchievements.findFor(player))
+                    .badges(allBadges.findFor(player))
                     .build();
             spec.commandLine().getOut().println(playerDetailView.render(playerDetailModel));
         } else {
             Contestant contestant = contestantQuery.findContestant(game, player);
             PlayerGameModel playerGameModel = PlayerGameModel.builder()
+                    .lastPlayedDate(lastPlayedStatistic.lookupLastDateFor(game, player))
+                    .firstPlayedDate(firstPlayedStatistic.lookupFirstDateFor(game, player))
                     .contestant(contestant)
                     .contestantRank(rankQuery.findBy(game, player))
                     .totalMatches(matchQuery.totalMatches(game, player))
                     .stats(statsQuery.gameStatsForPlayer(game, player))
+                    .trophies(allTrophies.findFor(game, player))
+                    .challenges(allChallenges.findFor(game, player))
+                    .achievements(allAchievements.findFor(game, player))
+                    .badges(allBadges.findFor(game, player))
                     .build();
             spec.commandLine().getOut().println(playerGameView.render(playerGameModel));
         }

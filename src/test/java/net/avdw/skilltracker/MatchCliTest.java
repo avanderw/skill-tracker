@@ -216,8 +216,8 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(0)));
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(1)));
         assertSuccess(commandLine.execute("game", "view", "Northgard"));
-        assertTrue(outWriter.toString().contains("Mean: 31,2μ"));
-        assertTrue(outWriter.toString().contains("Stddev:  6,8σ"));
+        assertTrue(outWriter.toString().contains("31,2μ"));
+        assertTrue(outWriter.toString().contains("6,8σ"));
         assertTrue(outWriter.toString().contains("(μ)=28,6 (σ)=7,6 P2"));
     }
 
@@ -245,10 +245,10 @@ public class MatchCliTest {
         assertSuccess(commandLine.execute("match", "rm", sessionIdList.get(1)));
         assertSuccess(commandLine.execute("player", "view", "First", "-g=N"));
         assertSuccess(commandLine.execute("game", "view", "N"));
-        assertTrue(outWriter.toString().contains("Mean: 27,1μ"));
-        assertTrue(outWriter.toString().contains("Stddev:  6,0σ"));
-        assertTrue(outWriter.toString().contains("Mean: 19,5μ"));
-        assertTrue(outWriter.toString().contains("Stddev:  7,5σ"));
+        assertTrue(outWriter.toString().contains("27,1μ"));
+        assertTrue(outWriter.toString().contains("6,0σ"));
+        assertTrue(outWriter.toString().contains("19,5μ"));
+        assertTrue(outWriter.toString().contains("7,5σ"));
     }
 
     @Test
@@ -268,7 +268,7 @@ public class MatchCliTest {
     public void testDuplicatePlayer() {
         cliTester.execute("match", "add", "-g", "N", "-r", "2,1,3", "p1,dup", "p3,dup", "p4").success();
         cliTester.execute("player", "view", "dup", "-g=N").success()
-                .contains("1 matches")
+                .contains("1 match")
                 .contains("25,6μ")
                 .contains("7,6σ");
     }

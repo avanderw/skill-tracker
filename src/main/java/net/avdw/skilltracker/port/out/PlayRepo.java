@@ -11,6 +11,9 @@ public interface PlayRepo {
 
     Long lookupPlayCountFor(Game game, Player player);
 
-    Play lookupFirstPlay(Player player);
+    Play lookupFirstPlayFor(Player player);
+    Play lookupFirstPlayFor(Game game, Player player);
 
+    Play lookupLastPlayFor(Player player);
+    Play lookupLastPlayFor(Game game, Player player);
 }

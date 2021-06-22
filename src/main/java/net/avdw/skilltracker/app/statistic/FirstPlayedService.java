@@ -18,11 +18,16 @@ public class FirstPlayedService implements FirstPlayedStatistic {
 
     @Override
     public Game lookupFirstGameFor(Player player) {
-        return playRepo.lookupFirstPlay(player).getGame();
+        return playRepo.lookupFirstPlayFor(player).getGame();
     }
 
     @Override
     public LocalDate lookupFirstDateFor(Player player) {
-        return playRepo.lookupFirstPlay(player).getDate();
+        return playRepo.lookupFirstPlayFor(player).getDate();
+    }
+
+    @Override
+    public LocalDate lookupFirstDateFor(Game game, Player player) {
+        return playRepo.lookupFirstPlayFor(game, player).getDate();
     }
 }
