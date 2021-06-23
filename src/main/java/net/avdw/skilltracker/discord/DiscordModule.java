@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import net.avdw.property.AbstractPropertyModule;
+import net.avdw.skilltracker.DbIntegrity;
 import net.avdw.skilltracker.GuiceFactory;
 import net.avdw.skilltracker.MainCli;
 import net.avdw.skilltracker.Templator;
@@ -20,6 +21,11 @@ public class DiscordModule extends AbstractPropertyModule {
         Names.bindProperties(binder(), properties);
 
         bind(CommandLine.class).toInstance(new CommandLine(MainCli.class, GuiceFactory.getInstance()));
+        try {
+            GuiceFactory.getInstance().create(DbIntegrity.class).init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

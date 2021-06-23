@@ -6,6 +6,12 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 See [README](README.md) for more project related information.
 
+## [v1.3.1] (Maintenance release)
+*Released on 2021-06-23*
+
+### Fixed
+- Fix database not upgrading with latest changesets
+
 ## [v1.3.0] (Feature release)
 *Released on 2021-06-23*
 
