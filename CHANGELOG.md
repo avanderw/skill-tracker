@@ -6,6 +6,43 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 See [README](README.md) for more project related information.
 
+## [v1.3.0] (Feature release)
+*Released on 2021-06-23*
+
+### Added
+- Add first match to the player detail view
+- Add HIndex statistic to the player detail view
+- Add collection services for the new categories
+- Add mustache template for player detail view
+- Add win streak statistic
+- Add achievement command to describe achievements
+- Add dominator stat to player
+- Add Guardian stat to the player
+- Add Enthusiast stat to player and game
+- Add Comrade stat to player
+- Add most played stat to player view
+- Add most wins stat to the game view
+- Add nemesis and minion statistic
+
+### Changed
+- Change the player game view to align with player detail
+- Change packaging to cater for Badge, Challenge, Achievement, and Trophy
+- Change game CamelCase to Title Case
+- Change rule that the dominator must have the highest skill instead of win ratio
+- Change formatting of the stats to align on the name
+
+### Removed
+- Remove dead code
+- Remove most win stat
+- Remove generated file
+- Remove Comaraderie statistic
+
+### Fixed
+- Fix plural not correctly showing for matches
+- Fix incorrect ranking on match view
+- Fix database migrating wrong column
+- Fix Guardian to have higher skill than player
+
 ## [v1.2.0] (Feature release)
 *Released on 2020-08-13*
 
